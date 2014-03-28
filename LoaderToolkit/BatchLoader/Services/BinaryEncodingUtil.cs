@@ -7,40 +7,59 @@ using System.Threading.Tasks;
 
 namespace BatchLoader.Services
 {
+    public enum EncoderDomainNames { RefNuc, Bases, BasesQual }
+
     public static class BinaryEncodingUtil
     {
-        public static readonly Dictionary<string, Dictionary<string, BitArray>> encoders;
-        public static readonly Dictionary<string, int> encoderLengths;
+        public static readonly Dictionary<EncoderDomainNames, Dictionary<string, BitArray>> encoders;
+        public static readonly Dictionary<EncoderDomainNames, int> encoderBitStringLengths;
+
+        private class InputIndeces
+        {
+            private int inputCharIndex = 0;
+            private int readIndex = 0;
+
+            /// <summary>
+            /// The actual char position of the input string.
+            /// </summary>
+            public int InputCharIndex { get; set; }
+
+            /// <summary>
+            /// The actual read position of the bases.
+            /// </summary>
+            public int ReadIndex { get; set; }
+
+        }
 
         static BinaryEncodingUtil()
         {
-            encoders = new Dictionary<string, Dictionary<string, BitArray>>();
-            encoderLengths = new Dictionary<string, int>();
+            encoders = new Dictionary<EncoderDomainNames, Dictionary<string, BitArray>>();
+            encoderBitStringLengths = new Dictionary<EncoderDomainNames, int>();
             InitializeEncoders();
         }
 
         private static void InitializeEncoders()
         {
-            var refNucName = "refNuc";
+            var refNucDomainName = EncoderDomainNames.RefNuc;
             var refNuc = InitializeRefNucEncoder();
-            InitializeEncoderLength(refNucName, refNuc);
-            encoders.Add(refNucName, refNuc);
+            InitializeEncoderLength(refNucDomainName, refNuc);
+            encoders.Add(refNucDomainName, refNuc);
 
-            var basesName = "bases";
+            var basesDomainName = EncoderDomainNames.Bases;
             var bases = InitializeBasesEncoder();
-            InitializeEncoderLength(basesName, bases);
-            encoders.Add(basesName, bases);
+            InitializeEncoderLength(basesDomainName, bases);
+            encoders.Add(basesDomainName, bases);
 
-            var basesQualName = "basesQual";
+            var basesQualDomainName = EncoderDomainNames.BasesQual;
             var basesQual = InitializeBasesQualEncoder();
-            InitializeEncoderLength(basesQualName, basesQual);
-            encoders.Add(basesQualName, basesQual);
+            InitializeEncoderLength(basesQualDomainName, basesQual);
+            encoders.Add(basesQualDomainName, basesQual);
         }
 
-        private static void InitializeEncoderLength(string encoderName, Dictionary<string, BitArray> encoder)
+        private static void InitializeEncoderLength(EncoderDomainNames encoderDomainName, Dictionary<string, BitArray> encoder)
         {
             var fixedLengthOfEncoder = CheckInitializedEncoder(encoder);
-            encoderLengths.Add(encoderName, fixedLengthOfEncoder);
+            encoderBitStringLengths.Add(encoderDomainName, fixedLengthOfEncoder);
         }
 
         private static int CheckInitializedEncoder(Dictionary<string, BitArray> encoder)
@@ -104,7 +123,7 @@ namespace BatchLoader.Services
         /// <param name="input"></param>
         /// <param name="encodingDomainName"></param>
         /// <returns></returns>
-        public static byte[] ConvertInputToEncodedBytes(string input, string encodingDomainName)
+        public static byte[] ConvertInputToEncodedBytes(string input, EncoderDomainNames encodingDomainName)
         {
             Dictionary<string, BitArray> encodingDomain;
             if (encoders.TryGetValue(encodingDomainName, out encodingDomain))
@@ -169,7 +188,7 @@ namespace BatchLoader.Services
         public static byte[] ConvertBasesInputToEncodedBytes(string input, out List<string> byProductsBySkipChars)
         {
             Dictionary<string, BitArray> encodingDomain;
-            if (encoders.TryGetValue("bases", out encodingDomain))
+            if (encoders.TryGetValue(EncoderDomainNames.Bases, out encodingDomain))
             {
                 byProductsBySkipChars = new List<string> { "", "", "", ""};
                 BitArray bitArrayOfInput = DetermineBitArrayOfBasesInput(input, encodingDomain, byProductsBySkipChars);
@@ -190,87 +209,117 @@ namespace BatchLoader.Services
             List<string> byProductsBySkipChars)
         {
             BitArray bitArrayOfInput = new BitArray(0);
-            int index = 0;
-            while (index < input.Length)
+            var inputIndeces = new InputIndeces();
+            while (inputIndeces.InputCharIndex < input.Length)
             {
-                var inputPart = input.Substring(index, 1);
-                
+                var inputPart = input.Substring(inputIndeces.InputCharIndex, 1);
                 if ("^".Equals(inputPart))
                 {
-                    index = RecordReadStartingFactAndItsQual(input, byProductsBySkipChars, index);
+                    RecordReadStartingFactAndItsQual(input, byProductsBySkipChars, inputIndeces);
                 }
                 else if ("$".Equals(inputPart))
                 {
-                    index = RecordReadEndingFact(byProductsBySkipChars, index);
+                    RecordReadEndingFact(byProductsBySkipChars, inputIndeces);
                 }
                 // It is very important that the case "+" is preceded by case "^" because read mapping quality can contain symbol "+".
                 else if ("+".Equals(inputPart))
                 {
-                    index = RecordExtraNucleotidesFact(input, byProductsBySkipChars, index);
+                    RecordExtraNucleotidesFact(input, byProductsBySkipChars, inputIndeces);
                 }
                 // It is very important that the case "-" is preceded by case "^" because read mapping quality can contain symbol "-".
                 else if ("-".Equals(inputPart))
                 {
-                    index = SkipMissingNucleotidesFact(input, index);
+                    SkipMissingNucleotidesFact(input, inputIndeces);
                 }
                 else
                 {
-                    BitArray bitArrayOfInputPart;
-                    if (encodingDomain.TryGetValue(inputPart, out bitArrayOfInputPart))
-                    {
-                        bitArrayOfInput = AppendBitArray(bitArrayOfInput, bitArrayOfInputPart);
-                        index++;
-                    }
-                    else
-                    {
-                        throw new ArgumentException("The input cannot be encoded because it contains invalid part!", inputPart);
-                    }
+                    bitArrayOfInput = UpdateBitArray(encodingDomain, bitArrayOfInput, inputIndeces, inputPart);
                 }
             }
             return bitArrayOfInput;
         }
 
-        private static int RecordReadStartingFactAndItsQual(string input, List<string> byProductsBySkipChars, int index)
+        private static BitArray UpdateBitArray(Dictionary<string, BitArray> encodingDomain, BitArray bitArrayOfInput, InputIndeces inputIndeces, string inputPart)
         {
-            int readIndexInBases = index - 1;
+            BitArray bitArrayOfInputPart;
+            if (encodingDomain.TryGetValue(inputPart, out bitArrayOfInputPart))
+            {
+                bitArrayOfInput = AppendBitArray(bitArrayOfInput, bitArrayOfInputPart);
+                inputIndeces.InputCharIndex++;
+                inputIndeces.ReadIndex++;
+            }
+            else
+            {
+                throw new ArgumentException("The input cannot be encoded because it contains invalid part!", inputPart);
+            }
+            return bitArrayOfInput;
+        }
+
+        /// <summary>
+        /// Note: The read nucleotide value follow starting sign and read mapping quality in this case.
+        /// E.g.: input: ,^~. when the input processing reach the char '^' then ReadIndex is 1
+        ///       because the ReadIndex has been incremented after char ',' processing.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="byProductsBySkipChars"></param>
+        /// <param name="inputIndeces"></param>
+        private static void RecordReadStartingFactAndItsQual(string input, List<string> byProductsBySkipChars, InputIndeces inputIndeces)
+        {
             var readStartingSigns = byProductsBySkipChars[1];
-            byProductsBySkipChars[1] = readStartingSigns + readIndexInBases + "\t";
-            index++;
-            var readMappingQual = input.Substring(index, 1);
+            byProductsBySkipChars[1] = readStartingSigns + inputIndeces.ReadIndex + "\t";
+            inputIndeces.InputCharIndex++;
+            var readMappingQual = input.Substring(inputIndeces.InputCharIndex, 1);
             var readMappingQuals = byProductsBySkipChars[2];
             byProductsBySkipChars[2] = readMappingQuals + readMappingQual + "\t";
-            index++;
-            return index;
+            inputIndeces.InputCharIndex++;
         }
 
-        private static int RecordReadEndingFact(List<string> byProductsBySkipChars, int index)
+        /// <summary>
+        /// Note: The read nucleotide value is followed by ending sign in this case
+        ///       but the ReadIndex has already been incremented so it should be handled.
+        /// E.g.: input: .$, the char '$' is assigned to the read '.'.
+        /// </summary>
+        /// <param name="byProductsBySkipChars"></param>
+        /// <param name="inputIndeces"></param>
+        private static void RecordReadEndingFact(List<string> byProductsBySkipChars, InputIndeces inputIndeces)
         {
-            int readIndexInBases = index - 1;
             var readEndingSigns = byProductsBySkipChars[3];
-            byProductsBySkipChars[3] = readEndingSigns + readIndexInBases + "\t";
-            index++;
-            return index;
+            var previousReadIndex = inputIndeces.ReadIndex - 1;
+            byProductsBySkipChars[3] = readEndingSigns + previousReadIndex + "\t";
+            inputIndeces.InputCharIndex++;
         }
 
-        private static int RecordExtraNucleotidesFact(string input, List<string> byProductsBySkipChars, int index)
+        /// <summary>
+        /// Note: The read nucleotide value is followed by extra nucleotides signs in this case.
+        ///       but the ReadIndex has already been incremented so it should be handled.
+        /// E.g.: input: .+2AB, the char '+' is assigned to the read '.'.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="byProductsBySkipChars"></param>
+        /// <param name="inputIndeces"></param>
+        private static void RecordExtraNucleotidesFact(string input, List<string> byProductsBySkipChars, InputIndeces inputIndeces)
         {
-            int readIndexInBases = index - 1;
-            index++;
-            var extraNucleotidesLength = Convert.ToInt32(input.Substring(index, 1));
-            index++;
-            var extraNucleotides = input.Substring(index, extraNucleotidesLength);
+            inputIndeces.InputCharIndex++;
+            var extraNucleotidesLength = Convert.ToInt32(input.Substring(inputIndeces.InputCharIndex, 1));
+            inputIndeces.InputCharIndex++;
+            var extraNucleotides = input.Substring(inputIndeces.InputCharIndex, extraNucleotidesLength);
             var extraNucleotidesStore = byProductsBySkipChars[0];
-            byProductsBySkipChars[0] = extraNucleotidesStore + readIndexInBases + extraNucleotides + "\t";
-            index += extraNucleotidesLength;
-            return index;
+            var previousReadIndex = inputIndeces.ReadIndex - 1;
+            byProductsBySkipChars[0] = extraNucleotidesStore + previousReadIndex + extraNucleotides + "\t";
+            inputIndeces.InputCharIndex += extraNucleotidesLength;
         }
 
-        private static int SkipMissingNucleotidesFact(string input, int index)
+        /// <summary>
+        /// Note: The read nucleotide value is followed by missing nucleotides signs in this case.
+        /// E.g.: input: .-2AB, the char '-' is assigned to the read '.'.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="inputIndeces"></param>
+        private static void SkipMissingNucleotidesFact(string input, InputIndeces inputIndeces)
         {
-            index++;
-            var extraNucleotidesLength = Convert.ToInt32(input.Substring(index, 1));
-            index += extraNucleotidesLength + 1;
-            return index;
+            inputIndeces.InputCharIndex++;
+            var extraNucleotidesLength = Convert.ToInt32(input.Substring(inputIndeces.InputCharIndex, 1));
+            inputIndeces.InputCharIndex += extraNucleotidesLength + 1;
         }
 
         private static Dictionary<string, BitArray> InitializeRefNucEncoder()

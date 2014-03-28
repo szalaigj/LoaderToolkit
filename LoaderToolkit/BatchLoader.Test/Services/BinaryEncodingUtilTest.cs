@@ -13,7 +13,7 @@ namespace BatchLoader.Test.Services
         {
             // Given
             var input = "ACGT";
-            var encodingDomainName = "refNuc";
+            var encodingDomainName = EncoderDomainNames.RefNuc;
             // "A" -> 00, "C" -> 01, "G" -> 10, "T" -> 11
             // "ACGT" -> 00011011 => 27 (in decimal numeral system representation)
             byte [] expected = new byte[] {27};
@@ -30,7 +30,7 @@ namespace BatchLoader.Test.Services
         {
             // Given
             var input = "TACGT";
-            var encodingDomainName = "refNuc";
+            var encodingDomainName = EncoderDomainNames.RefNuc;
             // "A" -> 00, "C" -> 01, "G" -> 10, "T" -> 11
             // "TACGT" -> 1100011011 => 795 (in decimal numeral system representation)
             // but in the bytes representation: it means two bytes 11 (3) 00011011 (27)
@@ -47,15 +47,20 @@ namespace BatchLoader.Test.Services
         public void ConvertBasesInputToEncodedBytesTest1()
         {
             // Given
-            var input = ".$,^+,+2ABA";
+            var input = ".$,^+,+3ATCA";
             List<string> byProductsBySkipChars;
-            byte[] expected = new byte[] { 3, 27 };
+            // the input without by-product: .,,A -> 00000|00001|00001|00010
+            // its 'byte-style' arrangement:         00000|00000100|00100010
+            // so the expected bytes:                 (0)     (4)     (34)
+            byte[] expectedResult = new byte[] { 0, 4, 34 };
+            List<string> expectedByProduct = new List<string> { "2ATC\t", "2\t", "+\t", "0\t" };
 
             // When
             byte[] result = BinaryEncodingUtil.ConvertBasesInputToEncodedBytes(input, out byProductsBySkipChars);
 
             // Then
-            CollectionAssert.AreEqual(expected, result);
+            CollectionAssert.AreEqual(expectedResult, result);
+            CollectionAssert.AreEqual(expectedByProduct, byProductsBySkipChars);
         }
     }
 }
