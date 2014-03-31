@@ -95,6 +95,117 @@ namespace LoaderLibrary.Load
             }
         }
 
+        public void WriteBinary(byte[] bytes, int length)
+        {
+            if (binary)
+            {
+                outputBinary.Write((ushort)length);
+                byte[] outputBytes = DetermineOutputBytes(bytes, length);
+                outputBinary.Write(outputBytes);
+            }
+            else
+            {
+                WriteFieldEnd();
+                byte[] outputBytes = DetermineOutputBytes(bytes, length);
+                row.Append(outputBytes);
+            }
+        }
+
+        private byte[] DetermineOutputBytes(byte[] bytes, int length)
+        {
+            byte[] result = Enumerable.Repeat((byte)0, length).ToArray();
+            if (length < bytes.Length)
+            {
+                for (int index = 0; index < length; index++)
+                {
+                    result[index] = bytes[index];
+                }
+            }
+            else if (length > bytes.Length)
+            {
+                for (int index = 0; index < bytes.Length; index++)
+                {
+                    result[index] = bytes[index];
+                }
+            }
+            else
+            {
+                result = bytes;
+            }
+            return result;
+        }
+
+        public void WriteNullableBinary(byte[] bytes, int length)
+        {
+            if (bytes == null)
+            {
+                if (binary)
+                {
+                    outputBinary.Write((ushort)0xFFFF);
+                    //outputBinary.Write((Int16)(-1));
+                }
+                else
+                {
+                    WriteFieldEnd();
+                }
+            }
+            else
+            {
+                WriteBinary(bytes, length);
+            }
+        }
+
+        public void WriteVarBinary(byte[] bytes, int maxlength)
+        {
+            if (binary)
+            {
+                if (bytes == null)
+                {
+                    outputBinary.Write((ushort)0xFFFF);
+                    //outputBinary.Write((Int16)(-1));
+                }
+                else
+                {
+                    int len = Math.Min(bytes.Length, maxlength);
+                    outputBinary.Write((ushort)len);
+                    byte[] outputBytes = DetermineVarOutputBytes(bytes, len);
+                    outputBinary.Write(outputBytes);
+                }
+            }
+            else
+            {
+                if (bytes == null)
+                {
+                    WriteFieldEnd();
+                }
+                else
+                {
+                    WriteFieldEnd();
+                    int len = Math.Min(bytes.Length, maxlength);
+                    byte[] outputBytes = DetermineVarOutputBytes(bytes, len);
+                    row.Append(outputBytes);
+                }
+            }
+        }
+
+        private byte[] DetermineVarOutputBytes(byte[] bytes, int len)
+        {
+            byte[] outputBytes;
+            if (len < bytes.Length)
+            {
+                outputBytes = new byte[len];
+                for (int index = 0; index < len; index++)
+                {
+                    outputBytes[index] = bytes[index];
+                }
+            }
+            else
+            {
+                outputBytes = bytes;
+            }
+            return outputBytes;
+        }
+
         public void WriteTinyInt(sbyte value)
         {
             if (binary)

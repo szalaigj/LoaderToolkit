@@ -47,7 +47,7 @@ namespace BatchLoader.Mappers
             }
             else
             {
-                BulkWriter.WriteNullableChar(null, 0);
+                BulkWriter.WriteVarChar(null, 8000);
             }
         }
     }

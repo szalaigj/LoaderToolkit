@@ -27,7 +27,8 @@ namespace BatchLoader
             For(typeof(BaseStreamReaderForLoader<>)).Use(typeof(StreamReaderForLoaderWithPrefix));
             For(typeof(BaseBulkInsertFileCreator<>)).Use(typeof(DefaultBulkInsertFileCreator));
 
-            //TODO:
+            For(typeof(Mapper<>)).Add(typeof(Mappers.BinaryEncodedPileup));
+
             // The following list of mappers/mergers are examples only (for tweeter) but the real mappers/mergers should be enumerated here:
             //For(typeof(Mapper<>)).Add(typeof(Mappers.Tweet));
             //For(typeof(Mapper<>)).Add(typeof(Mappers.TweetRetweet));

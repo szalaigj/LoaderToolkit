@@ -14,6 +14,8 @@ namespace BatchLoader.Services
         public static readonly Dictionary<EncoderDomainNames, Dictionary<string, BitArray>> encoders;
         public static readonly Dictionary<EncoderDomainNames, int> encoderBitStringLengths;
 
+        private const string separator = "\t";
+
         private class InputIndeces
         {
             private int inputCharIndex = 0;
@@ -256,6 +258,7 @@ namespace BatchLoader.Services
         }
 
         /// <summary>
+        /// This method dockets the read indices which are started at actual position.
         /// Note: The read nucleotide value follow starting sign and read mapping quality in this case.
         /// E.g.: input: ,^~. when the input processing reach the char '^' then ReadIndex is 1
         ///       because the ReadIndex has been incremented after char ',' processing.
@@ -266,15 +269,16 @@ namespace BatchLoader.Services
         private static void RecordReadStartingFactAndItsQual(string input, List<string> byProductsBySkipChars, InputIndeces inputIndeces)
         {
             var readStartingSigns = byProductsBySkipChars[1];
-            byProductsBySkipChars[1] = readStartingSigns + inputIndeces.ReadIndex + "\t";
+            byProductsBySkipChars[1] = readStartingSigns + inputIndeces.ReadIndex + separator;
             inputIndeces.InputCharIndex++;
             var readMappingQual = input.Substring(inputIndeces.InputCharIndex, 1);
             var readMappingQuals = byProductsBySkipChars[2];
-            byProductsBySkipChars[2] = readMappingQuals + readMappingQual + "\t";
+            byProductsBySkipChars[2] = readMappingQuals + readMappingQual + separator;
             inputIndeces.InputCharIndex++;
         }
 
         /// <summary>
+        /// This method dockets the read indices which are ended at actual position.
         /// Note: The read nucleotide value is followed by ending sign in this case
         ///       but the ReadIndex has already been incremented so it should be handled.
         /// E.g.: input: .$, the char '$' is assigned to the read '.'.
@@ -285,11 +289,12 @@ namespace BatchLoader.Services
         {
             var readEndingSigns = byProductsBySkipChars[3];
             var previousReadIndex = inputIndeces.ReadIndex - 1;
-            byProductsBySkipChars[3] = readEndingSigns + previousReadIndex + "\t";
+            byProductsBySkipChars[3] = readEndingSigns + previousReadIndex + separator;
             inputIndeces.InputCharIndex++;
         }
 
         /// <summary>
+        /// This method dockets the read indices which have extra nucleotides after actual position.
         /// Note: The read nucleotide value is followed by extra nucleotides signs in this case.
         ///       but the ReadIndex has already been incremented so it should be handled.
         /// E.g.: input: .+2AB, the char '+' is assigned to the read '.'.
@@ -305,11 +310,12 @@ namespace BatchLoader.Services
             var extraNucleotides = input.Substring(inputIndeces.InputCharIndex, extraNucleotidesLength);
             var extraNucleotidesStore = byProductsBySkipChars[0];
             var previousReadIndex = inputIndeces.ReadIndex - 1;
-            byProductsBySkipChars[0] = extraNucleotidesStore + previousReadIndex + extraNucleotides + "\t";
+            byProductsBySkipChars[0] = extraNucleotidesStore + previousReadIndex + extraNucleotides + separator;
             inputIndeces.InputCharIndex += extraNucleotidesLength;
         }
 
         /// <summary>
+        /// This method skips the description of missing nucleotides after actual position (because the asterisk will indicate this fact).
         /// Note: The read nucleotide value is followed by missing nucleotides signs in this case.
         /// E.g.: input: .-2AB, the char '-' is assigned to the read '.'.
         /// </summary>
