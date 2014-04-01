@@ -49,6 +49,8 @@ namespace BatchLoader.Mappers
             {
                 BulkWriter.WriteVarChar(null, 8000);
             }
+
+            BulkWriter.EndLine();
         }
     }
 }

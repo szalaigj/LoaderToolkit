@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Mappers\BinaryEncodedPileupTest.cs" />
     <Compile Include="Services\BinaryEncodingUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -57,6 +58,10 @@
     <ProjectReference Include="..\BatchLoader\BatchLoader.csproj">
       <Project>{9f1cbd4a-c194-480a-b821-5f47c17188fa}</Project>
       <Name>BatchLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LoaderLibrary\LoaderLibrary.csproj">
+      <Project>{bb349801-3eba-4309-8f15-e41f921f037c}</Project>
+      <Name>LoaderLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

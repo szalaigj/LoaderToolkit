@@ -11,7 +11,7 @@ namespace BatchLoader.Mappers
     {
         public override string TableName
         {
-            get { return "pileup"; }
+            get { return "pileups"; }
         }
 
         protected void MapFirstToken(string firstToken)
@@ -31,7 +31,7 @@ namespace BatchLoader.Mappers
             {
                 posOfFirstToken++;
             }
-            var sampleID = firstToken.Substring(startPosOfSampleID, posOfFirstToken);
+            var sampleID = firstToken.Substring(startPosOfSampleID, posOfFirstToken - startPosOfSampleID);
             // [sampleID] [int] NOT NULL
             BulkWriter.WriteInt(Int32.Parse(sampleID));
 

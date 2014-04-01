@@ -65,18 +65,20 @@ namespace BatchLoader.Mappers
 
             var endingSigns = byProductsBySkipChars[3];
             MapAdditionalColumn(endingSigns);
+
+            BulkWriter.EndLine();
         }
 
-        private void MapAdditionalColumn(string addtionalColumn)
+        private void MapAdditionalColumn(string additionalColumn)
         {
-            // [addtionalColumn] [varchar](8000) NULL (addtionalColumn == extraNuc || startingSigns || mappingQual || endingSigns)
-            if ("".Equals(addtionalColumn))
+            // [additionalColumn] [varchar](8000) NULL (additionalColumn == extraNuc || startingSigns || mappingQual || endingSigns)
+            if ("".Equals(additionalColumn))
             {
                 BulkWriter.WriteVarChar(null, 8000);
             }
             else
             {
-                BulkWriter.WriteVarChar(addtionalColumn, 8000);
+                BulkWriter.WriteVarChar(additionalColumn, 8000);
             }
         }
     }

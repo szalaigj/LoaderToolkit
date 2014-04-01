@@ -7,8 +7,8 @@ namespace BatchLoader
 {
     public static class Constants
     {
-        public const string DefaultTargetDB = "Twitter";
-        public const string DefaultLoaderDB = "TwitterLoader";
+        public const string DefaultTargetDB = "szalaigj";
+        public const string DefaultLoaderDB = "szalaigj";
         public const string DefaultServer = "localhost";
     }
 }

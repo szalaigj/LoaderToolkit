@@ -18,9 +18,6 @@ namespace BatchLoader.Services
 
         private class InputIndeces
         {
-            private int inputCharIndex = 0;
-            private int readIndex = 0;
-
             /// <summary>
             /// The actual char position of the input string.
             /// </summary>
@@ -364,16 +361,16 @@ namespace BatchLoader.Services
             {
                 char ch = (char)intReprOfChar;
                 string stringReprOfChar = new string(new char[] {ch});
-                string stringBitOfChar = ConvertQualityCharToBitString(ch);
+                string stringBitOfChar = ConvertQualityCharToBitString(intReprOfChar);
                 basesQual.Add(stringReprOfChar, EncodeZeroOneStringToBitArrays(stringBitOfChar));
             }
             return basesQual;
         }
 
-        private static string ConvertQualityCharToBitString(char qualityChar)
+        private static string ConvertQualityCharToBitString(int asciiCodeOfQualityChar)
         {
-            int asciiCodeOfQualityChar = (int)qualityChar;
-            int relatedQualityScore = asciiCodeOfQualityChar - 33;
+            // The first quality char is '+' which has ascii code 33 so the related quality score will be 1 (and not zero).
+            int relatedQualityScore = asciiCodeOfQualityChar - 32;
             return ConvertIntToBitString(relatedQualityScore, 7);
         }
 

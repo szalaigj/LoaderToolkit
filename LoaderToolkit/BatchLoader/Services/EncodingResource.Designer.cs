@@ -61,7 +61,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 01100.
+        ///   Looks up a localized string similar to 01101.
         /// </summary>
         internal static string bases_Asterisk {
             get {
@@ -70,7 +70,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 00010.
+        ///   Looks up a localized string similar to 00011.
         /// </summary>
         internal static string bases_CapitalA {
             get {
@@ -79,7 +79,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 00100.
+        ///   Looks up a localized string similar to 00101.
         /// </summary>
         internal static string bases_CapitalC {
             get {
@@ -88,7 +88,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 00110.
+        ///   Looks up a localized string similar to 00111.
         /// </summary>
         internal static string bases_CapitalG {
             get {
@@ -97,7 +97,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 01010.
+        ///   Looks up a localized string similar to 01011.
         /// </summary>
         internal static string bases_CapitalN {
             get {
@@ -106,7 +106,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 01000.
+        ///   Looks up a localized string similar to 01001.
         /// </summary>
         internal static string bases_CapitalT {
             get {
@@ -115,7 +115,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 00001.
+        ///   Looks up a localized string similar to 00010.
         /// </summary>
         internal static string bases_Comma {
             get {
@@ -124,7 +124,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 00000.
+        ///   Looks up a localized string similar to 00001.
         /// </summary>
         internal static string bases_Dot {
             get {
@@ -133,7 +133,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 00011.
+        ///   Looks up a localized string similar to 00100.
         /// </summary>
         internal static string bases_SmallA {
             get {
@@ -142,7 +142,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 00101.
+        ///   Looks up a localized string similar to 00110.
         /// </summary>
         internal static string bases_SmallC {
             get {
@@ -151,7 +151,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 00111.
+        ///   Looks up a localized string similar to 01000.
         /// </summary>
         internal static string bases_SmallG {
             get {
@@ -160,7 +160,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 01011.
+        ///   Looks up a localized string similar to 01100.
         /// </summary>
         internal static string bases_SmallN {
             get {
@@ -169,7 +169,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 01001.
+        ///   Looks up a localized string similar to 01010.
         /// </summary>
         internal static string bases_SmallT {
             get {
@@ -178,7 +178,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 00.
+        ///   Looks up a localized string similar to 001.
         /// </summary>
         internal static string refNuc_A {
             get {
@@ -187,7 +187,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 01.
+        ///   Looks up a localized string similar to 010.
         /// </summary>
         internal static string refNuc_C {
             get {
@@ -196,7 +196,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 10.
+        ///   Looks up a localized string similar to 011.
         /// </summary>
         internal static string refNuc_G {
             get {
@@ -205,7 +205,7 @@ namespace BatchLoader.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 11.
+        ///   Looks up a localized string similar to 100.
         /// </summary>
         internal static string refNuc_T {
             get {

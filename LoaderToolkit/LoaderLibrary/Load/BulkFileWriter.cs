@@ -107,7 +107,10 @@ namespace LoaderLibrary.Load
             {
                 WriteFieldEnd();
                 byte[] outputBytes = DetermineOutputBytes(bytes, length);
-                row.Append(outputBytes);
+                foreach (byte outputByte in outputBytes)
+                { 
+                    row.Append(outputByte); 
+                }
             }
         }
 
@@ -183,7 +186,10 @@ namespace LoaderLibrary.Load
                     WriteFieldEnd();
                     int len = Math.Min(bytes.Length, maxlength);
                     byte[] outputBytes = DetermineVarOutputBytes(bytes, len);
-                    row.Append(outputBytes);
+                    foreach (byte outputByte in outputBytes)
+                    {
+                        row.Append(outputByte);
+                    }
                 }
             }
         }

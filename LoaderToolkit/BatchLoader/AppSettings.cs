@@ -10,7 +10,7 @@ namespace BatchLoader
     {
         public static string AdminConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["TwitterBatchLoader.Admin"].ConnectionString; }
+            get { return ConfigurationManager.ConnectionStrings["szalaigj"].ConnectionString; }
         }
     }
 }
