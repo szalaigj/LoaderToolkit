@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BatchLoader.Services;
 using System.Collections.Generic;
+using System.IO;
+using LoaderLibrary.Load;
 
 namespace BatchLoader.Test.Services
 {
@@ -61,6 +63,54 @@ namespace BatchLoader.Test.Services
             // Then
             CollectionAssert.AreEqual(expectedResult, result);
             CollectionAssert.AreEqual(expectedByProduct, byProductsBySkipChars);
+        }
+
+        [TestMethod, Description("This method should work properly when normal refNuc input is given.")]
+        public void DecodeInputFileTest1()
+        {
+            // Given
+            string refNucForEncoding = "TAG";
+            var encodingDomainName = EncoderDomainNames.RefNuc;
+            byte[] refNucInEncodedBytes = BinaryEncodingUtil.ConvertInputToEncodedBytes(refNucForEncoding, encodingDomainName);
+            // Prepare the input file:
+            string filename = "input_bin.dat";
+            WriteEncodedBytesToFile(filename, refNucInEncodedBytes);
+
+            // When
+            var result = BinaryEncodingUtil.DecodeInputFile(filename, encodingDomainName);
+
+            // Then
+            Assert.AreEqual(refNucForEncoding, result);
+        }
+
+        [TestMethod, Description("This method should work properly when normal bases input is given.")]
+        public void DecodeInputFileTest2()
+        {
+            // Given
+            string basesForEncoding = ".$,^+,+3ATCA";
+            var encodingDomainName = EncoderDomainNames.Bases;
+            List<string> byProductsBySkipChars;
+            byte[] basesInEncodedBytes = BinaryEncodingUtil.ConvertBasesInputToEncodedBytes(basesForEncoding, out byProductsBySkipChars);
+            // Prepare the input file:
+            string filename = "input_bin.dat";
+            WriteEncodedBytesToFile(filename, basesInEncodedBytes);
+
+            // When
+            var result = BinaryEncodingUtil.DecodeInputFile(filename, encodingDomainName);
+
+            // Then
+            Assert.AreEqual(basesForEncoding, result);
+        }
+
+        private void WriteEncodedBytesToFile(string filename, byte[] basesInEncodedBytes)
+        {
+            var fileStream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None, 0x10000 /* 64K */);
+            var binWriter = new BinaryWriter(fileStream);
+            binWriter.Write(basesInEncodedBytes);
+            binWriter.Flush();
+            binWriter.Close();
+            binWriter.Dispose();
+            binWriter = null;
         }
     }
 }

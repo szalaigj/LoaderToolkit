@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace BatchLoader.Services
 
     public static class BinaryEncodingUtil
     {
-        public static readonly Dictionary<EncoderDomainNames, Dictionary<string, BitArray>> encoders;
+        public static readonly Dictionary<EncoderDomainNames, BidirectionalDictionary<string, BitArray>> encoders;
         public static readonly Dictionary<EncoderDomainNames, int> encoderBitStringLengths;
 
         private const string separator = "\t";
@@ -32,7 +33,7 @@ namespace BatchLoader.Services
 
         static BinaryEncodingUtil()
         {
-            encoders = new Dictionary<EncoderDomainNames, Dictionary<string, BitArray>>();
+            encoders = new Dictionary<EncoderDomainNames, BidirectionalDictionary<string, BitArray>>();
             encoderBitStringLengths = new Dictionary<EncoderDomainNames, int>();
             InitializeEncoders();
         }
@@ -55,16 +56,16 @@ namespace BatchLoader.Services
             encoders.Add(basesQualDomainName, basesQual);
         }
 
-        private static void InitializeEncoderLength(EncoderDomainNames encoderDomainName, Dictionary<string, BitArray> encoder)
+        private static void InitializeEncoderLength(EncoderDomainNames encoderDomainName, BidirectionalDictionary<string, BitArray> encoder)
         {
             var fixedLengthOfEncoder = CheckInitializedEncoder(encoder);
             encoderBitStringLengths.Add(encoderDomainName, fixedLengthOfEncoder);
         }
 
-        private static int CheckInitializedEncoder(Dictionary<string, BitArray> encoder)
+        private static int CheckInitializedEncoder(BidirectionalDictionary<string, BitArray> encoder)
         {
             int? fixedLengthOfEncoder = null;
-            foreach (BitArray bitArray in encoder.Values)
+            foreach (BitArray bitArray in encoder.Forward.Values)
             {
                 if (fixedLengthOfEncoder == null)
                 {
@@ -124,7 +125,7 @@ namespace BatchLoader.Services
         /// <returns></returns>
         public static byte[] ConvertInputToEncodedBytes(string input, EncoderDomainNames encodingDomainName)
         {
-            Dictionary<string, BitArray> encodingDomain;
+            BidirectionalDictionary<string, BitArray> encodingDomain;
             if (encoders.TryGetValue(encodingDomainName, out encodingDomain))
             {
                 BitArray bitArrayOfInput = DetermineBitArrayOfInput(input, encodingDomain);
@@ -141,14 +142,14 @@ namespace BatchLoader.Services
             }
         }
 
-        private static BitArray DetermineBitArrayOfInput(string input, Dictionary<string, BitArray> encodingDomain)
+        private static BitArray DetermineBitArrayOfInput(string input, BidirectionalDictionary<string, BitArray> encodingDomain)
         {
             BitArray bitArrayOfInput = new BitArray(0);
             for (int index = 0; index < input.Length; index++)
             {
                 var inputPart = input.Substring(index, 1);
                 BitArray bitArrayOfInputPart;
-                if (encodingDomain.TryGetValue(inputPart, out bitArrayOfInputPart))
+                if (encodingDomain.Forward.TryGetValue(inputPart, out bitArrayOfInputPart))
                 {
                     bitArrayOfInput = AppendBitArray(bitArrayOfInput, bitArrayOfInputPart);
                 }
@@ -186,7 +187,7 @@ namespace BatchLoader.Services
         /// <returns></returns>
         public static byte[] ConvertBasesInputToEncodedBytes(string input, out List<string> byProductsBySkipChars)
         {
-            Dictionary<string, BitArray> encodingDomain;
+            BidirectionalDictionary<string, BitArray> encodingDomain;
             if (encoders.TryGetValue(EncoderDomainNames.Bases, out encodingDomain))
             {
                 byProductsBySkipChars = new List<string> { "", "", "", ""};
@@ -204,7 +205,7 @@ namespace BatchLoader.Services
             }
         }
 
-        private static BitArray DetermineBitArrayOfBasesInput(string input, Dictionary<string, BitArray> encodingDomain,
+        private static BitArray DetermineBitArrayOfBasesInput(string input, BidirectionalDictionary<string, BitArray> encodingDomain,
             List<string> byProductsBySkipChars)
         {
             BitArray bitArrayOfInput = new BitArray(0);
@@ -238,10 +239,10 @@ namespace BatchLoader.Services
             return bitArrayOfInput;
         }
 
-        private static BitArray UpdateBitArray(Dictionary<string, BitArray> encodingDomain, BitArray bitArrayOfInput, InputIndeces inputIndeces, string inputPart)
+        private static BitArray UpdateBitArray(BidirectionalDictionary<string, BitArray> encodingDomain, BitArray bitArrayOfInput, InputIndeces inputIndeces, string inputPart)
         {
             BitArray bitArrayOfInputPart;
-            if (encodingDomain.TryGetValue(inputPart, out bitArrayOfInputPart))
+            if (encodingDomain.Forward.TryGetValue(inputPart, out bitArrayOfInputPart))
             {
                 bitArrayOfInput = AppendBitArray(bitArrayOfInput, bitArrayOfInputPart);
                 inputIndeces.InputCharIndex++;
@@ -325,9 +326,9 @@ namespace BatchLoader.Services
             inputIndeces.InputCharIndex += extraNucleotidesLength + 1;
         }
 
-        private static Dictionary<string, BitArray> InitializeRefNucEncoder()
+        private static BidirectionalDictionary<string, BitArray> InitializeRefNucEncoder()
         {
-            var refNuc = new Dictionary<string, BitArray>();
+            var refNuc = new BidirectionalDictionary<string, BitArray>();
             refNuc.Add("A", EncodeZeroOneStringToBitArrays(EncodingResource.refNuc_A));
             refNuc.Add("C", EncodeZeroOneStringToBitArrays(EncodingResource.refNuc_C));
             refNuc.Add("G", EncodeZeroOneStringToBitArrays(EncodingResource.refNuc_G));
@@ -335,9 +336,9 @@ namespace BatchLoader.Services
             return refNuc;
         }
 
-        private static Dictionary<string, BitArray> InitializeBasesEncoder()
+        private static BidirectionalDictionary<string, BitArray> InitializeBasesEncoder()
         {
-            var bases = new Dictionary<string, BitArray>();
+            var bases = new BidirectionalDictionary<string, BitArray>();
             bases.Add(".", EncodeZeroOneStringToBitArrays(EncodingResource.bases_Dot));
             bases.Add(",", EncodeZeroOneStringToBitArrays(EncodingResource.bases_Comma));
             bases.Add("A", EncodeZeroOneStringToBitArrays(EncodingResource.bases_CapitalA));
@@ -354,9 +355,9 @@ namespace BatchLoader.Services
             return bases;
         }
 
-        private static Dictionary<string, BitArray> InitializeBasesQualEncoder()
+        private static BidirectionalDictionary<string, BitArray> InitializeBasesQualEncoder()
         {
-            var basesQual = new Dictionary<string, BitArray>();
+            var basesQual = new BidirectionalDictionary<string, BitArray>();
             for (int intReprOfChar = 33 /*'!'*/; intReprOfChar <= 126 /*'~'*/; intReprOfChar++)
             {
                 char ch = (char)intReprOfChar;
@@ -391,6 +392,88 @@ namespace BatchLoader.Services
             }
 
             return new string(bits);
+        }
+
+        public static string DecodeInputFile(string fileName, EncoderDomainNames encodingDomainName)
+        {
+            string result;
+            using (BinaryReader binReader = new BinaryReader(File.Open(fileName, FileMode.Open)))
+            {
+                // Suppose the stream cannot be longer than 4294967295 in bytes (the limit is approx. 4 Gigabyte).
+                int length = (int)binReader.BaseStream.Length;
+                byte[] bytesFromInputFile = binReader.ReadBytes(length);
+                Array.Reverse(bytesFromInputFile);
+                BitArray bitArray = new BitArray(bytesFromInputFile);
+                int encoderBitStringLength;
+                if (encoderBitStringLengths.TryGetValue(encodingDomainName, out encoderBitStringLength))
+                {
+                    var bitArrayCount = bitArray.Count;
+                    var bools = new bool[bitArrayCount];
+                    bitArray.CopyTo(bools, 0);
+                    int remainder = bitArrayCount % encoderBitStringLength;
+                    int firstOneIndex = remainder;
+                    while (!bools[firstOneIndex])
+                    {
+                        firstOneIndex++;
+                    }
+                    // floor((F-R)/E)*E+R:
+                    result = DecodeInputBools(bools, encodingDomainName, encoderBitStringLength, bitArrayCount, remainder, firstOneIndex);
+                }
+                else
+                {
+                    throw new ArgumentException("The encoders does not contain the encodingDomain!");
+                }
+            }
+            return result;
+        }
+
+        private static string DecodeInputBools(bool[] bools, EncoderDomainNames encodingDomainName, int encoderBitStringLength, 
+            int bitArrayCount, int remainder, int firstOneIndex)
+        {
+            string result = "";
+            int indexFromProperStartingPos = ((firstOneIndex - remainder) / encoderBitStringLength) *
+                encoderBitStringLength + remainder;
+            bool[] boolsOfEncodedSign = new bool[encoderBitStringLength];
+            int indexOfBoolsOfEncodedSign = 0;
+            for (; indexFromProperStartingPos < bitArrayCount; indexFromProperStartingPos++)
+            {
+                if (((indexOfBoolsOfEncodedSign % encoderBitStringLength) == 0) && (indexOfBoolsOfEncodedSign != 0))
+                {
+                    DecodeUnitOfInputBools(encodingDomainName, encoderBitStringLength, ref result, 
+                        ref boolsOfEncodedSign, ref indexOfBoolsOfEncodedSign);
+                }
+                else
+                {
+                    boolsOfEncodedSign[indexOfBoolsOfEncodedSign] = bools[indexFromProperStartingPos];
+                    indexOfBoolsOfEncodedSign++;
+                }
+            }
+            return result;
+        }
+
+        private static void DecodeUnitOfInputBools(EncoderDomainNames encodingDomainName, int encoderBitStringLength, 
+            ref string result, ref bool[] boolsOfEncodedSign, ref int indexOfBoolsOfEncodedSign)
+        {
+            var bitArrayOfEncodedSign = new BitArray(boolsOfEncodedSign);
+            BidirectionalDictionary<string, BitArray> encodingDomain;
+            if (encoders.TryGetValue(encodingDomainName, out encodingDomain))
+            {
+                string decodedSign;
+                if (encodingDomain.Reverse.TryGetValue(bitArrayOfEncodedSign, out decodedSign))
+                {
+                    result += decodedSign;
+                }
+                else
+                {
+                    throw new ArgumentException("The encodingDomain does not contain the unit of input bools!");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("The encoders does not contain the encodingDomain!");
+            }
+            indexOfBoolsOfEncodedSign = 0;
+            boolsOfEncodedSign = new bool[encoderBitStringLength];
         }
     }
 }
