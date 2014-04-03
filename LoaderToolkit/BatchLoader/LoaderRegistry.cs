@@ -16,18 +16,18 @@ namespace BatchLoader
     {
         public LoaderRegistry()
         {
-            For(typeof(FileUtils<>)).Use(typeof(FileUtils<>));
-            For(typeof(SqlUtils<>)).Use(typeof(SqlUtils<>));
+            For(typeof(FileUtils<string>)).Use(typeof(FileUtils<string>));
+            For(typeof(SqlUtils<string>)).Use(typeof(SqlUtils<string>));
 
             // The following selector will be used with prefix (which is the associated source file name):
-            For(typeof(ISelector<>)).Use(typeof(DefaultSelector));
+            For(typeof(ISelector<string>)).Use(typeof(DefaultSelector));
             // The following setting for JSON parsing:
             //For(typeof(ISelector<>)).Use(typeof(JsonSelector));
 
-            For(typeof(BaseStreamReaderForLoader<>)).Use(typeof(StreamReaderForLoaderWithPrefix));
-            For(typeof(BaseBulkInsertFileCreator<>)).Use(typeof(DefaultBulkInsertFileCreator));
+            For(typeof(BaseStreamReaderForLoader<string>)).Use(typeof(StreamReaderForLoaderWithPrefix));
+            For(typeof(BaseBulkInsertFileCreator<string>)).Use(typeof(DefaultBulkInsertFileCreator));
 
-            For(typeof(Mapper<>)).Add(typeof(Mappers.BinaryEncodedPileup));
+            For(typeof(Mapper<string>)).Add(typeof(Mappers.BinaryEncodedPileup));
 
             // The following list of mappers/mergers are examples only (for tweeter) but the real mappers/mergers should be enumerated here:
             //For(typeof(Mapper<>)).Add(typeof(Mappers.Tweet));
@@ -37,7 +37,7 @@ namespace BatchLoader
             //For<Merger>().Add<Mergers.TweetRetweet>();
             //For<Merger>().Add<Mergers.User>();
 
-            For(typeof(ChunkService<>)).Add(typeof(ChunkService<>)).Named("WithAutoWiring");
+            For(typeof(ChunkService<string>)).Add(typeof(ChunkService<string>)).Named("WithAutoWiring");
 
             // If the all mappers/mergers are not necessary the explicit mappers/mergers can be defined in the following manner:
             //For(typeof(ChunkService<>)).Add(typeof(ChunkService<>)).Named("ExplicitMappersAndMergers")
