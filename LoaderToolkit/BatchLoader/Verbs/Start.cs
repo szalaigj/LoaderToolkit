@@ -22,8 +22,7 @@ namespace BatchLoader.Verbs
 
         private Batch batch;
 
-        // TODO: replace Dictionary<string, object> with the proper type:
-        private ChunkService<Dictionary<string, object>> chunkService;
+        private ChunkService<string> chunkService;
 
         [Parameter(Name = "BatchID", Description = "Batch ID to start.", Required = true)]
         public int BatchID
@@ -72,8 +71,7 @@ namespace BatchLoader.Verbs
             this.threads = Environment.ProcessorCount;
             this.skip = false;
             this.keepFiles = false;
-            //TODO: replace Dictionary<string, object> with the proper type:
-            this.chunkService = ObjectFactory.GetNamedInstance<ChunkService<Dictionary<string, object>>>("WithAutoWiring");
+            this.chunkService = ObjectFactory.GetNamedInstance<ChunkService<string>>("WithAutoWiring");
         }
 
         public override void Run()

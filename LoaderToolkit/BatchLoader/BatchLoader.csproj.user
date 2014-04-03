@@ -4,6 +4,6 @@
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>Create -RunID 1 -Source C:\Project\ExampleRun\%2a.pup -FileSuffix .csucsok -BulkPath C:\Project\ExampleBulkFile -EnableIntegratedSecurity -Binary</StartArguments>
+    <StartArguments>Start -BatchID 1 -Keep</StartArguments>
   </PropertyGroup>
 </Project>

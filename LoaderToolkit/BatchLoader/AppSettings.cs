@@ -10,7 +10,7 @@ namespace BatchLoader
     {
         public static string AdminConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["szalaigj"].ConnectionString; }
+            get { return ConfigurationManager.ConnectionStrings["BatchLoader.Admin"].ConnectionString; }
         }
     }
 }

@@ -246,6 +246,14 @@ namespace LoaderLibrary.Load {
                 return ResourceManager.GetString("create_user", resourceCulture);
             }
         }
+
+        public static string create_pileups
+        {
+            get
+            {
+                return ResourceManager.GetString("create_pileups", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to IF OBJECT_ID (N&apos;[$dbname].dbo.[$tablename]&apos;, N&apos;U&apos;) IS NOT NULL 

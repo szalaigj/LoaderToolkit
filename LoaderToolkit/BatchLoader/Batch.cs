@@ -82,8 +82,8 @@ namespace BatchLoader
         {
             this.batchID = 0;
             this.runID = 0;
-            this.targetDB = new SqlConnectionStringBuilder("Data Source=localhost;Initial Catalog=Twitter;Integrated Security=true");
-            this.loaderDB = new SqlConnectionStringBuilder("Data Source=localhost;Initial Catalog=TwitterLoader;Integrated Security=true");
+            this.targetDB = new SqlConnectionStringBuilder("Data Source=localhost;Initial Catalog=szalaigj;Integrated Security=true");
+            this.loaderDB = new SqlConnectionStringBuilder("Data Source=localhost;Initial Catalog=szalaigj;Integrated Security=true");
             this.sourcePath = null;
             this.fileSuffix = null;
             this.bulkPath = null;
@@ -178,6 +178,7 @@ WHERE batch_id = @batch_id";
             targetDB.ConnectionString = dr.GetString(++o);
             loaderDB.ConnectionString = dr.GetString(++o);
             sourcePath = dr.GetString(++o);
+            fileSuffix = dr.GetString(++o);
             bulkPath = dr.GetString(++o);
             binary = dr.GetBoolean(++o);
         }
