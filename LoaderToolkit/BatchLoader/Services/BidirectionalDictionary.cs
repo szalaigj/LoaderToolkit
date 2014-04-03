@@ -15,11 +15,21 @@ namespace BatchLoader.Services
     /// <typeparam name="T2"></typeparam>
     public class BidirectionalDictionary<T1,T2>
     {
-        private Dictionary<T1, T2> _forward = new Dictionary<T1, T2>();
-        private Dictionary<T2, T1> _reverse = new Dictionary<T2, T1>();
+        private Dictionary<T1, T2> _forward;
+        private Dictionary<T2, T1> _reverse;
 
         public BidirectionalDictionary()
         {
+            this._forward = new Dictionary<T1, T2>();
+            this._reverse = new Dictionary<T2, T1>();
+            this.Forward = new Indexer<T1, T2>(_forward);
+            this.Reverse = new Indexer<T2, T1>(_reverse);
+        }
+
+        public BidirectionalDictionary(IEqualityComparer<T2> equalityComparer)
+        {
+            this._forward = new Dictionary<T1, T2>();
+            this._reverse = new Dictionary<T2, T1>(equalityComparer);
             this.Forward = new Indexer<T1, T2>(_forward);
             this.Reverse = new Indexer<T2, T1>(_reverse);
         }

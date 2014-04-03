@@ -63,6 +63,7 @@
     <Compile Include="QueuedTaskScheduler.cs" />
     <Compile Include="Services\BidirectionalDictionary.cs" />
     <Compile Include="Services\BinaryEncodingUtil.cs" />
+    <Compile Include="Services\BitArrayEqualityComparer.cs" />
     <Compile Include="Services\EncodingResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

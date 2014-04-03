@@ -131,9 +131,6 @@ namespace BatchLoader.Services
                 BitArray bitArrayOfInput = DetermineBitArrayOfInput(input, encodingDomain);
                 byte[] encodedBytes = new byte[bitArrayOfInput.Length > 0 ? ((bitArrayOfInput.Length - 1) / 8) + 1 : 0];
                 bitArrayOfInput.CopyTo(encodedBytes, 0);
-                // The following is important because the BitArray will reverse the natural representation of bytes.
-                // E.g.: 11 00011011 => {27, 3} (of a byte array) and not {3, 27} as it might be expected.
-                Array.Reverse(encodedBytes);
                 return encodedBytes;
             }
             else
@@ -161,20 +158,11 @@ namespace BatchLoader.Services
             return bitArrayOfInput;
         }
 
-        /// <summary>
-        /// The implementation of this method is 'prepend' in fact.
-        /// However, this implementation provides the proper representation of the resulting bit array.
-        /// It is because the BitArray will reverse the natural representation of bits.
-        /// E.g.: new BitArray(new bool[] {false, false, false, true}) -> 1000 when the content of bit array is copied to byte arrays.
-        /// </summary>
-        /// <param name="original"></param>
-        /// <param name="appended"></param>
-        /// <returns></returns>
         public static BitArray AppendBitArray(BitArray original, BitArray appended)
         {
             var bools = new bool[original.Count + appended.Count];
-            appended.CopyTo(bools, 0);
-            original.CopyTo(bools, appended.Count);
+            original.CopyTo(bools, 0);
+            appended.CopyTo(bools, original.Count);
             return new BitArray(bools);
         }
 
@@ -194,9 +182,6 @@ namespace BatchLoader.Services
                 BitArray bitArrayOfInput = DetermineBitArrayOfBasesInput(input, encodingDomain, byProductsBySkipChars);
                 byte[] encodedBytes = new byte[bitArrayOfInput.Length > 0 ? ((bitArrayOfInput.Length - 1) / 8) + 1 : 0];
                 bitArrayOfInput.CopyTo(encodedBytes, 0);
-                // The following is important because the BitArray will reverse the natural representation of bytes.
-                // E.g.: 11 00011011 => {27, 3} (of a byte array) and not {3, 27} as it might be expected.
-                Array.Reverse(encodedBytes);
                 return encodedBytes;
             }
             else
@@ -328,7 +313,7 @@ namespace BatchLoader.Services
 
         private static BidirectionalDictionary<string, BitArray> InitializeRefNucEncoder()
         {
-            var refNuc = new BidirectionalDictionary<string, BitArray>();
+            var refNuc = new BidirectionalDictionary<string, BitArray>(new BitArrayEqualityComparer());
             refNuc.Add("A", EncodeZeroOneStringToBitArrays(EncodingResource.refNuc_A));
             refNuc.Add("C", EncodeZeroOneStringToBitArrays(EncodingResource.refNuc_C));
             refNuc.Add("G", EncodeZeroOneStringToBitArrays(EncodingResource.refNuc_G));
@@ -338,7 +323,7 @@ namespace BatchLoader.Services
 
         private static BidirectionalDictionary<string, BitArray> InitializeBasesEncoder()
         {
-            var bases = new BidirectionalDictionary<string, BitArray>();
+            var bases = new BidirectionalDictionary<string, BitArray>(new BitArrayEqualityComparer());
             bases.Add(".", EncodeZeroOneStringToBitArrays(EncodingResource.bases_Dot));
             bases.Add(",", EncodeZeroOneStringToBitArrays(EncodingResource.bases_Comma));
             bases.Add("A", EncodeZeroOneStringToBitArrays(EncodingResource.bases_CapitalA));
@@ -357,7 +342,7 @@ namespace BatchLoader.Services
 
         private static BidirectionalDictionary<string, BitArray> InitializeBasesQualEncoder()
         {
-            var basesQual = new BidirectionalDictionary<string, BitArray>();
+            var basesQual = new BidirectionalDictionary<string, BitArray>(new BitArrayEqualityComparer());
             for (int intReprOfChar = 33 /*'!'*/; intReprOfChar <= 126 /*'~'*/; intReprOfChar++)
             {
                 char ch = (char)intReprOfChar;
@@ -402,22 +387,11 @@ namespace BatchLoader.Services
                 // Suppose the stream cannot be longer than 4294967295 in bytes (the limit is approx. 4 Gigabyte).
                 int length = (int)binReader.BaseStream.Length;
                 byte[] bytesFromInputFile = binReader.ReadBytes(length);
-                Array.Reverse(bytesFromInputFile);
                 BitArray bitArray = new BitArray(bytesFromInputFile);
                 int encoderBitStringLength;
                 if (encoderBitStringLengths.TryGetValue(encodingDomainName, out encoderBitStringLength))
                 {
-                    var bitArrayCount = bitArray.Count;
-                    var bools = new bool[bitArrayCount];
-                    bitArray.CopyTo(bools, 0);
-                    int remainder = bitArrayCount % encoderBitStringLength;
-                    int firstOneIndex = remainder;
-                    while (!bools[firstOneIndex])
-                    {
-                        firstOneIndex++;
-                    }
-                    // floor((F-R)/E)*E+R:
-                    result = DecodeInputBools(bools, encodingDomainName, encoderBitStringLength, bitArrayCount, remainder, firstOneIndex);
+                    result = DecodeInputBits(encodingDomainName, bitArray, encoderBitStringLength);
                 }
                 else
                 {
@@ -427,32 +401,45 @@ namespace BatchLoader.Services
             return result;
         }
 
-        private static string DecodeInputBools(bool[] bools, EncoderDomainNames encodingDomainName, int encoderBitStringLength, 
-            int bitArrayCount, int remainder, int firstOneIndex)
+        private static string DecodeInputBits(EncoderDomainNames encodingDomainName, BitArray bitArray, 
+            int encoderBitStringLength)
         {
             string result = "";
-            int indexFromProperStartingPos = ((firstOneIndex - remainder) / encoderBitStringLength) *
-                encoderBitStringLength + remainder;
+            var bitArrayCount = bitArray.Count;
+            var bools = new bool[bitArrayCount];
+            bitArray.CopyTo(bools, 0);
             bool[] boolsOfEncodedSign = new bool[encoderBitStringLength];
             int indexOfBoolsOfEncodedSign = 0;
-            for (; indexFromProperStartingPos < bitArrayCount; indexFromProperStartingPos++)
+            int falseCounter = 0;
+            for (int index = 0; index < bitArrayCount; index++)
             {
-                if (((indexOfBoolsOfEncodedSign % encoderBitStringLength) == 0) && (indexOfBoolsOfEncodedSign != 0))
+                bool actualValue = bools[index];
+                boolsOfEncodedSign[indexOfBoolsOfEncodedSign] = actualValue;
+                indexOfBoolsOfEncodedSign++;
+                if (!actualValue)
                 {
-                    DecodeUnitOfInputBools(encodingDomainName, encoderBitStringLength, ref result, 
-                        ref boolsOfEncodedSign, ref indexOfBoolsOfEncodedSign);
+                    falseCounter++;
                 }
                 else
                 {
-                    boolsOfEncodedSign[indexOfBoolsOfEncodedSign] = bools[indexFromProperStartingPos];
-                    indexOfBoolsOfEncodedSign++;
+                    falseCounter = 0;
+                }
+                if ((indexOfBoolsOfEncodedSign % encoderBitStringLength) == 0)
+                {
+                    if (falseCounter == encoderBitStringLength)
+                    {
+                        // If there are as many 'false's of BitArray as encoderBitStringLength then these are only the trailing zeros.
+                        break;
+                    }
+                    result = DecodeUnitOfInputBits(encodingDomainName, encoderBitStringLength, result,
+                        ref boolsOfEncodedSign, ref indexOfBoolsOfEncodedSign, ref falseCounter);
                 }
             }
             return result;
         }
 
-        private static void DecodeUnitOfInputBools(EncoderDomainNames encodingDomainName, int encoderBitStringLength, 
-            ref string result, ref bool[] boolsOfEncodedSign, ref int indexOfBoolsOfEncodedSign)
+        private static string DecodeUnitOfInputBits(EncoderDomainNames encodingDomainName, int encoderBitStringLength, 
+            string result, ref bool[] boolsOfEncodedSign, ref int indexOfBoolsOfEncodedSign, ref int falseCounter)
         {
             var bitArrayOfEncodedSign = new BitArray(boolsOfEncodedSign);
             BidirectionalDictionary<string, BitArray> encodingDomain;
@@ -474,6 +461,8 @@ namespace BatchLoader.Services
             }
             indexOfBoolsOfEncodedSign = 0;
             boolsOfEncodedSign = new bool[encoderBitStringLength];
+            falseCounter = 0;
+            return result;
         }
     }
 }

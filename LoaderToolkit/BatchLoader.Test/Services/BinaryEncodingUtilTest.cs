@@ -17,8 +17,13 @@ namespace BatchLoader.Test.Services
             var input = "AC";
             var encodingDomainName = EncoderDomainNames.RefNuc;
             // "A" -> 001, "C" -> 010
-            // "AC" -> 001010 => 10 (in decimal numeral system representation)
-            byte [] expected = new byte[] {10};
+            // But the BitArray  will reverse the natural representation of bits.
+            // E.g.: new BitArray(new bool[] {true, false, false, false, true, false}) -> 010001 when the content of bit array is 
+            // copied to byte arrays. And the following method ConvertInputToEncodedBytes appends 
+            // bool values (!) of BitArray of next character for the previous ones.
+            // "A" -> {true, false, false}, "C" -> {false, true, false}; "A" append "C" -> {true, false, false, false, true, false}
+            // So "AC" -> 010 001 => 17 (in decimal numeral system representation)
+            byte[] expected = new byte[] { 17 };
 
             // When
             byte [] result = BinaryEncodingUtil.ConvertInputToEncodedBytes(input, encodingDomainName);
@@ -34,9 +39,11 @@ namespace BatchLoader.Test.Services
             var input = "TACGT";
             var encodingDomainName = EncoderDomainNames.RefNuc;
             // "A" -> 001, "C" -> 010, "G" -> 011, "T" -> 100
-            // "TACGT" -> 100001010011100 => 17052 (in decimal numeral system representation)
-            // but in the bytes representation: it means two bytes 1000010 (66) 10011100 (156)
-            byte[] expected = new byte[] { 66, 156 };
+            // See the explanation of the following in comment of method ConvertInputToEncodedBytesTest1.
+            // "TACGT" ->100 011 010 001 100 => 18060 (in decimal numeral system representation)
+            // but in the bytes representation: it means two bytes 1000110 (70) 10001100 (140)
+            // And these are reversed by BitArray for the following form:
+            byte[] expected = new byte[] { 140, 70 };
 
             // When
             byte[] result = BinaryEncodingUtil.ConvertInputToEncodedBytes(input, encodingDomainName);
@@ -51,10 +58,12 @@ namespace BatchLoader.Test.Services
             // Given
             var input = ".$,^+,+3ATCA";
             List<string> byProductsBySkipChars;
-            // the input without by-product: .,,A -> 00001|00010|00010|00011
-            // its 'byte-style' arrangement:          0000|10001000|01000011
-            // so the expected bytes:                 (0)    (136)    (67)
-            byte[] expectedResult = new byte[] { 0, 136, 67 };
+            // the input without by-product: .,,A -> 00011|00010|00010|00001
+            //                                        (A)   (,)   (,)   (.)
+            // its 'byte-style' arrangement:          0001|10001000|01000001
+            // so the expected bytes:                 (1)    (136)    (65)
+            // and these are reversed by BitArray for the following form:
+            byte[] expectedResult = new byte[] { 65, 136, 1};
             List<string> expectedByProduct = new List<string> { "2ATC\t", "2\t", "+\t", "0\t" };
 
             // When
@@ -88,6 +97,7 @@ namespace BatchLoader.Test.Services
         {
             // Given
             string basesForEncoding = ".$,^+,+3ATCA";
+            string expectedResult = ".,,A";
             var encodingDomainName = EncoderDomainNames.Bases;
             List<string> byProductsBySkipChars;
             byte[] basesInEncodedBytes = BinaryEncodingUtil.ConvertBasesInputToEncodedBytes(basesForEncoding, out byProductsBySkipChars);
@@ -99,7 +109,7 @@ namespace BatchLoader.Test.Services
             var result = BinaryEncodingUtil.DecodeInputFile(filename, encodingDomainName);
 
             // Then
-            Assert.AreEqual(basesForEncoding, result);
+            Assert.AreEqual(expectedResult, result);
         }
 
         private void WriteEncodedBytesToFile(string filename, byte[] basesInEncodedBytes)
