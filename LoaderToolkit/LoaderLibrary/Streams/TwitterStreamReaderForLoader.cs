@@ -13,6 +13,8 @@ namespace LoaderLibrary.Streams
         public TwitterStreamReaderForLoader(ISelector<Dictionary<string, object>> selector)
             : base(selector)
         {
+            // Twitter uses \r to delimit status messages
+            this.lineDelimiterChar = "\r";
         }
     }
 }

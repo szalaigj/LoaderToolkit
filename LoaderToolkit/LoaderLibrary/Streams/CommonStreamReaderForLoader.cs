@@ -25,6 +25,13 @@ namespace LoaderLibrary.Streams
         private int charPos;
         private int charLen;
 
+        protected string lineDelimiterChar;
+
+        public override string LineDelimiterChar
+        {
+            get { return lineDelimiterChar; }
+        }
+
         public CommonStreamReaderForLoader(ISelector<T> selector)
             : base (selector)
         {
@@ -49,6 +56,9 @@ namespace LoaderLibrary.Streams
             this.charBuffer = new char[encoding.GetMaxCharCount(byteBuffer.Length)];
             this.charPos = 0;
             this.charLen = 0;
+            
+            // The default new line character is UNIX-style: 
+            this.lineDelimiterChar = "\n";
         }
 
         public override void InitializeInputStream(string path, bool overlapped, bool compressed)
@@ -119,26 +129,24 @@ namespace LoaderLibrary.Streams
                 {
                     char ch = this.charBuffer[pos];
 
-                    // Twitter uses \r to delimit status messages
                     // If a newline is reached, return it
-                    switch (ch)
+                    if (LineDelimiterChar.Equals(ch.ToString()))
                     {
-                        case '\r':
-                            string str;
+                        string str;
 
-                            if (builder != null)
-                            {
-                                builder.Append(charBuffer, charPos, pos - charPos);
-                                str = builder.ToString();
-                            }
-                            else
-                            {
-                                str = new string(charBuffer, charPos, pos - charPos);
-                            }
+                        if (builder != null)
+                        {
+                            builder.Append(charBuffer, charPos, pos - charPos);
+                            str = builder.ToString();
+                        }
+                        else
+                        {
+                            str = new string(charBuffer, charPos, pos - charPos);
+                        }
 
-                            // Update buffer position
-                            charPos = pos + 1;
-                            return str;
+                        // Update buffer position
+                        charPos = pos + 1;
+                        return str;
                     }
                     pos++;
                 }

@@ -30,6 +30,12 @@ namespace LoaderLibrary.Streams
             Close();
         }
 
+        // Its type is string because there is "\r\n" for Windows-style line end
+        public abstract string LineDelimiterChar
+        {
+            get;
+        }
+
         public string Current
         {
             get { return current; }
