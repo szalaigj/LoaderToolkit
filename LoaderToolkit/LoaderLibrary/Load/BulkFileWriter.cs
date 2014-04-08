@@ -6,6 +6,14 @@ using System.IO;
 
 namespace LoaderLibrary.Load
 {
+    /// <summary>
+    /// This class is responsible for the creation of bulk insert files in proper format (binary or non-binary).
+    /// Important note: use the 'nullable' method for a column writing only if the target column has NULL keyword
+    /// (target column: where the content of bulk insert file will be inserted) and vice versa for NOT NULL.
+    /// E.g.: the method WriteInt should be used for column [c] [int] NOT NULL and not WriteNullableInt.
+    /// This principle of usage is very important because if the usage is improper then misleading error message
+    /// emerges during bulk inserting: e.g. the error message indicates another column as bad.
+    /// </summary>
     public class BulkFileWriter
     {
         private TextWriter outputWriter;
@@ -108,12 +116,12 @@ namespace LoaderLibrary.Load
                 WriteFieldEnd();
                 byte[] outputBytes = DetermineOutputBytes(bytes, length);
                 foreach (byte outputByte in outputBytes)
-                { 
-                    row.Append(outputByte); 
+                {
+                    row.Append(outputByte);
                 }
             }
         }
-
+        
         private byte[] DetermineOutputBytes(byte[] bytes, int length)
         {
             byte[] result = Enumerable.Repeat((byte)0, length).ToArray();
@@ -145,7 +153,6 @@ namespace LoaderLibrary.Load
                 if (binary)
                 {
                     outputBinary.Write((ushort)0xFFFF);
-                    //outputBinary.Write((Int16)(-1));
                 }
                 else
                 {
@@ -165,7 +172,6 @@ namespace LoaderLibrary.Load
                 if (bytes == null)
                 {
                     outputBinary.Write((ushort)0xFFFF);
-                    //outputBinary.Write((Int16)(-1));
                 }
                 else
                 {

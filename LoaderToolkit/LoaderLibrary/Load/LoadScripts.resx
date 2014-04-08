@@ -200,6 +200,9 @@
     <value>..\..\..\sql\drop_table.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
   <data name="create_pileups" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\create_pileups.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+    <value>..\..\..\sql\create_pileups.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="index_pileups" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\index_pileups.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
 </root>

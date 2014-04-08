@@ -52,6 +52,21 @@ namespace BatchLoader.Test.Services
             CollectionAssert.AreEqual(expected, result);
         }
 
+        [TestMethod, Description("This method should work properly when normal input (with large length) and existing encodingDomainName basesQual are given.")]
+        public void ConvertBasesQualInputToEncodedBytesTest1()
+        {
+            // Given
+            var input = "Z__";
+            var encodingDomainName = EncoderDomainNames.BasesQual;
+            byte[] expected = new byte[] { 186, 223, 15 };
+
+            // When
+            byte[] result = BinaryEncodingUtil.ConvertInputToEncodedBytes(input, encodingDomainName);
+
+            // Then
+            CollectionAssert.AreEqual(expected, result);
+        }
+
         [TestMethod, Description("This method should work properly when normal input is given.")]
         public void ConvertBasesInputToEncodedBytesTest1()
         {

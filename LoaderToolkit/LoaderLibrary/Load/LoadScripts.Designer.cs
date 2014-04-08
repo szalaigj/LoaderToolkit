@@ -394,6 +394,14 @@ namespace LoaderLibrary.Load {
                 return ResourceManager.GetString("index_user", resourceCulture);
             }
         }
+
+        public static string index_pileups
+        {
+            get
+            {
+                return ResourceManager.GetString("index_pileups", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to -- Merge tweets

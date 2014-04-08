@@ -12,8 +12,8 @@ CREATE TABLE [dbo].[run](
 CREATE TABLE [dbo].[pileups](
 	[run_id] [smallint] NOT NULL,
 	[sampleGroup] [varchar](8) NOT NULL,
-	[sampleID] [int] NULL,
-	[lane] [char] NULL,
+	[sampleID] [int] NOT NULL,
+	[lane] [char] NOT NULL,
 	[refSeqID] [varchar](50) NOT NULL,
 	[refSeqPos] [bigint] NOT NULL,
 	[refNuc] [binary](1) NOT NULL,
