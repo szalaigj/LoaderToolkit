@@ -58,7 +58,6 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="UserDefinedFunctions" />
-    <Folder Include="Utils" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -67,6 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UserDefinedFunctions\RefNucColumnDecoder.cs" />
-    <Compile Include="Utils\BitArrayEqualityComparer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BinaryCodec\BinaryCodec.csproj">
+      <Name>BinaryCodec</Name>
+      <Project>{8211cd1f-271d-4c58-82b7-25f1fa1832ed}</Project>
+      <Private>True</Private>
+      <IsModelAware>True</IsModelAware>
+      <GenerateSqlClrDdl>True</GenerateSqlClrDdl>
+    </ProjectReference>
   </ItemGroup>
 </Project>
