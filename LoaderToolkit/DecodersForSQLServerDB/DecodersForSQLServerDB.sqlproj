@@ -68,6 +68,7 @@
     <Compile Include="UserDefinedFunctions\RefNucColumnDecoder.cs" />
     <Compile Include="UserDefinedFunctions\BasesColumnDecoder.cs" />
     <Compile Include="UserDefinedFunctions\BasesQualColumnDecoder.cs" />
+    <Compile Include="UserDefinedFunctions\DetermineCompressionRate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BinaryCodec\BinaryCodec.csproj">
