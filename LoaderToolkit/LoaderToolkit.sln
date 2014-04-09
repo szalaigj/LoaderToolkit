@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchLoader.Test", "BatchLo
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DecodersForSQLServerDB", "DecodersForSQLServerDB\DecodersForSQLServerDB.sqlproj", "{D218421A-E365-4773-BBC9-84BB83A8B2BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryCodec", "BinaryCodec\BinaryCodec.csproj", "{8211CD1F-271D-4C58-82B7-25F1FA1832ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryCodec.Test", "BinaryCodec.Test\BinaryCodec.Test.csproj", "{5E69932C-C8C6-4137-94D4-2AAF34A02950}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,14 @@ Global
 		{D218421A-E365-4773-BBC9-84BB83A8B2BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D218421A-E365-4773-BBC9-84BB83A8B2BD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D218421A-E365-4773-BBC9-84BB83A8B2BD}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8211CD1F-271D-4C58-82B7-25F1FA1832ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8211CD1F-271D-4C58-82B7-25F1FA1832ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8211CD1F-271D-4C58-82B7-25F1FA1832ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8211CD1F-271D-4C58-82B7-25F1FA1832ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E69932C-C8C6-4137-94D4-2AAF34A02950}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E69932C-C8C6-4137-94D4-2AAF34A02950}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E69932C-C8C6-4137-94D4-2AAF34A02950}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E69932C-C8C6-4137-94D4-2AAF34A02950}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -51,7 +51,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Mappers\BinaryEncodedPileupTest.cs" />
-    <Compile Include="Services\BinaryEncodingUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

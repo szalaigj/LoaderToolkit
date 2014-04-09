@@ -1,4 +1,4 @@
-﻿using BatchLoader.Services;
+﻿using BinaryCodec;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +29,8 @@ namespace BatchLoader.Mappers
 
             var fourthToken = objParts[3];
             // [refNuc] [binary](1) NOT NULL
-            byte[] encodedRefNuc = BinaryEncodingUtil.ConvertInputToEncodedBytes(fourthToken, EncoderDomainNames.RefNuc);
+            byte[] encodedRefNuc = BinaryCodecUtil.ConvertInputToEncodedBytes(fourthToken, 
+                BinaryCodec.Constants.CodecDomainNames.RefNuc);
             BulkWriter.WriteBinary(encodedRefNuc, 1);
 
             var fifthToken = objParts[4];
@@ -39,14 +40,15 @@ namespace BatchLoader.Mappers
             var sixthToken = objParts[5];
             // [bases] [varbinary](8000) NOT NULL
             List<string> byProductsBySkipChars;
-            byte[] encodedBases = BinaryEncodingUtil.ConvertBasesInputToEncodedBytes(sixthToken, out byProductsBySkipChars);
+            byte[] encodedBases = BinaryCodecUtil.ConvertBasesInputToEncodedBytes(sixthToken, out byProductsBySkipChars);
             BulkWriter.WriteVarBinary(encodedBases, 8000);
 
             if (objParts.Length == 7)
             {
                 var seventhToken = objParts[6];
                 // [basesQual] [varbinary](8000) NULL
-                byte[] encodedBasesQual = BinaryEncodingUtil.ConvertInputToEncodedBytes(seventhToken, EncoderDomainNames.BasesQual);
+                byte[] encodedBasesQual = BinaryCodecUtil.ConvertInputToEncodedBytes(seventhToken, 
+                    BinaryCodec.Constants.CodecDomainNames.BasesQual);
                 BulkWriter.WriteVarBinary(encodedBasesQual, 8000);
             }
             else
