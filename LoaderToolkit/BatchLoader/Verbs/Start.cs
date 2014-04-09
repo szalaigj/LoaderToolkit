@@ -115,19 +115,19 @@ namespace BatchLoader.Verbs
 
                 // Merge
                 // This has to been done sequentially
-                //for (int i = 0; i < ccount; i++)
-                //{
-                //    Merge(chunks[cstart + i]);
-                //}
+                for (int i = 0; i < ccount; i++)
+                {
+                    Merge(chunks[cstart + i]);
+                }
 
                 // Cleanup
-                //for (int i = 0; i < ccount; i++)
-                //{
-                //    tasks[i] = new Task(Cleanup, chunks[cstart + i]);
-                //    tasks[i].Start(qts);
-                //}
+                for (int i = 0; i < ccount; i++)
+                {
+                    tasks[i] = new Task(Cleanup, chunks[cstart + i]);
+                    tasks[i].Start(qts);
+                }
 
-                //Task.WaitAll(tasks);
+                Task.WaitAll(tasks);
 
                 cstart += batchSize;
             }

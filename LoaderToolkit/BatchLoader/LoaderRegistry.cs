@@ -28,15 +28,8 @@ namespace BatchLoader
             For(typeof(BaseBulkInsertFileCreator<string>)).Use(typeof(DefaultBulkInsertFileCreator));
 
             For(typeof(Mapper<string>)).Add(typeof(Mappers.BinaryEncodedPileup));
-
-            // The following list of mappers/mergers are examples only (for tweeter) but the real mappers/mergers should be enumerated here:
-            //For(typeof(Mapper<>)).Add(typeof(Mappers.Tweet));
-            //For(typeof(Mapper<>)).Add(typeof(Mappers.TweetRetweet));
-            //For(typeof(Mapper<>)).Add(typeof(Mappers.User));
-            //For<Merger>().Add<Mergers.Tweet>();
-            //For<Merger>().Add<Mergers.TweetRetweet>();
-            //For<Merger>().Add<Mergers.User>();
-
+            For<Merger>().Add<Mergers.BinaryEncodedPileup>();
+            
             For(typeof(ChunkService<string>)).Add(typeof(ChunkService<string>)).Named("WithAutoWiring");
 
             // If the all mappers/mergers are not necessary the explicit mappers/mergers can be defined in the following manner:
