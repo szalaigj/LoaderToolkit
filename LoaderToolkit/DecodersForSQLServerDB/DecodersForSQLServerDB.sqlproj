@@ -66,6 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UserDefinedFunctions\RefNucColumnDecoder.cs" />
+    <Compile Include="UserDefinedFunctions\BasesColumnDecoder.cs" />
+    <Compile Include="UserDefinedFunctions\BasesQualColumnDecoder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BinaryCodec\BinaryCodec.csproj">
