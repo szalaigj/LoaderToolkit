@@ -148,6 +148,9 @@
   <data name="merge_user_update" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\merge_user_update.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
+  <data name="merge_pileups" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\merge_pileups.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
   <data name="create_delete_tweet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\create_delete_tweet.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>

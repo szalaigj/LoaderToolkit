@@ -592,5 +592,13 @@ namespace LoaderLibrary.Load {
                 return ResourceManager.GetString("merge_user_update", resourceCulture);
             }
         }
+
+        public static string merge_pileups
+        {
+            get
+            {
+                return ResourceManager.GetString("merge_pileups", resourceCulture);
+            }
+        }
     }
 }
