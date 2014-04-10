@@ -17,7 +17,7 @@ namespace LoaderLibrary.Services
         {
         }
 
-        protected BaseStreamReaderForLoader<string> InstantiateReader()
+        protected override BaseStreamReaderForLoader<string> InstantiateReader()
         {
             return ObjectFactory.GetInstance<StreamReaderForLoaderWithPrefix>();
         }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LoaderLibrary.Services
 {
-    public class BaseBulkInsertFileCreator<T>
+    public abstract class BaseBulkInsertFileCreator<T>
     {
         private List<Mapper<T>> mappings;
         private FileUtils<T> fileUtils;
