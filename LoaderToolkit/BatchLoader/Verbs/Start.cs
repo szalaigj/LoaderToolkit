@@ -21,9 +21,7 @@ namespace BatchLoader.Verbs
         private bool keepFiles;
 
         private Batch batch;
-
-        private ChunkService<string> chunkService;
-
+        
         [Parameter(Name = "BatchID", Description = "Batch ID to start.", Required = true)]
         public int BatchID
         {
@@ -71,7 +69,6 @@ namespace BatchLoader.Verbs
             this.threads = Environment.ProcessorCount;
             this.skip = false;
             this.keepFiles = false;
-            this.chunkService = ObjectFactory.GetNamedInstance<ChunkService<string>>("WithAutoWiring");
         }
 
         public override void Run()
@@ -161,7 +158,7 @@ namespace BatchLoader.Verbs
         private void PrepareAndLoad(object state)
         {
             var chunk = (Chunk)state;
-
+            var chunkService = ObjectFactory.GetNamedInstance<ChunkService<string>>("WithAutoWiring");
             chunk.PrepareStart = DateTime.Now;
             SaveChunk(chunk);
             chunkService.CreateFiles(chunk);
@@ -178,6 +175,7 @@ namespace BatchLoader.Verbs
         {
             chunk.MergeStart = DateTime.Now;
             SaveChunk(chunk);
+            var chunkService = ObjectFactory.GetNamedInstance<ChunkService<string>>("WithAutoWiring");
             chunkService.MergeTables(chunk);
             SaveChunk(chunk);
         }
@@ -185,6 +183,7 @@ namespace BatchLoader.Verbs
         private void Cleanup(object state)
         {
             var chunk = (Chunk)state;
+            var chunkService = ObjectFactory.GetNamedInstance<ChunkService<string>>("WithAutoWiring");
 
             chunk.CleanupStart = DateTime.Now;
             SaveChunk(chunk);
