@@ -24,7 +24,7 @@ namespace BatchLoader
             // The following setting for JSON parsing:
             //For(typeof(ISelector<>)).Use(typeof(JsonSelector));
 
-            For(typeof(BaseStreamReaderForLoader<string>)).Use(typeof(StreamReaderForLoaderWithPrefix));
+            For<StreamReaderForLoaderWithPrefix>().Use<StreamReaderForLoaderWithPrefix>();
             For(typeof(BaseBulkInsertFileCreator<string>)).Use(typeof(DefaultBulkInsertFileCreator));
 
             For(typeof(Mapper<string>)).Add(typeof(Mappers.BinaryEncodedPileup));

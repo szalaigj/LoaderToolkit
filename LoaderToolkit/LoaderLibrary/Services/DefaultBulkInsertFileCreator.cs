@@ -1,5 +1,6 @@
 ﻿using LoaderLibrary.Load;
 using LoaderLibrary.Streams;
+using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,10 +12,14 @@ namespace LoaderLibrary.Services
 {
     public class DefaultBulkInsertFileCreator : BaseBulkInsertFileCreator<string>
     {
-        public DefaultBulkInsertFileCreator(BaseStreamReaderForLoader<string> streamReaderForLoader,
-            FileUtils<string> fileUtils, List<Mapper<string>> mappings)
-            : base(streamReaderForLoader, fileUtils, mappings)
+        public DefaultBulkInsertFileCreator(FileUtils<string> fileUtils, List<Mapper<string>> mappings)
+            : base(fileUtils, mappings)
         {
+        }
+
+        protected BaseStreamReaderForLoader<string> InstantiateReader()
+        {
+            return ObjectFactory.GetInstance<StreamReaderForLoaderWithPrefix>();
         }
     }
 }

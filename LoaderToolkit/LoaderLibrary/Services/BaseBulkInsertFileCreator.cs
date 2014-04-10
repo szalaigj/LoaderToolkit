@@ -13,26 +13,19 @@ namespace LoaderLibrary.Services
     {
         private List<Mapper<T>> mappings;
         private FileUtils<T> fileUtils;
-        private BaseStreamReaderForLoader<T> streamReaderForLoader;
 
         public List<Mapper<T>> Mappings
         {
             get { return mappings; }
         }
-
-        public BaseStreamReaderForLoader<T> StreamReaderForLoader
-        {
-            get { return streamReaderForLoader; }
-        }
-
+        
         public FileUtils<T> FileUtils
         {
             get { return fileUtils; }
         }
 
-        public BaseBulkInsertFileCreator(BaseStreamReaderForLoader<T> streamReaderForLoader, FileUtils<T> fileUtils, List<Mapper<T>> mappings)
+        public BaseBulkInsertFileCreator(FileUtils<T> fileUtils, List<Mapper<T>> mappings)
         {
-            this.streamReaderForLoader = streamReaderForLoader;
             this.fileUtils = fileUtils;
             this.mappings = mappings;
         }
@@ -53,8 +46,7 @@ namespace LoaderLibrary.Services
             int q = 0;
             if (!skipall)
             {
-                InitializeReader(chunk);
-                using (var reader = StreamReaderForLoader)
+                using (var reader = InitializeReader(chunk))
                 {
                     //var objects = reader.AsParallel().WithMergeOptions(ParallelMergeOptions.NotBuffered).WithDegreeOfParallelism(Environment.ProcessorCount).Select(
                     var objects = reader.selectObjects(chunk);
@@ -78,11 +70,15 @@ namespace LoaderLibrary.Services
             chunk.PrepareEnd = end;
         }
 
-        protected void InitializeReader(Chunk chunk)
+        protected BaseStreamReaderForLoader<T> InitializeReader(Chunk chunk)
         {
+            var streamReaderForLoader = InstantiateReader();
             var compressed = chunk.Filename.EndsWith(".gz", StringComparison.InvariantCultureIgnoreCase);
-            StreamReaderForLoader.InitializeInputStream(chunk.Filename, chunk.Overlapped, compressed);
+            streamReaderForLoader.InitializeInputStream(chunk.Filename, chunk.Overlapped, compressed);
+            return streamReaderForLoader;
         }
+
+        protected abstract BaseStreamReaderForLoader<T> InstantiateReader();
 
         protected int DoMapOnObjects(int q, IEnumerable<T> objects)
         {
