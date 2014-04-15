@@ -28,10 +28,8 @@ namespace BatchLoader.Mappers
             BulkWriter.WriteBigInt(Int64.Parse(thirdToken));
 
             var fourthToken = objParts[3];
-            // [refNuc] [binary](1) NOT NULL
-            byte[] encodedRefNuc = BinaryCodecUtil.ConvertInputToEncodedBytes(fourthToken, 
-                BinaryCodec.Constants.CodecDomainNames.RefNuc);
-            BulkWriter.WriteBinary(encodedRefNuc, 1);
+            // [refNuc] [char] NOT NULL
+            BulkWriter.WriteChar(fourthToken, 1);
 
             var fifthToken = objParts[4];
             // [alignedReadsNO] [int] NOT NULL
@@ -46,14 +44,12 @@ namespace BatchLoader.Mappers
             if (objParts.Length == 7)
             {
                 var seventhToken = objParts[6];
-                // [basesQual] [varbinary](8000) NULL
-                byte[] encodedBasesQual = BinaryCodecUtil.ConvertInputToEncodedBytes(seventhToken, 
-                    BinaryCodec.Constants.CodecDomainNames.BasesQual);
-                BulkWriter.WriteVarBinary(encodedBasesQual, 8000);
+                // [basesQual] [varchar](8000) NULL
+                BulkWriter.WriteVarChar(seventhToken, 8000);
             }
             else
             {
-                BulkWriter.WriteVarBinary(null, 8000);
+                BulkWriter.WriteVarChar(null, 8000);
             }
 
             var extraNuc = byProductsBySkipChars[0];
