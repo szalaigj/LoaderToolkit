@@ -9,12 +9,28 @@ CREATE TABLE [dbo].[run](
 ) ON [PRIMARY]
 
 --
-CREATE TABLE [dbo].[pileups](
-	[run_id] [smallint] NOT NULL,
+CREATE TABLE [dbo].[sample_units](
+	[sample_unit_id] [bigint] IDENTITY(1,1)PRIMARY KEY,
 	[sampleGroup] [varchar](8) NOT NULL,
 	[sampleID] [int] NOT NULL,
 	[lane] [char] NOT NULL,
-	[refSeqID] [varchar](50) NOT NULL,
+	[description] [varchar](200) NULL
+) ON [PRIMARY]
+
+--
+CREATE TABLE [dbo].[reference_sequences](
+	[reference_sequence_id] [bigint] IDENTITY(1,1)PRIMARY KEY,
+	[refSeqID] [varchar](50) NULL,
+	[gi] [bigint] NULL,
+	[accessionNO] [varchar](50) NULL,
+	[shortName] [varchar](100) NULL
+) ON [PRIMARY]
+
+--
+CREATE TABLE [dbo].[pileups](
+	[run_id] [smallint] NOT NULL,
+	[sample_unit_id] [bigint] NOT NULL,
+	[reference_sequence_id] [bigint] NOT NULL,
 	[refSeqPos] [bigint] NOT NULL,
 	[refNuc] [char] NOT NULL,
 	[alignedReadsNO] [int] NOT NULL,
