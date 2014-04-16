@@ -55,13 +55,16 @@ namespace BatchLoader.Mappers
             var extraNuc = byProductsBySkipChars[0];
             MapAdditionalColumn(extraNuc);
 
-            var startingSigns = byProductsBySkipChars[1];
+            var missingNuc = byProductsBySkipChars[1];
+            MapAdditionalColumn(missingNuc);
+
+            var startingSigns = byProductsBySkipChars[2];
             MapAdditionalColumn(startingSigns);
 
-            var mappingQual = byProductsBySkipChars[2];
+            var mappingQual = byProductsBySkipChars[3];
             MapAdditionalColumn(mappingQual);
 
-            var endingSigns = byProductsBySkipChars[3];
+            var endingSigns = byProductsBySkipChars[4];
             MapAdditionalColumn(endingSigns);
 
             BulkWriter.EndLine();
@@ -69,7 +72,7 @@ namespace BatchLoader.Mappers
 
         private void MapAdditionalColumn(string additionalColumn)
         {
-            // [additionalColumn] [varchar](8000) NULL (additionalColumn == extraNuc || startingSigns || mappingQual || endingSigns)
+            // [additionalColumn] [varchar](8000) NULL (additionalColumn == extraNuc || missingNuc || startingSigns || mappingQual || endingSigns)
             if ("".Equals(additionalColumn))
             {
                 BulkWriter.WriteVarChar(null, 8000);

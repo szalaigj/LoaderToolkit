@@ -47,6 +47,14 @@ namespace BinaryCodec
         /// <summary>
         /// This method is for codec domain 'bases' which is more specific than others.
         /// The main lines are similar to general ConvertInputToEncodedBytes.
+        /// The parameter byProductsBySkipChars is an out parameter. It is a list which stores the skipped characters
+        /// (or information about them) from bases grouped by their types.
+        /// The following listing describes the type positions of this list:
+        /// 0 : extra nucleotides
+        /// 1 : missing nucleotides
+        /// 2 : read starting signs
+        /// 3 : read mapping qualities
+        /// 4 : read ending signs
         /// </summary>
         /// <param name="input"></param>
         /// <param name="byProductsBySkipChars"></param>
@@ -56,7 +64,7 @@ namespace BinaryCodec
             BidirectionalDictionary<string, BitArray> codecDomain;
             if (codecs.TryGetValue(Constants.CodecDomainNames.Bases, out codecDomain))
             {
-                byProductsBySkipChars = new List<string> { "", "", "", "" };
+                byProductsBySkipChars = new List<string> { "", "", "", "", "" };
                 BitArray bitArrayOfInput = BitArrayOfInputCreator.DetermineBitArrayOfBasesInput(input, codecDomain, byProductsBySkipChars);
                 byte[] encodedBytes = new byte[bitArrayOfInput.Length > 0 ? ((bitArrayOfInput.Length - 1) / 8) + 1 : 0];
                 bitArrayOfInput.CopyTo(encodedBytes, 0);

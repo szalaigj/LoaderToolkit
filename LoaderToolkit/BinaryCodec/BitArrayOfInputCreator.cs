@@ -52,7 +52,7 @@ namespace BinaryCodec
                 // It is very important that the case "-" is preceded by case "^" because read mapping quality can contain symbol "-".
                 else if ("-".Equals(inputPart))
                 {
-                    SkipMissingNucleotidesFact(input, inputIndeces);
+                    RecordMissingNucleotidesFact(input, byProductsBySkipChars, inputIndeces);
                 }
                 else
                 {
@@ -97,12 +97,12 @@ namespace BinaryCodec
         /// <param name="inputIndeces"></param>
         private static void RecordReadStartingFactAndItsQual(string input, List<string> byProductsBySkipChars, InputIndeces inputIndeces)
         {
-            var readStartingSigns = byProductsBySkipChars[1];
-            byProductsBySkipChars[1] = readStartingSigns + inputIndeces.ReadIndex + Constants.separator;
+            var readStartingSigns = byProductsBySkipChars[2];
+            byProductsBySkipChars[2] = readStartingSigns + inputIndeces.ReadIndex + Constants.separator;
             inputIndeces.InputCharIndex++;
             var readMappingQual = input.Substring(inputIndeces.InputCharIndex, 1);
-            var readMappingQuals = byProductsBySkipChars[2];
-            byProductsBySkipChars[2] = readMappingQuals + readMappingQual + Constants.separator;
+            var readMappingQuals = byProductsBySkipChars[3];
+            byProductsBySkipChars[3] = readMappingQuals + readMappingQual + Constants.separator;
             inputIndeces.InputCharIndex++;
         }
 
@@ -116,9 +116,9 @@ namespace BinaryCodec
         /// <param name="inputIndeces"></param>
         private static void RecordReadEndingFact(List<string> byProductsBySkipChars, InputIndeces inputIndeces)
         {
-            var readEndingSigns = byProductsBySkipChars[3];
+            var readEndingSigns = byProductsBySkipChars[4];
             var previousReadIndex = inputIndeces.ReadIndex - 1;
-            byProductsBySkipChars[3] = readEndingSigns + previousReadIndex + Constants.separator;
+            byProductsBySkipChars[4] = readEndingSigns + previousReadIndex + Constants.separator;
             inputIndeces.InputCharIndex++;
         }
 
@@ -150,11 +150,16 @@ namespace BinaryCodec
         /// </summary>
         /// <param name="input"></param>
         /// <param name="inputIndeces"></param>
-        private static void SkipMissingNucleotidesFact(string input, InputIndeces inputIndeces)
+        private static void RecordMissingNucleotidesFact(string input, List<string> byProductsBySkipChars, InputIndeces inputIndeces)
         {
             inputIndeces.InputCharIndex++;
-            var extraNucleotidesLength = Convert.ToInt32(input.Substring(inputIndeces.InputCharIndex, 1));
-            inputIndeces.InputCharIndex += extraNucleotidesLength + 1;
+            var missingNucleotidesLength = Convert.ToInt32(input.Substring(inputIndeces.InputCharIndex, 1));
+            inputIndeces.InputCharIndex++;
+            var missingNucleotides = input.Substring(inputIndeces.InputCharIndex, missingNucleotidesLength);
+            var missingNucleotidesStore = byProductsBySkipChars[1];
+            var previousReadIndex = inputIndeces.ReadIndex - 1;
+            byProductsBySkipChars[1] = missingNucleotidesStore + previousReadIndex + missingNucleotides + Constants.separator;
+            inputIndeces.InputCharIndex += missingNucleotidesLength;
         }
     }
 }

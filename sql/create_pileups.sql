@@ -11,6 +11,7 @@ CREATE TABLE [$dbname].[dbo].[$tablename]
 	[bases] [varbinary](8000) NOT NULL,
 	[basesQual] [varchar](8000) NULL,
 	[extraNuc] [varchar](8000) NULL,
+	[missingNuc] [varchar](8000) NULL,
 	[startingSigns] [varchar](8000) NULL,
 	[mappingQual] [varchar](8000) NULL,
 	[endingSigns] [varchar](8000) NULL

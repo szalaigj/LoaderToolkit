@@ -77,7 +77,7 @@ namespace BinaryCodec.Test
             // so the expected bytes:                 (1)    (136)    (65)
             // and these are reversed by BitArray for the following form:
             byte[] expectedResult = new byte[] { 65, 136, 1 };
-            List<string> expectedByProduct = new List<string> { "2ATC\t", "2\t", "+\t", "0\t" };
+            List<string> expectedByProduct = new List<string> { "2ATC\t", "", "2\t", "+\t", "0\t"};
 
             // When
             byte[] result = BinaryCodecUtil.ConvertBasesInputToEncodedBytes(input, out byProductsBySkipChars);
