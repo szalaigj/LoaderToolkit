@@ -47,14 +47,8 @@ namespace BinaryCodec
         /// <summary>
         /// This method is for codec domain 'bases' which is more specific than others.
         /// The main lines are similar to general ConvertInputToEncodedBytes.
-        /// The parameter byProductsBySkipChars is an out parameter. It is a list which stores the skipped characters
-        /// (or information about them) from bases grouped by their types.
-        /// The following listing describes the type positions of this list:
-        /// 0 : extra nucleotides
-        /// 1 : missing nucleotides
-        /// 2 : read starting signs
-        /// 3 : read mapping qualities
-        /// 4 : read ending signs
+        /// The parameter byProductsBySkipChars is an out parameter. It is a dictionary which stores the skipped characters
+        /// (or information about them) from bases grouped by their types which are keys.
         /// </summary>
         /// <param name="input"></param>
         /// <param name="byProductsBySkipChars"></param>
