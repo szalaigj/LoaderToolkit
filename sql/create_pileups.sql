@@ -1,9 +1,10 @@
 CREATE TABLE [$dbname].[dbo].[$tablename]
 (
 	[run_id] [smallint] NOT NULL,
-	[sampleGroup] [varchar](8) NOT NULL,
-	[sampleID] [int] NOT NULL,
-	[lane] [char] NOT NULL,
+	[sampleName] [varchar](16) NOT NULL,
+	[sampleGroup] [varchar](8) NULL,
+	[sampleID] [int] NULL,
+	[lane] [char] NULL,
 	[refSeqID] [varchar](50) NOT NULL,
 	[refSeqPos] [bigint] NOT NULL,
 	[refNuc] [char] NOT NULL,

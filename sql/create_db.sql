@@ -11,16 +11,17 @@ CREATE TABLE [dbo].[run](
 --
 CREATE TABLE [dbo].[sample_units](
 	[sample_unit_id] [bigint] IDENTITY(1,1)PRIMARY KEY,
-	[sampleGroup] [varchar](8) NOT NULL,
-	[sampleID] [int] NOT NULL,
-	[lane] [char] NOT NULL,
+	[sampleName] [varchar](16) NOT NULL,
+	[sampleGroup] [varchar](8) NULL,
+	[sampleID] [int] NULL,
+	[lane] [char] NULL,
 	[description] [varchar](200) NULL
 ) ON [PRIMARY]
 
 --
 CREATE TABLE [dbo].[reference_sequences](
 	[reference_sequence_id] [bigint] IDENTITY(1,1)PRIMARY KEY,
-	[refSeqID] [varchar](50) NULL,
+	[refSeqID] [varchar](50) NOT NULL,
 	[gi] [bigint] NULL,
 	[accessionNO] [varchar](50) NULL,
 	[shortName] [varchar](100) NULL
