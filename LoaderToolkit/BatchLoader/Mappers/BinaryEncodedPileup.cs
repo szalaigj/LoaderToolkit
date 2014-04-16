@@ -37,7 +37,7 @@ namespace BatchLoader.Mappers
 
             var sixthToken = objParts[5];
             // [bases] [varbinary](8000) NOT NULL
-            List<string> byProductsBySkipChars;
+            Dictionary<BinaryCodec.Constants.ColumnsFromSkipChars, string> byProductsBySkipChars;
             byte[] encodedBases = BinaryCodecUtil.ConvertBasesInputToEncodedBytes(sixthToken, out byProductsBySkipChars);
             BulkWriter.WriteVarBinary(encodedBases, 8000);
 
@@ -52,19 +52,19 @@ namespace BatchLoader.Mappers
                 BulkWriter.WriteVarChar(null, 8000);
             }
 
-            var extraNuc = byProductsBySkipChars[0];
+            var extraNuc = byProductsBySkipChars[BinaryCodec.Constants.ColumnsFromSkipChars.ExtraNuc];
             MapAdditionalColumn(extraNuc);
 
-            var missingNuc = byProductsBySkipChars[1];
+            var missingNuc = byProductsBySkipChars[BinaryCodec.Constants.ColumnsFromSkipChars.MissingNuc];
             MapAdditionalColumn(missingNuc);
 
-            var startingSigns = byProductsBySkipChars[2];
+            var startingSigns = byProductsBySkipChars[BinaryCodec.Constants.ColumnsFromSkipChars.StartingSigns];
             MapAdditionalColumn(startingSigns);
 
-            var mappingQual = byProductsBySkipChars[3];
+            var mappingQual = byProductsBySkipChars[BinaryCodec.Constants.ColumnsFromSkipChars.MappingQual];
             MapAdditionalColumn(mappingQual);
 
-            var endingSigns = byProductsBySkipChars[4];
+            var endingSigns = byProductsBySkipChars[BinaryCodec.Constants.ColumnsFromSkipChars.EndingSigns];
             MapAdditionalColumn(endingSigns);
 
             BulkWriter.EndLine();

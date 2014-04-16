@@ -70,14 +70,21 @@ namespace BinaryCodec.Test
         {
             // Given
             var input = ".$,^+,+3ATCA";
-            List<string> byProductsBySkipChars;
+            Dictionary<Constants.ColumnsFromSkipChars, string> byProductsBySkipChars;
             // the input without by-product: .,,A -> 00011|00010|00010|00001
             //                                        (A)   (,)   (,)   (.)
             // its 'byte-style' arrangement:          0001|10001000|01000001
             // so the expected bytes:                 (1)    (136)    (65)
             // and these are reversed by BitArray for the following form:
             byte[] expectedResult = new byte[] { 65, 136, 1 };
-            List<string> expectedByProduct = new List<string> { "2ATC\t", "", "2\t", "+\t", "0\t"};
+            Dictionary<Constants.ColumnsFromSkipChars, string> expectedByProduct = new Dictionary<Constants.ColumnsFromSkipChars, string>()
+            { 
+                {Constants.ColumnsFromSkipChars.ExtraNuc, "2ATC\t"}, 
+                {Constants.ColumnsFromSkipChars.MissingNuc, ""},
+                {Constants.ColumnsFromSkipChars.StartingSigns, "2\t"},
+                {Constants.ColumnsFromSkipChars.MappingQual, "+\t"},
+                {Constants.ColumnsFromSkipChars.EndingSigns, "0\t"}
+            };
 
             // When
             byte[] result = BinaryCodecUtil.ConvertBasesInputToEncodedBytes(input, out byProductsBySkipChars);
@@ -112,7 +119,7 @@ namespace BinaryCodec.Test
             string basesForEncoding = ".$,^+,+3ATCA";
             string expectedResult = ".,,A";
             var codecDomainName = Constants.CodecDomainNames.Bases;
-            List<string> byProductsBySkipChars;
+            Dictionary<Constants.ColumnsFromSkipChars, string> byProductsBySkipChars;
             byte[] basesInEncodedBytes = BinaryCodecUtil.ConvertBasesInputToEncodedBytes(basesForEncoding, out byProductsBySkipChars);
             // Prepare the input file:
             string filename = "input_bin.dat";

@@ -59,12 +59,20 @@ namespace BinaryCodec
         /// <param name="input"></param>
         /// <param name="byProductsBySkipChars"></param>
         /// <returns></returns>
-        public static byte[] ConvertBasesInputToEncodedBytes(string input, out List<string> byProductsBySkipChars)
+        public static byte[] ConvertBasesInputToEncodedBytes(string input,
+            out Dictionary<Constants.ColumnsFromSkipChars, string> byProductsBySkipChars)
         {
             BidirectionalDictionary<string, BitArray> codecDomain;
             if (codecs.TryGetValue(Constants.CodecDomainNames.Bases, out codecDomain))
             {
-                byProductsBySkipChars = new List<string> { "", "", "", "", "" };
+                byProductsBySkipChars = new Dictionary<Constants.ColumnsFromSkipChars, string>() 
+                { 
+                    {Constants.ColumnsFromSkipChars.ExtraNuc, ""},
+                    {Constants.ColumnsFromSkipChars.MissingNuc, ""},
+                    {Constants.ColumnsFromSkipChars.StartingSigns, ""},
+                    {Constants.ColumnsFromSkipChars.MappingQual, ""},
+                    {Constants.ColumnsFromSkipChars.EndingSigns, ""}
+                };
                 BitArray bitArrayOfInput = BitArrayOfInputCreator.DetermineBitArrayOfBasesInput(input, codecDomain, byProductsBySkipChars);
                 byte[] encodedBytes = new byte[bitArrayOfInput.Length > 0 ? ((bitArrayOfInput.Length - 1) / 8) + 1 : 0];
                 bitArrayOfInput.CopyTo(encodedBytes, 0);

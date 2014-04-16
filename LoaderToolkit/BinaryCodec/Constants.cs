@@ -10,6 +10,8 @@ namespace BinaryCodec
     {
         public enum CodecDomainNames { RefNuc, Bases, BasesQual }
 
+        public enum ColumnsFromSkipChars { ExtraNuc, MissingNuc, StartingSigns, MappingQual, EndingSigns }
+
         public const string separator = "\t";
     }
 }

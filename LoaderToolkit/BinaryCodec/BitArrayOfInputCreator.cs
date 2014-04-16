@@ -29,7 +29,7 @@ namespace BinaryCodec
         }
 
         public static BitArray DetermineBitArrayOfBasesInput(string input, BidirectionalDictionary<string, BitArray> codecDomain,
-            List<string> byProductsBySkipChars)
+            Dictionary<Constants.ColumnsFromSkipChars, string> byProductsBySkipChars)
         {
             BitArray bitArrayOfInput = new BitArray(0);
             var inputIndeces = new InputIndeces();
@@ -95,14 +95,16 @@ namespace BinaryCodec
         /// <param name="input"></param>
         /// <param name="byProductsBySkipChars"></param>
         /// <param name="inputIndeces"></param>
-        private static void RecordReadStartingFactAndItsQual(string input, List<string> byProductsBySkipChars, InputIndeces inputIndeces)
+        private static void RecordReadStartingFactAndItsQual(string input,
+            Dictionary<Constants.ColumnsFromSkipChars, string> byProductsBySkipChars, InputIndeces inputIndeces)
         {
-            var readStartingSigns = byProductsBySkipChars[2];
-            byProductsBySkipChars[2] = readStartingSigns + inputIndeces.ReadIndex + Constants.separator;
+            var readStartingSigns = byProductsBySkipChars[Constants.ColumnsFromSkipChars.StartingSigns];
+            byProductsBySkipChars[Constants.ColumnsFromSkipChars.StartingSigns] 
+                = readStartingSigns + inputIndeces.ReadIndex + Constants.separator;
             inputIndeces.InputCharIndex++;
             var readMappingQual = input.Substring(inputIndeces.InputCharIndex, 1);
-            var readMappingQuals = byProductsBySkipChars[3];
-            byProductsBySkipChars[3] = readMappingQuals + readMappingQual + Constants.separator;
+            var readMappingQuals = byProductsBySkipChars[Constants.ColumnsFromSkipChars.MappingQual];
+            byProductsBySkipChars[Constants.ColumnsFromSkipChars.MappingQual] = readMappingQuals + readMappingQual + Constants.separator;
             inputIndeces.InputCharIndex++;
         }
 
@@ -114,11 +116,12 @@ namespace BinaryCodec
         /// </summary>
         /// <param name="byProductsBySkipChars"></param>
         /// <param name="inputIndeces"></param>
-        private static void RecordReadEndingFact(List<string> byProductsBySkipChars, InputIndeces inputIndeces)
+        private static void RecordReadEndingFact(Dictionary<Constants.ColumnsFromSkipChars, string> byProductsBySkipChars, 
+            InputIndeces inputIndeces)
         {
-            var readEndingSigns = byProductsBySkipChars[4];
+            var readEndingSigns = byProductsBySkipChars[Constants.ColumnsFromSkipChars.EndingSigns];
             var previousReadIndex = inputIndeces.ReadIndex - 1;
-            byProductsBySkipChars[4] = readEndingSigns + previousReadIndex + Constants.separator;
+            byProductsBySkipChars[Constants.ColumnsFromSkipChars.EndingSigns] = readEndingSigns + previousReadIndex + Constants.separator;
             inputIndeces.InputCharIndex++;
         }
 
@@ -131,15 +134,16 @@ namespace BinaryCodec
         /// <param name="input"></param>
         /// <param name="byProductsBySkipChars"></param>
         /// <param name="inputIndeces"></param>
-        private static void RecordExtraNucleotidesFact(string input, List<string> byProductsBySkipChars, InputIndeces inputIndeces)
+        private static void RecordExtraNucleotidesFact(string input,
+            Dictionary<Constants.ColumnsFromSkipChars, string> byProductsBySkipChars, InputIndeces inputIndeces)
         {
             inputIndeces.InputCharIndex++;
             var extraNucleotidesLength = Convert.ToInt32(input.Substring(inputIndeces.InputCharIndex, 1));
             inputIndeces.InputCharIndex++;
             var extraNucleotides = input.Substring(inputIndeces.InputCharIndex, extraNucleotidesLength);
-            var extraNucleotidesStore = byProductsBySkipChars[0];
+            var extraNucleotidesStore = byProductsBySkipChars[Constants.ColumnsFromSkipChars.ExtraNuc];
             var previousReadIndex = inputIndeces.ReadIndex - 1;
-            byProductsBySkipChars[0] = extraNucleotidesStore + previousReadIndex + extraNucleotides + Constants.separator;
+            byProductsBySkipChars[Constants.ColumnsFromSkipChars.ExtraNuc] = extraNucleotidesStore + previousReadIndex + extraNucleotides + Constants.separator;
             inputIndeces.InputCharIndex += extraNucleotidesLength;
         }
 
@@ -150,15 +154,17 @@ namespace BinaryCodec
         /// </summary>
         /// <param name="input"></param>
         /// <param name="inputIndeces"></param>
-        private static void RecordMissingNucleotidesFact(string input, List<string> byProductsBySkipChars, InputIndeces inputIndeces)
+        private static void RecordMissingNucleotidesFact(string input, 
+            Dictionary<Constants.ColumnsFromSkipChars, string> byProductsBySkipChars, InputIndeces inputIndeces)
         {
             inputIndeces.InputCharIndex++;
             var missingNucleotidesLength = Convert.ToInt32(input.Substring(inputIndeces.InputCharIndex, 1));
             inputIndeces.InputCharIndex++;
             var missingNucleotides = input.Substring(inputIndeces.InputCharIndex, missingNucleotidesLength);
-            var missingNucleotidesStore = byProductsBySkipChars[1];
+            var missingNucleotidesStore = byProductsBySkipChars[Constants.ColumnsFromSkipChars.MissingNuc];
             var previousReadIndex = inputIndeces.ReadIndex - 1;
-            byProductsBySkipChars[1] = missingNucleotidesStore + previousReadIndex + missingNucleotides + Constants.separator;
+            byProductsBySkipChars[Constants.ColumnsFromSkipChars.MissingNuc]
+                = missingNucleotidesStore + previousReadIndex + missingNucleotides + Constants.separator;
             inputIndeces.InputCharIndex += missingNucleotidesLength;
         }
     }
