@@ -1,0 +1,7 @@
+--CREATE CLUSTERED INDEX [IX_$tablename] ON [$dbname].[dbo].[$tablename] 
+--(
+--	[run_id] ASC,
+--	[sampleName] ASC,
+--	[refSeqID] ASC,
+--	[refSeqPos] ASC
+--) ON [PRIMARY];

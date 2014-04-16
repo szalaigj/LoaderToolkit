@@ -70,6 +70,7 @@
     <Compile Include="UserDefinedFunctions\BasesQualColumnDecoder.cs" />
     <Compile Include="UserDefinedFunctions\DetermineCompressionRate.cs" />
     <Compile Include="UserDefinedFunctions\PickOutAPartOfColumnBySeparator.cs" />
+    <Compile Include="UserDefinedFunctions\CountBasesSeparately.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BinaryCodec\BinaryCodec.csproj">
