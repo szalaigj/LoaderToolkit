@@ -51,6 +51,8 @@ CREATE TABLE [dbo].[pileups](
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
+GO
+
 --
 CREATE VIEW [dbo].[pileups_view]
 (
@@ -85,6 +87,8 @@ AS
 	FROM [dbo].[pileups] pu, [dbo].[sample_units] su, [dbo].[reference_sequences] rs
 	WHERE pu.[sample_unit_id] = su.[sample_unit_id] AND pu.reference_sequence_id = rs.reference_sequence_id
 
+GO	
+	
 --
 CREATE VIEW [dbo].[pileups_base_counters_view]
 (

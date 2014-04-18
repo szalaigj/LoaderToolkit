@@ -27,3 +27,10 @@ RETURNS table
 AS
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[CountBasesSeparately];
 GO
+
+CREATE FUNCTION [dbo].[CollectNucsFromNeighborhoodOfRefSeqPos](@runID [smallint], @sampleUnitID [bigint],
+@refSeqID [bigint], @refSeqPos [bigint], @posRadius [int])
+RETURNS [nvarchar](100) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[CollectNucsFromNeighborhoodOfRefSeqPos]
+GO
