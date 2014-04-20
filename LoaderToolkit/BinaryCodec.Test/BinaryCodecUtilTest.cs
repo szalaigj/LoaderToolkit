@@ -94,6 +94,35 @@ namespace BinaryCodec.Test
             CollectionAssert.AreEqual(expectedByProduct, byProductsBySkipChars);
         }
 
+        [TestMethod, Description("This method should work properly when normal input with missing nucleotides is given.")]
+        public void ConvertBasesInputToEncodedBytesTest2()
+        {
+            // Given
+            var input = ".-2AG,,A";
+            Dictionary<Constants.ColumnsFromSkipChars, string> byProductsBySkipChars;
+            // the input without by-product: .,,A -> 00011|00010|00010|00001
+            //                                        (A)   (,)   (,)   (.)
+            // its 'byte-style' arrangement:          0001|10001000|01000001
+            // so the expected bytes:                 (1)    (136)    (65)
+            // and these are reversed by BitArray for the following form:
+            byte[] expectedResult = new byte[] { 65, 136, 1 };
+            Dictionary<Constants.ColumnsFromSkipChars, string> expectedByProduct = new Dictionary<Constants.ColumnsFromSkipChars, string>()
+            { 
+                {Constants.ColumnsFromSkipChars.ExtraNuc, ""}, 
+                {Constants.ColumnsFromSkipChars.MissingNuc, "0AG\t"},
+                {Constants.ColumnsFromSkipChars.StartingSigns, ""},
+                {Constants.ColumnsFromSkipChars.MappingQual, ""},
+                {Constants.ColumnsFromSkipChars.EndingSigns, ""}
+            };
+
+            // When
+            byte[] result = BinaryCodecUtil.ConvertBasesInputToEncodedBytes(input, out byProductsBySkipChars);
+
+            // Then
+            CollectionAssert.AreEqual(expectedResult, result);
+            CollectionAssert.AreEqual(expectedByProduct, byProductsBySkipChars);
+        }
+
         [TestMethod, Description("This method should work properly when normal refNuc input is given.")]
         public void DecodeInputFileTest1()
         {

@@ -34,3 +34,12 @@ RETURNS [nvarchar](100) WITH EXECUTE AS CALLER
 AS 
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[CollectNucsFromNeighborhoodOfRefSeqPos]
 GO
+
+CREATE FUNCTION [dbo].[DetermineInDel](@extraNuc [nvarchar](4000), @missingNuc [nvarchar](4000))
+RETURNS table 
+(
+    inDel bit, lengthOfChain int, nucChain nvarchar(100)
+)
+AS 
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetermineInDel]
+GO

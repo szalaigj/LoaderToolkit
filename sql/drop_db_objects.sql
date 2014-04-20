@@ -7,3 +7,4 @@ drop function [dbo].[BasesColumnDecoder];
 drop function [dbo].[PickOutAPartOfColumnBySeparator];
 drop function [dbo].[CollectNucsFromNeighborhoodOfRefSeqPos];
 drop function [dbo].[CountBasesSeparately];
+drop function [dbo].[DetermineInDel];

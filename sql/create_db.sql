@@ -124,3 +124,38 @@ SELECT [run_id]
   CROSS APPLY [dbo].[CountBasesSeparately]([bases], [refNuc]) as [cbs]
   
 GO
+
+--
+CREATE VIEW [dbo].[pileups_indel_view]
+(
+		[run_id]
+		,[sampleName]
+		,[refSeqID]
+		,[refSeqPos]
+		,[coverage]
+		,[inDel]
+		,[lengthOfChain]
+		,[nucChain]
+)
+AS
+SELECT [run_id]
+      ,[sampleName]
+      ,[refSeqID]
+      ,[refSeqPos]
+      ,[coverage]
+	  ,[did].[inDel]
+	  ,[did].[lengthOfChain]
+	  ,[did].[nucChain]
+FROM
+(SELECT [run_id]
+      ,[sampleName]
+      ,[refSeqID]
+      ,[refSeqPos]
+      ,[alignedReadsNO] as coverage
+	  ,[extraNuc]
+	  ,[missingNuc]
+  FROM [dbo].[pileups_view]
+  WHERE [extraNuc] IS NOT NULL OR [missingNuc] IS NOT NULL) as [innerTbl] 
+  CROSS APPLY [dbo].[DetermineInDel]([extraNuc], [missingNuc]) as [did]
+  
+GO

@@ -73,6 +73,7 @@
     <Compile Include="UserDefinedFunctions\CountBasesSeparately.cs" />
     <Compile Include="UserDefinedFunctions\CollectNucFromPriorRefSeqPos.cs" />
     <Compile Include="UserDefinedFunctions\CollectNucsFromNeighborhoodOfRefSeqPos.cs" />
+    <Compile Include="UserDefinedFunctions\DetermineInDel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BinaryCodec\BinaryCodec.csproj">
