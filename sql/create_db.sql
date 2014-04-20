@@ -57,7 +57,9 @@ GO
 CREATE VIEW [dbo].[pileups_view]
 (
 		[run_id]
+		,[sample_unit_id]
 		,[sampleName]
+		,[reference_sequence_id]
 		,[refSeqID]
 		,[refSeqPos]
 		,[refNuc]
@@ -72,7 +74,9 @@ CREATE VIEW [dbo].[pileups_view]
 )
 AS
 	SELECT [run_id]
+		,su.[sample_unit_id]
 		,su.[sampleName]
+		,rs.[reference_sequence_id]
 		,rs.[refSeqID]
 		,[refSeqPos]
 		,[refNuc]
@@ -102,6 +106,7 @@ CREATE VIEW [dbo].[pileups_base_counters_view]
 		,[C]
 		,[G]
 		,[T]
+		,[triplet]
 )
 AS
 SELECT [run_id]
@@ -114,6 +119,7 @@ SELECT [run_id]
 	  ,[cbs].[C]
 	  ,[cbs].[G]
 	  ,[cbs].[T]
+	  ,[dbo].[CollectNucsFromNeighborhoodOfRefSeqPos]([run_id], [sample_unit_id], [reference_sequence_id], [refSeqPos], 1) as triplet
   FROM [dbo].[pileups_view]
   CROSS APPLY [dbo].[CountBasesSeparately]([bases], [refNuc]) as [cbs]
   

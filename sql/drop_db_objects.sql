@@ -6,3 +6,4 @@ drop view pileups_base_counters_view;
 drop function [dbo].[BasesColumnDecoder];
 drop function [dbo].[PickOutAPartOfColumnBySeparator];
 drop function [dbo].[CollectNucsFromNeighborhoodOfRefSeqPos];
+drop function [dbo].[CountBasesSeparately];
