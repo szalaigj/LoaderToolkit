@@ -1,8 +1,10 @@
-drop table sample_units;
-drop table reference_sequences;
-drop table pileups;
-drop view pileups_view;
-drop view pileups_base_counters_view;
+drop table sample;
+drop table reference;
+drop table pileup;
+drop table coverageEnc;
+drop view coverage;
+drop view basesCover;
+drop view inDel;
 drop function [dbo].[BasesColumnDecoder];
 drop function [dbo].[PickOutAPartOfColumnBySeparator];
 drop function [dbo].[CollectNucsFromNeighborhoodOfRefSeqPos];

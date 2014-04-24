@@ -13,19 +13,16 @@ using System.Collections.Generic;
 public partial class UserDefinedFunctions
 {
     [Microsoft.SqlServer.Server.SqlFunction(DataAccess = DataAccessKind.Read)]
-    public static SqlString CollectNucsFromNeighborhoodOfRefSeqPos(SqlInt16 runID, SqlInt64 sampleUnitID, SqlInt64 refSeqID,
-        SqlInt64 refSeqPos, SqlInt32 posRadius)
+    public static SqlString CollectNucsFromNeighborhoodOfRefSeqPos(SqlInt32 pupID, SqlInt64 pos, SqlInt32 posRadius)
     {
         using (SqlConnection conn = new SqlConnection("context connection=true"))
         {
-            string beginOfSelection = "SELECT refNuc FROM [dbo].[pileups]"
-                + "WHERE [run_id] = " + runID.ToString()
-                + "AND [sample_unit_id] = " + sampleUnitID.ToString()
-                + "AND [reference_sequence_id] = " + refSeqID.ToString();
+            string beginOfSelection = "SELECT refNuc FROM [dbo].[coverageEnc]"
+                + "WHERE [pupID] = " + pupID.ToString();
             conn.Open();
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = conn;
-            long centerRefPos = refSeqPos.Value;
+            long centerRefPos = pos.Value;
             int radius = posRadius.Value;
             string posList = "";
             for (long i = centerRefPos - radius; i <= centerRefPos + radius; i++)
@@ -34,8 +31,8 @@ public partial class UserDefinedFunctions
             }
             // The last comma is ignored:
             posList = posList.Substring(0, posList.Length - 1);
-            long actualRefPos = refSeqPos.Value - posRadius.Value;
-            cmd.CommandText = beginOfSelection + "AND [refSeqPos] in (" + posList + ")";
+            long actualRefPos = pos.Value - posRadius.Value;
+            cmd.CommandText = beginOfSelection + "AND [pos] in (" + posList + ")";
 
             string result = "";
             using (SqlDataReader reader = cmd.ExecuteReader())
@@ -62,7 +59,7 @@ public partial class UserDefinedFunctions
         long firstPos = centerRefPos - radius;
         SqlCommand checkCmd = new SqlCommand();
         checkCmd.Connection = conn;
-        checkCmd.CommandText = beginOfSelection + "AND [refSeqPos] = " + firstPos.ToString();
+        checkCmd.CommandText = beginOfSelection + "AND [pos] = " + firstPos.ToString();
         object firstNuc = checkCmd.ExecuteScalar();
         if (firstNuc == null)
         {

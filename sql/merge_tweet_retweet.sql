@@ -3,7 +3,7 @@
 dbcc traceon (610);
 
 -- Create new table for merged data
-CREATE TABLE [$twitterdb].[dbo].[tweet_retweet_new](
+CREATE TABLE [$targetdb].[dbo].[tweet_retweet_new](
 	[run_id] [bigint] NOT NULL,
 	[tweet_id] [bigint] NOT NULL,
 	[user_id] [bigint] NOT NULL,
@@ -21,10 +21,10 @@ CREATE TABLE [$twitterdb].[dbo].[tweet_retweet_new](
 ) ON [PRIMARY];
 
 -- Merge data into new table
-INSERT [$twitterdb].[dbo].[tweet_retweet_new] WITH (TABLOCKX)
+INSERT [$targetdb].[dbo].[tweet_retweet_new] WITH (TABLOCKX)
 SELECT
 	run_id, tweet_id, user_id, retweeted_tweet_id, retweeted_user_id, created_at, retweeted_at
-FROM [$twitterdb].[dbo].[tweet_retweet]
+FROM [$targetdb].[dbo].[tweet_retweet]
 UNION
 SELECT DISTINCT
 	run_id, tweet_id, user_id, retweeted_tweet_id, retweeted_user_id, created_at, retweeted_at
@@ -32,9 +32,9 @@ FROM [$loaddb].[dbo].[$tablename]
 
 -- Drop old table and rename new
 
-USE [$twitterdb]
+USE [$targetdb]
 
-DROP TABLE [$twitterdb].[dbo].[tweet_retweet]
+DROP TABLE [$targetdb].[dbo].[tweet_retweet]
 
 EXEC sp_rename 'tweet_retweet_new', 'tweet_retweet';
 EXEC sp_rename 'PK_tweet_retweet_new', 'PK_tweet_retweet';
@@ -51,7 +51,7 @@ WITH s AS
 		run_id, tweet_id, user_id, retweeted_tweet_id, retweeted_user_id, created_at, retweeted_at
 	FROM [$loaddb].[dbo].[$tablename]
 )
-MERGE [$twitterdb].[dbo].[tweet_retweet] WITH (TABLOCKX) AS t
+MERGE [$targetdb].[dbo].[tweet_retweet] WITH (TABLOCKX) AS t
 USING s
 	ON s.run_id = t.run_id AND s.tweet_id = t.tweet_id
 WHEN NOT MATCHED THEN

@@ -28,17 +28,16 @@ AS
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[CountBasesSeparately];
 GO
 
-CREATE FUNCTION [dbo].[CollectNucsFromNeighborhoodOfRefSeqPos](@runID [smallint], @sampleUnitID [bigint],
-@refSeqID [bigint], @refSeqPos [bigint], @posRadius [int])
+CREATE FUNCTION [dbo].[CollectNucsFromNeighborhoodOfRefSeqPos](@pupID [int], @pos [bigint], @posRadius [int])
 RETURNS [nvarchar](100) WITH EXECUTE AS CALLER
 AS 
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[CollectNucsFromNeighborhoodOfRefSeqPos]
 GO
 
-CREATE FUNCTION [dbo].[DetermineInDel](@extraNuc [nvarchar](4000), @missingNuc [nvarchar](4000))
+CREATE FUNCTION [dbo].[DetermineInDel](@exNuc [nvarchar](4000), @missNuc [nvarchar](4000))
 RETURNS table 
 (
-    inDel bit, lengthOfChain int, nucChain nvarchar(100)
+    inDel bit, chainLen int, nucChain nvarchar(100)
 )
 AS 
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetermineInDel]

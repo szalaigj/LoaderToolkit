@@ -56,7 +56,7 @@ namespace LoaderLibrary.Load
             set { bulkWriter = value; }
         }
 
-        public short RunID { get; set; }
+        //public short RunID { get; set; }
 
         public abstract string TableName { get; }
 

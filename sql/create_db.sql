@@ -1,105 +1,145 @@
-CREATE TABLE [dbo].[run](
-	[run_id] [smallint] NOT NULL,
-	[started_at] [datetime] NOT NULL,
-	[stopped_at] [datetime] NOT NULL,
- CONSTRAINT [PK_run] PRIMARY KEY CLUSTERED
- (
-	[run_id] ASC
- ) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+USE szalaigj
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP COVERAGE_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = coverage_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\coverage_0.ndf',
+	SIZE = 20GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = coverage_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\coverage_1.ndf',
+	SIZE = 20GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP COVERAGE_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP PUPLOAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = pupload_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\pupload_0.ndf',
+	SIZE = 20GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = pupload_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\pupload_1.ndf',
+	SIZE = 20GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP PUPLOAD_FG;
+GO
+
+-- For checking:
+USE szalaigj
+GO
+sp_helpfile
+GO
+
+SELECT groupName AS FileGroupName FROM sysfilegroups
+GO
 
 --
-CREATE TABLE [dbo].[sample_units](
-	[sample_unit_id] [bigint] IDENTITY(1,1)PRIMARY KEY,
-	[sampleName] [varchar](16) NOT NULL,
-	[sampleGroup] [varchar](8) NULL,
-	[sampleID] [int] NULL,
+CREATE TABLE [dbo].[sample](
+	[sampleID] [int] IDENTITY(1,1)PRIMARY KEY,
+	[name] [varchar](16) NOT NULL,
+	[group] [varchar](8) NULL,
+	[extID] [int] NULL,
 	[lane] [char] NULL,
-	[description] [varchar](200) NULL
+	[desc] [varchar](200) NULL
 ) ON [PRIMARY]
 
 --
-CREATE TABLE [dbo].[reference_sequences](
-	[reference_sequence_id] [bigint] IDENTITY(1,1)PRIMARY KEY,
-	[refSeqID] [varchar](50) NOT NULL,
+CREATE TABLE [dbo].[reference](
+	[refID] [int] IDENTITY(1,1)PRIMARY KEY,
+	[extID] [varchar](50) NOT NULL,
 	[gi] [bigint] NULL,
-	[accessionNO] [varchar](50) NULL,
-	[shortName] [varchar](100) NULL
+	[accNO] [varchar](50) NULL,
+	[name] [varchar](100) NULL
 ) ON [PRIMARY]
 
 --
-CREATE TABLE [dbo].[pileups](
-	[run_id] [smallint] NOT NULL,
-	[sample_unit_id] [bigint] NOT NULL,
-	[reference_sequence_id] [bigint] NOT NULL,
-	[refSeqPos] [bigint] NOT NULL,
+CREATE TABLE [dbo].[pileup](
+	[pupID] [int] IDENTITY(1,1)PRIMARY KEY,
+	[sampleID] [int] NOT NULL,
+	[refID] [int] NOT NULL
+) ON [PRIMARY]
+
+--
+CREATE TABLE [dbo].[coverageEnc](
+	[pupID] [int] NOT NULL,
+	[pos] [bigint] NOT NULL,
 	[refNuc] [char] NOT NULL,
-	[alignedReadsNO] [int] NOT NULL,
+	[coverage] [int] NOT NULL,
 	[bases] [varbinary](8000) NOT NULL,
 	[basesQual] [varchar](8000) NULL,
-	[extraNuc] [varchar](8000) NULL,
-	[missingNuc] [varchar](8000) NULL,
-	[startingSigns] [varchar](8000) NULL,
-	[mappingQual] [varchar](8000) NULL,
-	[endingSigns] [varchar](8000) NULL,
-	CONSTRAINT [PK_tweet_hour] PRIMARY KEY CLUSTERED 
+	[exNuc] [varchar](8000) NULL,
+	[missNuc] [varchar](8000) NULL,
+	[startSg] [varchar](8000) NULL,
+	[mapQual] [varchar](8000) NULL,
+	[endSg] [varchar](8000) NULL,
+	CONSTRAINT [PK_coverage_enc] PRIMARY KEY CLUSTERED 
 	(
-		[run_id] ASC,
-		[sample_unit_id] ASC,
-		[reference_sequence_id] ASC,
-		[refSeqPos] ASC
-	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+		[pupID] ASC,
+		[pos] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [PRIMARY]
+) ON [COVERAGE_FG]
 
 GO
 
 --
-CREATE VIEW [dbo].[pileups_view]
+CREATE VIEW [dbo].[coverage]
 (
-		[run_id]
-		,[sample_unit_id]
-		,[sampleName]
-		,[reference_sequence_id]
-		,[refSeqID]
-		,[refSeqPos]
+		[pupID]
+		,[pos]
 		,[refNuc]
-		,[alignedReadsNO]
+		,[coverage]
 		,[bases]
 		,[basesQual]
-		,[extraNuc]
-		,[missingNuc]
-		,[startingSigns]
-		,[mappingQual]
-		,[endingSigns]
+		,[exNuc]
+		,[missNuc]
+		,[startSg]
+		,[mapQual]
+		,[endSg]
 )
 AS
-	SELECT [run_id]
-		,su.[sample_unit_id]
-		,su.[sampleName]
-		,rs.[reference_sequence_id]
-		,rs.[refSeqID]
-		,[refSeqPos]
+	SELECT [pupID]
+		,[pos]
 		,[refNuc]
-		,[alignedReadsNO]
+		,[coverage]
 		,[dbo].[BasesColumnDecoder]([bases]) as bases
 		,[basesQual]
-		,[extraNuc]
-		,[missingNuc]
-		,[startingSigns]
-		,[mappingQual]
-		,[endingSigns]
-	FROM [dbo].[pileups] pu, [dbo].[sample_units] su, [dbo].[reference_sequences] rs
-	WHERE pu.[sample_unit_id] = su.[sample_unit_id] AND pu.reference_sequence_id = rs.reference_sequence_id
+		,[exNuc]
+		,[missNuc]
+		,[startSg]
+		,[mapQual]
+		,[endSg]
+	FROM [dbo].[coverage_enc]
 
 GO	
 	
 --
-CREATE VIEW [dbo].[pileups_base_counters_view]
+CREATE VIEW [dbo].[basesCover]
 (
-		[run_id]
-		,[sampleName]
-		,[refSeqID]
-		,[refSeqPos]
+		[pupID]
+		,[pos]
 		,[refNuc]
 		,[coverage]
 		,[A]
@@ -109,53 +149,45 @@ CREATE VIEW [dbo].[pileups_base_counters_view]
 		,[triplet]
 )
 AS
-SELECT [run_id]
-      ,[sampleName]
-      ,[refSeqID]
-      ,[refSeqPos]
+SELECT [pupID]
+      ,[pos]
       ,[refNuc]
-      ,[alignedReadsNO] as coverage
+      ,[coverage]
 	  ,[cbs].[A]
 	  ,[cbs].[C]
 	  ,[cbs].[G]
 	  ,[cbs].[T]
-	  ,[dbo].[CollectNucsFromNeighborhoodOfRefSeqPos]([run_id], [sample_unit_id], [reference_sequence_id], [refSeqPos], 1) as triplet
-  FROM [dbo].[pileups_view]
+	  ,[dbo].[CollectNucsFromNeighborhoodOfRefSeqPos]([pupID], [pos], 1) as triplet
+  FROM [dbo].[coverage]
   CROSS APPLY [dbo].[CountBasesSeparately]([bases], [refNuc]) as [cbs]
   
 GO
 
 --
-CREATE VIEW [dbo].[pileups_indel_view]
+CREATE VIEW [dbo].[inDel]
 (
-		[run_id]
-		,[sampleName]
-		,[refSeqID]
-		,[refSeqPos]
+		[pupID]
+		,[pos]
 		,[coverage]
 		,[inDel]
-		,[lengthOfChain]
+		,[chainLen]
 		,[nucChain]
 )
 AS
-SELECT [run_id]
-      ,[sampleName]
-      ,[refSeqID]
-      ,[refSeqPos]
+SELECT [pupID]
+      ,[pos]
       ,[coverage]
 	  ,[did].[inDel]
-	  ,[did].[lengthOfChain]
+	  ,[did].[chainLen]
 	  ,[did].[nucChain]
 FROM
-(SELECT [run_id]
-      ,[sampleName]
-      ,[refSeqID]
-      ,[refSeqPos]
-      ,[alignedReadsNO] as coverage
-	  ,[extraNuc]
-	  ,[missingNuc]
-  FROM [dbo].[pileups_view]
-  WHERE [extraNuc] IS NOT NULL OR [missingNuc] IS NOT NULL) as [innerTbl] 
-  CROSS APPLY [dbo].[DetermineInDel]([extraNuc], [missingNuc]) as [did]
+(SELECT [pupID]
+      ,[pos]
+      ,[coverage]
+	  ,[exNuc]
+	  ,[missNuc]
+  FROM [dbo].[coverage]
+  WHERE [exNuc] IS NOT NULL OR [missNuc] IS NOT NULL) as [innerTbl] 
+  CROSS APPLY [dbo].[DetermineInDel]([exNuc], [missNuc]) as [did]
   
 GO

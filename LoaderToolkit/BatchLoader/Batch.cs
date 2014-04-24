@@ -12,7 +12,6 @@ namespace BatchLoader
     class Batch
     {
         private int batchID;
-        private short runID;
         private SqlConnectionStringBuilder targetDB;
         private SqlConnectionStringBuilder loaderDB;
         private string sourcePath;
@@ -27,13 +26,7 @@ namespace BatchLoader
             get { return batchID; }
             set { batchID = value; }
         }
-
-        public short RunID
-        {
-            get { return runID; }
-            set { runID = value; }
-        }
-
+        
         public SqlConnectionStringBuilder TargetDB
         {
             get { return targetDB; }
@@ -81,7 +74,6 @@ namespace BatchLoader
         private void InitializeMembers()
         {
             this.batchID = 0;
-            this.runID = 0;
             this.targetDB = new SqlConnectionStringBuilder("Data Source=localhost;Initial Catalog=szalaigj;Integrated Security=true");
             this.loaderDB = new SqlConnectionStringBuilder("Data Source=localhost;Initial Catalog=szalaigj;Integrated Security=true");
             this.sourcePath = null;
@@ -107,8 +99,8 @@ namespace BatchLoader
         {
             var sql = @"
 INSERT batch
-    (run_id, target_db, loader_db, source_path, file_suffix, bulk_path, binary)
-VALUES (@run_id, @target_db, @loader_db, @source_path, @file_suffix, @bulk_path, @binary);
+    (target_db, loader_db, source_path, file_suffix, bulk_path, binary)
+VALUES (@target_db, @loader_db, @source_path, @file_suffix, @bulk_path, @binary);
 
 SELECT CAST(@@IDENTITY AS int)";
 
@@ -125,8 +117,7 @@ SELECT CAST(@@IDENTITY AS int)";
         {
             var sql = @"
 UPDATE batch
-SET run_id = @run_id,
-    target_db = @target_db,
+SET target_db = @target_db,
     loader_db = @loader_db,
     source_path = @source_path,
     file_suffix = @file_suffix,
@@ -145,7 +136,6 @@ WHERE batch_id = @batch_id";
 
         private void AppendCreateModifyParameters(SqlCommand cmd)
         {
-            cmd.Parameters.Add("@run_id", SqlDbType.SmallInt).Value = runID;
             cmd.Parameters.Add("@target_db", SqlDbType.NVarChar).Value = targetDB.ConnectionString;
             cmd.Parameters.Add("@loader_db", SqlDbType.NVarChar).Value = loaderDB.ConnectionString;
             cmd.Parameters.Add("@source_path", SqlDbType.NVarChar).Value = sourcePath;
@@ -174,7 +164,6 @@ WHERE batch_id = @batch_id";
         {
             int o = -1;
             batchID = dr.GetInt32(++o);
-            runID = dr.GetInt16(++o);
             targetDB.ConnectionString = dr.GetString(++o);
             loaderDB.ConnectionString = dr.GetString(++o);
             sourcePath = dr.GetString(++o);
@@ -232,7 +221,6 @@ WHERE batch_id = @batch_id";
             c.CleanupEnd = !dr.IsDBNull(++o) ? dr.GetDateTime(o) : DateTime.MinValue;
 
             c.Binary = binary;
-            c.RunId = runID;
             c.BulkPath = bulkPath;
             c.Filename = Path.Combine(sourcePath, c.ChunkId);
             c.FileSuffix = fileSuffix;

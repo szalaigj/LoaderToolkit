@@ -11,7 +11,7 @@ namespace LoaderLibrary.Load
    
     public abstract class Merger
     {
-        public short RunID { get; set; }
+        //public short RunID { get; set; }
         protected abstract string SourceTableName { get; }
         protected abstract string TargetTableName { get; }
 
@@ -25,15 +25,15 @@ namespace LoaderLibrary.Load
             StringBuilder sql = new StringBuilder((string)p.GetValue(null, null));
 
             sql.Replace("$loaddb", chunk.LoaderDB.InitialCatalog);
-            sql.Replace("$twitterdb", chunk.TargetDB.InitialCatalog);
+            sql.Replace("$targetdb", chunk.TargetDB.InitialCatalog);
             sql.Replace("$tablename", String.Format("{0}_{1}", chunk.ChunkId, SourceTableName));
-            sql.Replace("$run_id", chunk.RunId.ToString());
+            //sql.Replace("$run_id", chunk.RunId.ToString());
 
             using (SqlCommand cmd = new SqlCommand(sql.ToString(), cn, tn))
             {
                 cmd.CommandTimeout = 7200;
 
-                cmd.Parameters.Add("@run_id", SqlDbType.SmallInt).Value = RunID;
+                //cmd.Parameters.Add("@run_id", SqlDbType.SmallInt).Value = RunID;
 
                 cmd.ExecuteNonQuery();
             }

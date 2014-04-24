@@ -11,7 +11,7 @@ WITH q AS
 			ROW_NUMBER() OVER (PARTITION BY run_id, tweet_id ORDER BY created_at DESC) AS rn
 	FROM [$loaddb].[dbo].[$tablename]
 )
-MERGE [$twitterdb].[dbo].[tweet] WITH (TABLOCKX) AS t
+MERGE [$targetdb].[dbo].[tweet] WITH (TABLOCKX) AS t
 USING (SELECT * FROM q WHERE rn = 1) AS s
 	ON s.run_id = t.run_id AND s.tweet_id = t.tweet_id
 WHEN MATCHED AND s.retweet_count > t.retweet_count THEN

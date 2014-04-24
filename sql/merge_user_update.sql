@@ -19,7 +19,7 @@ WITH s AS
 	GROUP BY user_id, screen_name, description, geo_enabled, lang,
 		location, name, profile_background_color, profile_text_color, utc_offset, verified
 )
-INSERT [$twitterdb].[dbo].[user_update] WITH (TABLOCKX)
+INSERT [$targetdb].[dbo].[user_update] WITH (TABLOCKX)
 SELECT $run_id, user_id, tweeted_at, screen_name, description,
 			favourites_count, followers_count, friends_count, statuses_count,
 			geo_enabled, lang, location, name,

@@ -12,7 +12,7 @@ dbcc traceon (610);
 
 -- Create new table for merged user data
 
-CREATE TABLE [$twitterdb].[dbo].[user_new](
+CREATE TABLE [$targetdb].[dbo].[user_new](
 	[user_id] [bigint] NOT NULL,
 	[created_at] [datetime] NOT NULL,
 	[last_update_at] [datetime] NOT NULL,
@@ -48,13 +48,13 @@ WITH q AS
 			ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY user_id ASC, tweeted_at DESC) AS rn
 	FROM  [$loaddb].[dbo].[$tablename]
 )
-	INSERT [$twitterdb].[dbo].[user_new] WITH (TABLOCKX)
+	INSERT [$targetdb].[dbo].[user_new] WITH (TABLOCKX)
 	SELECT 
 		user_id, created_at, last_update_at, screen_name, description, favourites_count, followers_count,
 		friends_count, statuses_count, geo_enabled, lang, location, name,
 		profile_background_color, profile_text_color, protected,
 		show_all_inline_media, utc_offset, verified
-	FROM [$twitterdb].[dbo].[user] old
+	FROM [$targetdb].[dbo].[user] old
 	WHERE user_id NOT IN (SELECT user_id FROM  [$loaddb].[dbo].[$tablename])
 
 	UNION ALL
@@ -67,9 +67,9 @@ WITH q AS
 	WHERE rn = 1;
 
 -- Drop old table and rename new
-DROP TABLE [$twitterdb].[dbo].[user];
+DROP TABLE [$targetdb].[dbo].[user];
 
-USE [$twitterdb]
+USE [$targetdb]
 
 EXEC sp_rename 'user_new' , 'user'
 EXEC sp_rename 'PK_user_new', 'PK_user'
@@ -90,7 +90,7 @@ WITH q AS
 			ROW_NUMBER() OVER (PARTITION BY run_id, user_id ORDER BY user_id ASC, tweeted_at DESC) AS rn
 	FROM [$loaddb].[dbo].[$tablename]
 )
-MERGE [$twitterdb].[dbo].[user] WITH (TABLOCKX) AS t
+MERGE [$targetdb].[dbo].[user] WITH (TABLOCKX) AS t
 USING q AS s
 	ON s.user_id = t.user_id AND rn = 1
 /*WHEN MATCHED AND s.tweeted_at > t.last_update_at THEN

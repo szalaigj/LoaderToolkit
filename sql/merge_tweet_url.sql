@@ -8,7 +8,7 @@ WITH s AS
 		ROW_NUMBER() OVER (PARTITION BY run_id, url_id, tweet_id ORDER BY user_id) rn
 	FROM [$loaddb].[dbo].[$tablename]
 )
-MERGE [$twitterdb].[dbo].[tweet_url] WITH (TABLOCKX) AS t
+MERGE [$targetdb].[dbo].[tweet_url] WITH (TABLOCKX) AS t
 USING (SELECT * FROM s WHERE rn = 1) s
 	ON s.run_id = t.run_id AND s.url_id = t.url_id AND s.tweet_id = t.tweet_id
 WHEN NOT MATCHED THEN

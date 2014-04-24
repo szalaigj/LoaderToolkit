@@ -12,7 +12,7 @@ namespace BatchLoader.Mappers
     {
         public override string TableName
         {
-            get { return "pileups"; }
+            get { return "pupLoad"; }
         }
 
         protected void MapFirstToken(string firstToken)
@@ -35,14 +35,14 @@ namespace BatchLoader.Mappers
                 // [sampleGroup] [varchar](8) NULL
                 BulkWriter.WriteVarChar(sampleGroup, 8);
 
-                int startPosOfSampleID = posOfFirstToken;
+                int startPosOfSampleExtID = posOfFirstToken;
                 while (Char.IsNumber(firstToken, posOfFirstToken))
                 {
                     posOfFirstToken++;
                 }
-                var sampleID = firstToken.Substring(startPosOfSampleID, posOfFirstToken - startPosOfSampleID);
-                // [sampleID] [int] NULL
-                BulkWriter.WriteNullableInt(Int32.Parse(sampleID));
+                var sampleExtID = firstToken.Substring(startPosOfSampleExtID, posOfFirstToken - startPosOfSampleExtID);
+                // [sampleExtID] [int] NULL
+                BulkWriter.WriteNullableInt(Int32.Parse(sampleExtID));
 
                 // Note: there is "+ 1" in the following because "_" should be skipped.
                 var lane = firstToken.Substring(posOfFirstToken + 1);
@@ -54,7 +54,7 @@ namespace BatchLoader.Mappers
                 // [sampleGroup] [varchar](8) NULL
                 BulkWriter.WriteVarChar(null, 8);
 
-                // [sampleID] [int] NULL
+                // [sampleExtID] [int] NULL
                 BulkWriter.WriteNullableInt(null);
 
                 // [lane] [char] NULL

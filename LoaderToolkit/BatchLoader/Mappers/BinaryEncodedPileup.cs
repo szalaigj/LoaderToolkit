@@ -11,9 +11,6 @@ namespace BatchLoader.Mappers
     {
         public override void Map(string obj)
         {
-            // [run_id] [smallint] NOT NULL
-            BulkWriter.WriteSmallInt(RunID);
-
             // the obj - which is read line in fact - is splitted by tab character:
             string[] objParts = obj.Split('\t');
 
@@ -32,7 +29,7 @@ namespace BatchLoader.Mappers
             BulkWriter.WriteChar(fourthToken, 1);
 
             var fifthToken = objParts[4];
-            // [alignedReadsNO] [int] NOT NULL
+            // [coverage] [int] NOT NULL
             BulkWriter.WriteInt(Int32.Parse(fifthToken));
 
             var sixthToken = objParts[5];
@@ -72,7 +69,7 @@ namespace BatchLoader.Mappers
 
         private void MapAdditionalColumn(string additionalColumn)
         {
-            // [additionalColumn] [varchar](8000) NULL (additionalColumn == extraNuc || missingNuc || startingSigns || mappingQual || endingSigns)
+            // [additionalColumn] [varchar](8000) NULL (additionalColumn == exNuc || missNuc || startSg || mapQual || endSg)
             if ("".Equals(additionalColumn))
             {
                 BulkWriter.WriteVarChar(null, 8000);

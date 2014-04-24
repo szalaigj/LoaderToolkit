@@ -247,11 +247,11 @@ namespace LoaderLibrary.Load {
             }
         }
 
-        public static string create_pileups
+        public static string create_pupLoad
         {
             get
             {
-                return ResourceManager.GetString("create_pileups", resourceCulture);
+                return ResourceManager.GetString("create_pupLoad", resourceCulture);
             }
         }
         
@@ -395,11 +395,11 @@ namespace LoaderLibrary.Load {
             }
         }
 
-        public static string index_pileups
+        public static string index_pupLoad
         {
             get
             {
-                return ResourceManager.GetString("index_pileups", resourceCulture);
+                return ResourceManager.GetString("index_pupLoad", resourceCulture);
             }
         }
         
@@ -417,7 +417,7 @@ namespace LoaderLibrary.Load {
         ///			ROW_NUMBER() OVER (PARTITION BY run_id, tweet_id ORDER BY created_at DESC) AS rn
         ///	FROM [$loaddb].[dbo].[$tablename]
         ///)
-        ///MERGE [$twitterdb].[dbo].[tweet] WITH (TABLO [rest of string was truncated]&quot;;.
+        ///MERGE [$targetdb].[dbo].[tweet] WITH (TABLO [rest of string was truncated]&quot;;.
         /// </summary>
         public static string merge_tweet {
             get {
@@ -435,7 +435,7 @@ namespace LoaderLibrary.Load {
         ///		run_id, tweet_id, tag, user_id, created_at
         ///	FROM [$loaddb].[dbo].[$tablename]
         ///)
-        ///MERGE [$twitterdb].[dbo].[tweet_hashtag] WITH (TABLOCKX) AS t
+        ///MERGE [$targetdb].[dbo].[tweet_hashtag] WITH (TABLOCKX) AS t
         ///USING s
         ///	ON s.run_id = t.run_id AND s.tag = t.tag AND s.tweet_id = t.tweet_id AND s.user_id = t.user_id
         ///WHEN NOT MATCHED THEN
@@ -454,7 +454,7 @@ namespace LoaderLibrary.Load {
         ///dbcc traceon (610);
         ///
         ///-- Create new table for merged data
-        ///CREATE TABLE [$twitterdb].[dbo].[tweet_retweet_new](
+        ///CREATE TABLE [$targetdb].[dbo].[tweet_retweet_new](
         ///	[run_id] [bigint] NOT NULL,
         ///	[tweet_id] [bigint] NOT NULL,
         ///	[user_id] [bigint] NOT NULL,
@@ -486,7 +486,7 @@ namespace LoaderLibrary.Load {
         ///		ROW_NUMBER() OVER (PARTITION BY run_id, url_id, tweet_id ORDER BY user_id) rn
         ///	FROM [$loaddb].[dbo].[$tablename]
         ///)
-        ///MERGE [$twitterdb].[dbo].[tweet_url] WITH (TABLOCKX) AS t
+        ///MERGE [$targetdb].[dbo].[tweet_url] WITH (TABLOCKX) AS t
         ///USING (SELECT * FROM s WHERE rn = 1) s
         ///	ON s.run_id = t.run_id AND s.url_id = t.url_id AND s.tweet_id = t.tweet_id
         ///WHEN NOT MATCHED THEN
@@ -508,7 +508,7 @@ namespace LoaderLibrary.Load {
         ///		run_id, tweet_id, user_id, mentioned_user_id
         ///	FROM [$loaddb].[dbo].[$tablename]
         ///)
-        ///MERGE [$twitterdb].[dbo].[tweet_user_mention] WITH (TABLOCKX) AS t
+        ///MERGE [$targetdb].[dbo].[tweet_user_mention] WITH (TABLOCKX) AS t
         ///USING s
         ///	ON  s.run_id = t.run_id AND s.tweet_id = t.tweet_id AND s.user_id = t.user_id AND s.mentioned_user_id = t.mentioned_user_id
         ///WHEN NOT MATCHED THEN
@@ -536,7 +536,7 @@ namespace LoaderLibrary.Load {
         ///
         ///-- Create new table for merged user data
         ///
-        ///CREATE TABLE [$twitterdb].[dbo].[user_new](
+        ///CREATE TABLE [$targetdb].[dbo].[user_new](
         ///	[user_id] [bigint] NOT NULL,
         ///	[created_at] [datetime] NOT NULL,
         ///	[last_update_at] [datetime] NOT NULL,        /// [rest of string was truncated]&quot;;.
@@ -557,7 +557,7 @@ namespace LoaderLibrary.Load {
         ///		run_id, tag, user_id
         ///	FROM [$loaddb].[dbo].[$tablename]
         ///)
-        ///MERGE [$twitterdb].[dbo].[user_hashtag] WITH (TABLOCKX/*, FORCESEEK*/) AS t
+        ///MERGE [$targetdb].[dbo].[user_hashtag] WITH (TABLOCKX/*, FORCESEEK*/) AS t
         ///USING s
         ///	ON s.run_id = t.run_id AND s.tag = t.tag AND s.user_id = t.user_id
         ///WHEN NOT MATCHED THEN
@@ -593,11 +593,11 @@ namespace LoaderLibrary.Load {
             }
         }
 
-        public static string merge_pileups
+        public static string merge_pileup
         {
             get
             {
-                return ResourceManager.GetString("merge_pileups", resourceCulture);
+                return ResourceManager.GetString("merge_pileup", resourceCulture);
             }
         }
     }

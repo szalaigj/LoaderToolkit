@@ -1,6 +1,6 @@
 CREATE TABLE [dbo].[batch](
 	[batch_id] [int] IDENTITY(1,1) NOT NULL,
-	[run_id] [smallint] NOT NULL,
+	--[run_id] [smallint] NOT NULL,
 	[target_db] [nvarchar](512) NOT NULL,
 	[loader_db] [nvarchar](512) NOT NULL,
 	[source_path] [nvarchar](512) NOT NULL,

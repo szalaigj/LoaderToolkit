@@ -11,12 +11,12 @@ namespace BatchLoader.Mergers
     {
         protected override string SourceTableName
         {
-            get { return "pileups"; }
+            get { return "pupLoad"; }
         }
 
         protected override string TargetTableName
         {
-            get { return "pileups"; }
+            get { return "pileup"; }
         }
     }
 }

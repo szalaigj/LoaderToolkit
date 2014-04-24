@@ -16,7 +16,7 @@ namespace LoaderLibrary.Load
         private int batchID;
         private string chunkID;
 
-        private short runId;
+        //private short runId;
 
         private DateTime prepareStart;
         private DateTime prepareEnd;
@@ -64,11 +64,11 @@ namespace LoaderLibrary.Load
             set { chunkID = value; }
         }
 
-        public short RunId
-        {
-            get { return runId; }
-            set { runId = value; }
-        }
+        //public short RunId
+        //{
+        //    get { return runId; }
+        //    set { runId = value; }
+        //}
 
         public DateTime PrepareStart
         {
@@ -196,7 +196,7 @@ namespace LoaderLibrary.Load
             this.batchID = 0;
             this.chunkID = null;
 
-            this.runId = 0;
+            //this.runId = 0;
 
             this.prepareStart = DateTime.MinValue;
             this.prepareEnd = DateTime.MinValue;

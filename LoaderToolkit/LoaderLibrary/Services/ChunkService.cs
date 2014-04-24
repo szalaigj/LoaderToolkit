@@ -141,7 +141,7 @@ namespace LoaderLibrary.Services
 
                 foreach (Merger m in mergers)
                 {
-                    m.RunID = chunk.RunId;
+                    //m.RunID = chunk.RunId;
 
                     using (SqlTransaction tn = cn.BeginTransaction(IsolationLevel.ReadUncommitted))
                     {

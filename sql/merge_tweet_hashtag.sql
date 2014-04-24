@@ -7,7 +7,7 @@ WITH s AS
 		run_id, tweet_id, tag, user_id, created_at
 	FROM [$loaddb].[dbo].[$tablename]
 )
-MERGE [$twitterdb].[dbo].[tweet_hashtag] WITH (TABLOCKX) AS t
+MERGE [$targetdb].[dbo].[tweet_hashtag] WITH (TABLOCKX) AS t
 USING s
 	ON s.run_id = t.run_id AND s.tag = t.tag AND s.tweet_id = t.tweet_id AND s.user_id = t.user_id
 WHEN NOT MATCHED THEN

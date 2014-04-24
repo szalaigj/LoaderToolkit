@@ -39,7 +39,7 @@ namespace LoaderLibrary.Services
             foreach (Mapper<T> m in Mappings)
             {
                 m.Binary = chunk.Binary;
-                m.RunID = chunk.RunId;
+                //m.RunID = chunk.RunId;
                 skipall &= FileUtils.Open(chunk, chunk.Skip, m);
             }
 

@@ -33,7 +33,7 @@ namespace BatchLoader.Mappers
         private void MapOne(Dictionary<string, object> obj)
         {
             // [run_id] [smallint] NOT NULL
-            BulkWriter.WriteSmallInt(RunID);
+            //BulkWriter.WriteSmallInt(RunID);
 
             // The original code is removed because of dependency...
         }

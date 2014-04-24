@@ -11,7 +11,6 @@ namespace BatchLoader.Verbs
     [Verb(Name = "Create", Description = "Create new batch.")]
     class Create : Verb
     {
-        private short runID;
         private string source;
         private string fileSuffix;
         private string bulkPath;
@@ -22,14 +21,7 @@ namespace BatchLoader.Verbs
         private string userID;
         private string password;
         private bool binary;
-
-        [Parameter(Name = "RunID", Description = "RUN_ID", Required = true)]
-        public short RunID
-        {
-            get { return runID; }
-            set { runID = value; }
-        }
-
+        
         [Parameter(Name = "Source", Description = "Source file pattern.", Required = true)]
         public string Source
         {
@@ -107,7 +99,6 @@ namespace BatchLoader.Verbs
 
         private void InitializeMembers()
         {
-            this.runID = 0;
             this.source = null;
             this.bulkPath = null;
             this.targetDB = Constants.DefaultTargetDB;
@@ -140,9 +131,7 @@ namespace BatchLoader.Verbs
             using (var context = new DatabaseContext())
             {
                 // Create batch object
-
-                b.RunID = RunID;
-
+                
                 b.SourcePath = Path.GetDirectoryName(Source);
                 b.FileSuffix = FileSuffix;
                 b.BulkPath = BulkPath;
