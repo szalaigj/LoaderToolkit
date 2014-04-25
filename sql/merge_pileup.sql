@@ -25,13 +25,16 @@ WHERE NOT EXISTS
 
 INSERT INTO [$targetdb].[dbo].[pileup] (sampleID, refID)
 SELECT s.sampleID, r.refID
-FROM [$loaddb].[dbo].[$tablename] as pupLd, [$targetdb].[dbo].[sample] as s, [$targetdb].[dbo].[reference] as r
+FROM (SELECT DISTINCT sampleName, refSeqID FROM [$loaddb].[dbo].[$tablename]) as pupLd, 
+[$targetdb].[dbo].[sample] as s, 
+[$targetdb].[dbo].[reference] as r
 WHERE pupLd.sampleName = s.name
 AND pupLd.refSeqID = r.extID;
 
+
 INSERT INTO [$targetdb].[dbo].[coverageEnc] (pupID, pos, refNuc, coverage, bases, basesQual, exNuc, missNuc, startSg, mapQual, endSg)
 SELECT pup.pupID, pupLd.refSeqPos, pupLd.refNuc, pupLd.coverage, pupLd.bases, pupLd.basesQual, pupLd.exNuc, pupLd.missNuc, pupLd.startSg, pupLd.mapQual, pupLd.endSg
-  FROM [$loaddb].[dbo].[$tablename] as pupLd, [$targetdb].[dbo].[sample] as s, [$targetdb].[dbo].[reference] as r, $targetdb].[dbo].[pileup] as pup
+  FROM [$loaddb].[dbo].[$tablename] as pupLd, [$targetdb].[dbo].[sample] as s, [$targetdb].[dbo].[reference] as r, [$targetdb].[dbo].[pileup] as pup
   WHERE pupLd.sampleName = s.name
   AND pupLd.refSeqID = r.extID
   AND pup.sampleID = s.sampleID

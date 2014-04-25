@@ -131,7 +131,7 @@ AS
 		,[startSg]
 		,[mapQual]
 		,[endSg]
-	FROM [dbo].[coverage_enc]
+	FROM [dbo].[coverageEnc]
 
 GO	
 	
