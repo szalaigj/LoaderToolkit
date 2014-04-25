@@ -1,10 +1,10 @@
+drop view coverage;
+drop view basesCover;
+drop view inDel;
 drop table sample;
 drop table reference;
 drop table pileup;
 drop table coverageEnc;
-drop view coverage;
-drop view basesCover;
-drop view inDel;
 drop function [dbo].[BasesColumnDecoder];
 drop function [dbo].[PickOutAPartOfColumnBySeparator];
 drop function [dbo].[CollectNucsFromNeighborhoodOfRefSeqPos];
