@@ -56,6 +56,10 @@ GO
 SELECT groupName AS FileGroupName FROM sysfilegroups
 GO
 
+-- Check which filegroup is used by table coverageEnc:
+--sp_help [coverageEnc]
+--GO
+
 --
 CREATE TABLE [dbo].[sample](
 	[sampleID] [int] IDENTITY(1,1)PRIMARY KEY,
@@ -99,7 +103,7 @@ CREATE TABLE [dbo].[coverageEnc](
 	(
 		[pupID] ASC,
 		[pos] ASC
-	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [PRIMARY]
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [COVERAGE_FG]
 ) ON [COVERAGE_FG]
 
 GO
