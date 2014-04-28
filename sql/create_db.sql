@@ -157,13 +157,32 @@ SELECT [pupID]
       ,[pos]
       ,[refNuc]
       ,[coverage]
+	  ,[A]
+	  ,[C]
+	  ,[G]
+	  ,[T]
+	  ,CASE
+		WHEN lagPos = pos - 1 AND leadPos = pos + 1 THEN lagValue + [refNuc] + leadValue
+		WHEN lagPos = pos - 1 AND (leadPos IS NULL OR leadPos != pos + 1) THEN lagValue + [refNuc] + 'x'
+		WHEN (lagPos IS NULL OR lagPos != pos - 1) AND leadPos = pos + 1 THEN 'x' + [refNuc] + leadValue
+		ELSE 'x' + [refNuc] + 'x'
+	   END triplet
+FROM
+(SELECT [pupID]
+      ,[pos]
+      ,[refNuc]
+      ,[coverage]
 	  ,[cbs].[A]
 	  ,[cbs].[C]
 	  ,[cbs].[G]
 	  ,[cbs].[T]
-	  ,[dbo].[CollectNucsFromNeighborhoodOfRefSeqPos]([pupID], [pos], 1) as triplet
+	  ,LAG([pos],1) OVER (ORDER BY [pupID], [pos]) as lagPos
+	  ,LAG([refNuc],1) OVER (ORDER BY [pupID], [pos]) as lagValue
+	  ,LEAD([pos],1) OVER (ORDER BY [pupID], [pos]) as leadPos
+	  ,LEAD([refNuc],1) OVER (ORDER BY [pupID], [pos]) as leadValue
   FROM [dbo].[coverage]
   CROSS APPLY [dbo].[CountBasesSeparately]([bases], [refNuc]) as [cbs]
+  ) as counters
   
 GO
 
