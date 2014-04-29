@@ -1,6 +1,8 @@
 USE szalaigj
 GO
 
+-- For pileups
+
 ALTER DATABASE szalaigj
 ADD FILEGROUP COVERAGE_FG;
 GO
@@ -47,6 +49,55 @@ ADD FILE
 TO FILEGROUP PUPLOAD_FG;
 GO
 
+-- For basesDist
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP BASESDIST_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = basesdist_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\basesdist_0.ndf',
+	SIZE = 20GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = basesdist_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\basesdist_1.ndf',
+	SIZE = 20GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP BASESDIST_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP BASESDISTLOAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = basesdistload_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\basesdistload_0.ndf',
+	SIZE = 20GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = basesdistload_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\basesdistload_1.ndf',
+	SIZE = 20GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP BASESDISTLOAD_FG;
+GO
+
+
 -- For checking:
 USE szalaigj
 GO
@@ -60,7 +111,7 @@ GO
 --sp_help [coverageEnc]
 --GO
 
---
+-- For pileups:
 CREATE TABLE [dbo].[sample](
 	[sampleID] [int] IDENTITY(1,1)PRIMARY KEY,
 	[name] [varchar](16) NOT NULL,
@@ -214,3 +265,27 @@ FROM
   CROSS APPLY [dbo].[DetermineInDel]([exNuc], [missNuc]) as [did]
   
 GO
+
+-- For basesDist:
+CREATE TABLE [dbo].[sampleBD](
+	[sampleID] [int] IDENTITY(1,1)PRIMARY KEY,
+	[name] [varchar](50) NOT NULL
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[basesDist](
+	[sampleID] [int] NOT NULL,
+	[chr] [varchar](20) NOT NULL,
+	[pos] [bigint] NOT NULL,
+	[refNuc] [char] NOT NULL,
+	[A] [int] NOT NULL,
+	[C] [int] NOT NULL,
+	[G] [int] NOT NULL,
+	[T] [int] NOT NULL,
+	[triplet] [varchar](100),
+	CONSTRAINT [PK_basesDist] PRIMARY KEY CLUSTERED 
+	(
+		[sampleID] ASC,
+		[chr] ASC,
+		[pos] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [BASESDIST_FG]
+) ON [BASESDIST_FG]

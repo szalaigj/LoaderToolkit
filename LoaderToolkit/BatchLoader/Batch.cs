@@ -139,7 +139,7 @@ WHERE batch_id = @batch_id";
             cmd.Parameters.Add("@target_db", SqlDbType.NVarChar).Value = targetDB.ConnectionString;
             cmd.Parameters.Add("@loader_db", SqlDbType.NVarChar).Value = loaderDB.ConnectionString;
             cmd.Parameters.Add("@source_path", SqlDbType.NVarChar).Value = sourcePath;
-            cmd.Parameters.Add("@file_suffix", SqlDbType.NVarChar).Value = fileSuffix;
+            cmd.Parameters.Add("@file_suffix", SqlDbType.NVarChar).Value = (object)fileSuffix ?? DBNull.Value;
             cmd.Parameters.Add("@bulk_path", SqlDbType.NVarChar).Value = bulkPath;
             cmd.Parameters.Add("@binary", SqlDbType.Bit).Value = binary;
         }
@@ -167,7 +167,7 @@ WHERE batch_id = @batch_id";
             targetDB.ConnectionString = dr.GetString(++o);
             loaderDB.ConnectionString = dr.GetString(++o);
             sourcePath = dr.GetString(++o);
-            fileSuffix = dr.GetString(++o);
+            fileSuffix = dr.IsDBNull(++o) ? null : dr.GetString(o);
             bulkPath = dr.GetString(++o);
             binary = dr.GetBoolean(++o);
         }

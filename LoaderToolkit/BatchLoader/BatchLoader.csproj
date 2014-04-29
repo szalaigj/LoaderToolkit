@@ -58,9 +58,11 @@
     <Compile Include="DatabaseContext.cs" />
     <Compile Include="LoaderRegistry.cs" />
     <Compile Include="Mappers\BasePileup.cs" />
+    <Compile Include="Mappers\BasesDist.cs" />
     <Compile Include="Mappers\BinaryEncodedPileup.cs" />
     <Compile Include="Mappers\SimplePileup.cs" />
     <Compile Include="Mappers\Tweet.cs" />
+    <Compile Include="Mergers\BasesDist.cs" />
     <Compile Include="Mergers\BinaryEncodedPileup.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

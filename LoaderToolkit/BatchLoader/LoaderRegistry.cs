@@ -27,9 +27,14 @@ namespace BatchLoader
             For<StreamReaderForLoaderWithPrefix>().Use<StreamReaderForLoaderWithPrefix>();
             For(typeof(BaseBulkInsertFileCreator<string>)).Use(typeof(DefaultBulkInsertFileCreator));
 
-            For(typeof(Mapper<string>)).Add(typeof(Mappers.BinaryEncodedPileup));
-            For<Merger>().Add<Mergers.BinaryEncodedPileup>();
-            
+            // For pileups:
+            //For(typeof(Mapper<string>)).Add(typeof(Mappers.BinaryEncodedPileup));
+            //For<Merger>().Add<Mergers.BinaryEncodedPileup>();
+
+            // For basesDist:
+            For(typeof(Mapper<string>)).Add(typeof(Mappers.BasesDist));
+            For<Merger>().Add<Mergers.BasesDist>();
+
             For(typeof(ChunkService<string>)).Add(typeof(ChunkService<string>)).Named("WithAutoWiring");
 
             // If the all mappers/mergers are not necessary the explicit mappers/mergers can be defined in the following manner:

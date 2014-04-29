@@ -254,6 +254,14 @@ namespace LoaderLibrary.Load {
                 return ResourceManager.GetString("create_pupLoad", resourceCulture);
             }
         }
+
+        public static string create_basesDistLoad
+        {
+            get
+            {
+                return ResourceManager.GetString("create_basesDistLoad", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to IF OBJECT_ID (N&apos;[$dbname].dbo.[$tablename]&apos;, N&apos;U&apos;) IS NOT NULL 
@@ -400,6 +408,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("index_pupLoad", resourceCulture);
+            }
+        }
+
+        public static string index_basesDistLoad
+        {
+            get
+            {
+                return ResourceManager.GetString("index_basesDistLoad", resourceCulture);
             }
         }
         
@@ -598,6 +614,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("merge_pileup", resourceCulture);
+            }
+        }
+
+        public static string merge_basesDist
+        {
+            get
+            {
+                return ResourceManager.GetString("merge_basesDist", resourceCulture);
             }
         }
     }

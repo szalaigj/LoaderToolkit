@@ -151,6 +151,9 @@
   <data name="merge_pileup" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\merge_pileup.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
+  <data name="merge_basesDist" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\merge_basesDist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
   <data name="create_delete_tweet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\create_delete_tweet.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
@@ -207,5 +210,11 @@
   </data>
   <data name="index_pupLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\index_pupLoad.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="create_basesDistLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\create_basesDistLoad.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="index_basesDistLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\index_basesDistLoad.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
 </root>
