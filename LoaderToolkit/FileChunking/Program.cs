@@ -13,7 +13,8 @@ namespace FileChunking
         {
             List<Type> verbs = new List<Type>() 
             {
-                typeof(Verbs.Chunk)
+                typeof(Verbs.Chunk),
+                typeof(Verbs.SplitBySeqID)
             };
 
             Verb v = null;

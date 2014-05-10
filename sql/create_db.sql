@@ -97,6 +97,99 @@ ADD FILE
 TO FILEGROUP BASESDISTLOAD_FG;
 GO
 
+-- For SAM-style
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP REF_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = ref_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\ref_0.ndf',
+	SIZE = 80GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = ref_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\ref_1.ndf',
+	SIZE = 80GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP REF_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP REFLOAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = refload_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\refload_0.ndf',
+	SIZE = 40GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = refload_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\refload_1.ndf',
+	SIZE = 40GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP REFLOAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP SREAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = ref_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\sread_0.ndf',
+	SIZE = 80GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = ref_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\sread_1.ndf',
+	SIZE = 80GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP SREAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP SAMLOAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = refload_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\samload_0.ndf',
+	SIZE = 40GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = refload_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\samload_1.ndf',
+	SIZE = 40GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP SAMLOAD_FG;
+GO
 
 -- For checking:
 USE szalaigj
@@ -289,3 +382,34 @@ CREATE TABLE [dbo].[basesDist](
 		[pos] ASC
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [BASESDIST_FG]
 ) ON [BASESDIST_FG]
+
+-- For refDesc:
+CREATE TABLE [dbo].[refDesc](
+	[refID] [int] NOT NULL PRIMARY KEY,-- IDENTITY(1,1)PRIMARY KEY,
+	[extID] [varchar](80) NOT NULL,
+	[desc] [varchar](200) NULL
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[ref](
+	[refID] [int] NOT NULL,
+	[pos] [bigint] NOT NULL,
+	[refNuc] [char] NULL,
+	CONSTRAINT [PK_basesDist] PRIMARY KEY CLUSTERED 
+	(
+		[refID] ASC,
+		[pos] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [REF_FG]
+) ON [REF_FG]
+
+CREATE TABLE sread
+(
+	[samID] [int] IDENTITY(1,1)PRIMARY KEY,
+	[refID] [int] NOT NULL,
+	[dir] [bit] NOT NULL,
+	[mapq] [tinyint] NOT NULL,
+	[posStart] [bigint] NOT NULL,
+    [posEnd] [bigint] NOT NULL,
+    [indel] [varchar](8000) NULL,
+    [qual] [varchar](50) NOT NULL,
+) ON [SREAD_FG]
+
