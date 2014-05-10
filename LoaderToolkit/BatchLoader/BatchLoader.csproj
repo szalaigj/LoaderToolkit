@@ -60,6 +60,8 @@
     <Compile Include="Mappers\BasePileup.cs" />
     <Compile Include="Mappers\BasesDist.cs" />
     <Compile Include="Mappers\BinaryEncodedPileup.cs" />
+    <Compile Include="Mappers\Ref.cs" />
+    <Compile Include="Mappers\RefDesc.cs" />
     <Compile Include="Mappers\SimplePileup.cs" />
     <Compile Include="Mappers\Tweet.cs" />
     <Compile Include="Mergers\BasesDist.cs" />
