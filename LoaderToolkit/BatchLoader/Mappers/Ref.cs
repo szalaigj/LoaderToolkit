@@ -39,7 +39,7 @@ namespace BatchLoader.Mappers
                 BulkWriter.WriteBigInt(firstPosOfLine);
 
                 // [refNuc] [char] NULL
-                BulkWriter.WriteChar(nuc.ToString(), 1);
+                BulkWriter.WriteNullableChar(nuc.ToString(), 1);
 
                 BulkWriter.EndLine();
                 firstPosOfLine++;
