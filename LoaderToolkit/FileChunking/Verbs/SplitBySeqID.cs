@@ -132,7 +132,7 @@ namespace FileChunking.Verbs
             // Skip character '>':
             var seqID = line.Substring(1, delimiterPosOfSeqID);
             var seqDesc = line.Substring(delimiterPosOfSeqID + 1);
-            writerForSeqDesc.WriteLine(fileIndex + "\t" + seqID + "\t" + seqDesc);
+            writerForSeqDesc.WriteLine("INSERT INTO [dbo].[refDesc] ([refID],[extID],[desc]) VALUES (" + fileIndex + ",'" + seqID + "','" + seqDesc + "')");
             writerForSeqDesc.Flush();
         }
 
