@@ -14,6 +14,7 @@ namespace FileChunking.Verbs
         private string source;
         private string outputPath;
         private int lastRefID;
+        private int lineLength;
 
         [Parameter(Name = "Source", Description = "Source file pattern.", Required = true)]
         public string Source
@@ -36,6 +37,13 @@ namespace FileChunking.Verbs
             set { lastRefID = value; }
         }
 
+        [Parameter(Name = "LineLength", Description = "The length of one line.")]
+        public int LineLength
+        {
+            get { return lineLength; }
+            set { lineLength = value; }
+        }
+
         public SplitBySeqID()
         {
             InitializeMembers();
@@ -46,6 +54,7 @@ namespace FileChunking.Verbs
             this.source = null;
             this.outputPath = null;
             this.lastRefID = 0;
+            this.lineLength = 60;
         }
 
         public override void Run()
@@ -74,6 +83,7 @@ namespace FileChunking.Verbs
                     StreamWriter writerForSeqDesc = GetOutputStreamForSeqDesc(file);
                     StreamWriter writerBySeqID = null;
                     var startTime = DateTime.Now;
+                    long firstPosOfLine = 1;
                     try
                     {
                         while ((line = sr.ReadLine()) != null)
@@ -98,7 +108,8 @@ namespace FileChunking.Verbs
                             }
                             else
                             {
-                                writerBySeqID.WriteLine(line);
+                                writerBySeqID.WriteLine(firstPosOfLine + "\t" + line);
+                                firstPosOfLine += lineLength;
                             }
                         }
                         // For handling the last output file:
