@@ -24,12 +24,26 @@ namespace BatchLoader.Mappers
             // And the original file name is irrelevant.
             string[] firstTokenParts = objParts[0].Split('_');
 
-            // [refID] [int] NOT NULL PRIMARY KEY
-            BulkWriter.WriteInt(Int32.Parse(firstTokenParts[1]));
+            long firstPosOfLine = long.Parse(objParts[1]);
 
-            // TODO : the determination of pos is complex.
+            string partsOfNucSeq = objParts[2];
 
-            BulkWriter.EndLine();
+            char[] nucsOfLine = partsOfNucSeq.ToCharArray();
+
+            foreach (char nuc in nucsOfLine)
+            {
+                // [refID] [int] NOT NULL PRIMARY KEY
+                BulkWriter.WriteInt(Int32.Parse(firstTokenParts[1]));
+
+                // [pos] [bigint] NOT NULL
+                BulkWriter.WriteBigInt(firstPosOfLine);
+
+                // [refNuc] [char] NULL
+                BulkWriter.WriteChar(nuc.ToString(), 1);
+
+                BulkWriter.EndLine();
+                firstPosOfLine++;
+            }
         }
     }
 }

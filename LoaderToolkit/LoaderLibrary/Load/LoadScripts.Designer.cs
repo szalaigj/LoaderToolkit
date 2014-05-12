@@ -262,7 +262,15 @@ namespace LoaderLibrary.Load {
                 return ResourceManager.GetString("create_basesDistLoad", resourceCulture);
             }
         }
-        
+
+        public static string create_ref
+        {
+            get
+            {
+                return ResourceManager.GetString("create_ref", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to IF OBJECT_ID (N&apos;[$dbname].dbo.[$tablename]&apos;, N&apos;U&apos;) IS NOT NULL 
         ///DROP TABLE [$dbname].dbo.[$tablename].
@@ -418,7 +426,15 @@ namespace LoaderLibrary.Load {
                 return ResourceManager.GetString("index_basesDistLoad", resourceCulture);
             }
         }
-        
+
+        public static string index_ref
+        {
+            get
+            {
+                return ResourceManager.GetString("index_ref", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to -- Merge tweets
         ///dbcc traceon (610);
@@ -622,6 +638,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("merge_basesDist", resourceCulture);
+            }
+        }
+
+        public static string merge_ref
+        {
+            get
+            {
+                return ResourceManager.GetString("merge_ref", resourceCulture);
             }
         }
     }

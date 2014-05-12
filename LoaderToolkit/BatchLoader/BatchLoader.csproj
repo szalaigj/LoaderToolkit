@@ -66,6 +66,7 @@
     <Compile Include="Mappers\Tweet.cs" />
     <Compile Include="Mergers\BasesDist.cs" />
     <Compile Include="Mergers\BinaryEncodedPileup.cs" />
+    <Compile Include="Mergers\Ref.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueuedTaskScheduler.cs" />

@@ -152,14 +152,14 @@ GO
 ALTER DATABASE szalaigj
 ADD FILE
 (
-	NAME = ref_0,
+	NAME = sread_0,
 	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\sread_0.ndf',
 	SIZE = 80GB,
 	MAXSIZE = UNLIMITED,
     FILEGROWTH = 0KB
 ),
 (
-	NAME = ref_1,
+	NAME = sread_1,
 	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\sread_1.ndf',
 	SIZE = 80GB,
 	MAXSIZE = UNLIMITED,
@@ -175,14 +175,14 @@ GO
 ALTER DATABASE szalaigj
 ADD FILE
 (
-	NAME = refload_0,
+	NAME = samload_0,
 	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\samload_0.ndf',
 	SIZE = 40GB,
 	MAXSIZE = UNLIMITED,
     FILEGROWTH = 0KB
 ),
 (
-	NAME = refload_1,
+	NAME = samload_1,
 	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\samload_1.ndf',
 	SIZE = 40GB,
 	MAXSIZE = UNLIMITED,
@@ -383,7 +383,7 @@ CREATE TABLE [dbo].[basesDist](
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [BASESDIST_FG]
 ) ON [BASESDIST_FG]
 
--- For refDesc:
+-- For SAM-style:
 CREATE TABLE [dbo].[refDesc](
 	[refID] [int] NOT NULL PRIMARY KEY,-- IDENTITY(1,1)PRIMARY KEY,
 	[extID] [varchar](80) NOT NULL,
@@ -394,7 +394,7 @@ CREATE TABLE [dbo].[ref](
 	[refID] [int] NOT NULL,
 	[pos] [bigint] NOT NULL,
 	[refNuc] [char] NULL,
-	CONSTRAINT [PK_basesDist] PRIMARY KEY CLUSTERED 
+	CONSTRAINT [PK_ref] PRIMARY KEY CLUSTERED 
 	(
 		[refID] ASC,
 		[pos] ASC
