@@ -30,8 +30,10 @@ namespace BatchLoader.Mappers
 
             char[] nucsOfLine = partsOfNucSeq.ToCharArray();
 
-            foreach (char nuc in nucsOfLine)
+            for (int index = 0; index < 60; index++)
             {
+                char nuc = nucsOfLine[index];
+
                 // [refID] [int] NOT NULL PRIMARY KEY
                 BulkWriter.WriteInt(Int32.Parse(firstTokenParts[1]));
 
