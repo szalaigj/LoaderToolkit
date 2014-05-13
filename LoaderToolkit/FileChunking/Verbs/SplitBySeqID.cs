@@ -13,8 +13,7 @@ namespace FileChunking.Verbs
     {
         private string source;
         private string outputPath;
-        private int lastRefID;
-        private int lineLength;
+        private int speciesID;
 
         [Parameter(Name = "Source", Description = "Source file pattern.", Required = true)]
         public string Source
@@ -30,18 +29,12 @@ namespace FileChunking.Verbs
             set { outputPath = value; }
         }
 
-        [Parameter(Name = "LastRefID", Description = "The last ref ID of the DB.")]
-        public int LastRefID
+        [Parameter(Name = "SpeciesID", Description = "The species ID which is a part of the allocated, planned refID.")]
+        // Value of this property is the higher bit parts of the planned refID.
+        public int SpeciesID
         {
-            get { return lastRefID; }
-            set { lastRefID = value; }
-        }
-
-        [Parameter(Name = "LineLength", Description = "The length of one line.")]
-        public int LineLength
-        {
-            get { return lineLength; }
-            set { lineLength = value; }
+            get { return speciesID; }
+            set { speciesID = value; }
         }
 
         public SplitBySeqID()
@@ -53,8 +46,8 @@ namespace FileChunking.Verbs
         {
             this.source = null;
             this.outputPath = null;
-            this.lastRefID = 0;
-            this.lineLength = 60;
+            // The default is 0x00010000 the next speciesID should be 0x00020000 = 131072.
+            this.speciesID = 65536;
         }
 
         public override void Run()
@@ -78,7 +71,7 @@ namespace FileChunking.Verbs
                 using (StreamReader sr = new StreamReader(file))
                 {
                     String line;
-                    int fileIndex = lastRefID;
+                    int fileIndex = speciesID;
                     Console.WriteLine("Now creating chunked output files...");
                     StreamWriter writerForSeqDesc = GetOutputStreamForSeqDesc(file);
                     StreamWriter writerBySeqID = null;
@@ -104,12 +97,13 @@ namespace FileChunking.Verbs
                                     Console.WriteLine("{0}. output file is created. Elapsed time: " + elapsedTime, fileIndex - 1);
                                     writerBySeqID = GetOutputStream(file, fileIndex);
                                     startTime = DateTime.Now;
+                                    firstPosOfLine = 1;
                                 }
                             }
                             else
                             {
                                 writerBySeqID.WriteLine(firstPosOfLine + "\t" + line);
-                                firstPosOfLine += lineLength;
+                                firstPosOfLine += line.Length;
                             }
                         }
                         // For handling the last output file:
@@ -130,7 +124,7 @@ namespace FileChunking.Verbs
         {
             var delimiterPosOfSeqID = line.IndexOf(" ");
             // Skip character '>':
-            var seqID = line.Substring(1, delimiterPosOfSeqID);
+            var seqID = line.Substring(1, delimiterPosOfSeqID - 1);
             var seqDesc = line.Substring(delimiterPosOfSeqID + 1);
             writerForSeqDesc.WriteLine("INSERT INTO [dbo].[refDesc] ([refID],[extID],[desc]) VALUES (" + fileIndex + ",'" + seqID + "','" + seqDesc + "')");
             writerForSeqDesc.Flush();
