@@ -140,7 +140,7 @@ namespace FileChunking.Verbs
         {
             string fileName = Path.GetFileNameWithoutExtension(file);
             string fileExt = Path.GetExtension(file);
-            string outputFile = OutputPath + "\\" + fileName + "_refdesc.dsc";
+            string outputFile = OutputPath + Path.DirectorySeparatorChar + fileName + "_refdesc.dsc";
             return new StreamWriter(outputFile);
         }
 
@@ -148,7 +148,7 @@ namespace FileChunking.Verbs
         {
             string fileName = Path.GetFileNameWithoutExtension(file);
             string fileExt = Path.GetExtension(file);
-            string outputFile = OutputPath +"\\"+ fileName +"_"+ fileIndex + fileExt;
+            string outputFile = OutputPath + Path.DirectorySeparatorChar + fileName + "_" + fileIndex + fileExt;
             return new StreamWriter(outputFile);
         }
     }
