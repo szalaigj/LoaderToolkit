@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryCodec.Test", "BinaryC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileChunking", "FileChunking\FileChunking.csproj", "{7D5E6C3C-257E-4251-8FC2-1DAEB766AA9B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileAdapter", "FileAdapter\FileAdapter.csproj", "{C5BE39DE-DFD1-426A-8FD3-FA633132B16D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{7D5E6C3C-257E-4251-8FC2-1DAEB766AA9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D5E6C3C-257E-4251-8FC2-1DAEB766AA9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D5E6C3C-257E-4251-8FC2-1DAEB766AA9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5BE39DE-DFD1-426A-8FD3-FA633132B16D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5BE39DE-DFD1-426A-8FD3-FA633132B16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5BE39DE-DFD1-426A-8FD3-FA633132B16D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5BE39DE-DFD1-426A-8FD3-FA633132B16D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

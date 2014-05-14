@@ -30,8 +30,6 @@ namespace BatchLoader.Mappers
 
             char[] nucsOfLine = partsOfNucSeq.ToCharArray();
 
-
-
             for (int index = 0; index < nucsOfLine.Length - 1; index++)
             {
                 char nuc = nucsOfLine[index];
