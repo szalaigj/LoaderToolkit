@@ -92,6 +92,7 @@ namespace FileChunking.Verbs
                                 else
                                 {
                                     writerBySeqID.Flush();
+                                    writerBySeqID.Dispose();
                                     var endTime = DateTime.Now;
                                     var elapsedTime = endTime - startTime;
                                     Console.WriteLine("{0}. output file is created. Elapsed time: " + elapsedTime, fileIndex - 1);
