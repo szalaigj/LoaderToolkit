@@ -403,10 +403,15 @@ CREATE TABLE [dbo].[ref](
 
 -- For the storage of headers of sam files:
 CREATE TABLE [dbo].[sam](
-	[samID] [int] NOT NULL PRIMARY KEY, -- sam file identifier
+	[samID] [int] NOT NULL, -- sam file identifier
 	[line] [int] NOT NULL, -- 1-based row number of the header line in the file
 	[type] [varchar](2) NOT NULL,
-	[tags] [varchar](8000) NOT NULL
+	[tags] [varchar](8000) NOT NULL,
+	CONSTRAINT [PK_sam] PRIMARY KEY CLUSTERED 
+	(
+		[samID] ASC,
+		[line] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [PRIMARY]
 ) ON [PRIMARY]
 
 CREATE TABLE sread
