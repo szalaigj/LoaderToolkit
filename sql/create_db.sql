@@ -169,26 +169,26 @@ TO FILEGROUP SREAD_FG;
 GO
 
 ALTER DATABASE szalaigj
-ADD FILEGROUP SAMLOAD_FG;
+ADD FILEGROUP SREADLOAD_FG;
 GO
 
 ALTER DATABASE szalaigj
 ADD FILE
 (
-	NAME = samload_0,
-	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\samload_0.ndf',
+	NAME = sreadload_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\sreadload_0.ndf',
 	SIZE = 40GB,
 	MAXSIZE = UNLIMITED,
     FILEGROWTH = 0KB
 ),
 (
-	NAME = samload_1,
-	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\samload_1.ndf',
+	NAME = sreadload_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\sreadload_1.ndf',
 	SIZE = 40GB,
 	MAXSIZE = UNLIMITED,
     FILEGROWTH = 0KB
 )
-TO FILEGROUP SAMLOAD_FG;
+TO FILEGROUP SREADLOAD_FG;
 GO
 
 -- For checking:
@@ -416,14 +416,20 @@ CREATE TABLE [dbo].[sam](
 
 CREATE TABLE sread
 (
-	[sreadID] [int] IDENTITY(1,1)PRIMARY KEY,
 	[samID] [int] NOT NULL,
+	[sreadID] [int] NOT NULL IDENTITY(1,1),
 	[refID] [int] NOT NULL,
+	[extID] [varchar](150) NOT NULL,
 	[dir] [bit] NOT NULL,
 	[mapq] [tinyint] NOT NULL,
 	[posStart] [bigint] NOT NULL,
     [posEnd] [bigint] NOT NULL,
     [indel] [varchar](8000) NULL,
     [qual] [varchar](50) NOT NULL,
+	CONSTRAINT [PK_sread] PRIMARY KEY CLUSTERED 
+	(
+		[samID] ASC,
+		[sreadID] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [SREAD_FG]
 ) ON [SREAD_FG]
 
