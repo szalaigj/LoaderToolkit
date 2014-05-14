@@ -64,11 +64,13 @@
     <Compile Include="Mappers\RefDesc.cs" />
     <Compile Include="Mappers\Sam.cs" />
     <Compile Include="Mappers\SimplePileup.cs" />
+    <Compile Include="Mappers\Sread.cs" />
     <Compile Include="Mappers\Tweet.cs" />
     <Compile Include="Mergers\BasesDist.cs" />
     <Compile Include="Mergers\BinaryEncodedPileup.cs" />
     <Compile Include="Mergers\Ref.cs" />
     <Compile Include="Mergers\Sam.cs" />
+    <Compile Include="Mergers\Sread.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueuedTaskScheduler.cs" />
