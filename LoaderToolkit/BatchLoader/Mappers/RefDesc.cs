@@ -23,11 +23,11 @@ namespace BatchLoader.Mappers
             // [refID] [int] NOT NULL PRIMARY KEY
             BulkWriter.WriteInt(Int32.Parse(objParts[1]));
 
-            // [extID] [varchar](80) NOT NULL,
-            BulkWriter.WriteVarChar(objParts[2], 100);
+            // [extID] [varchar](80) NOT NULL
+            BulkWriter.WriteVarChar(objParts[2], 80);
 
             // [desc] [varchar](200) NULL
-            BulkWriter.WriteVarChar(objParts[3], 100);
+            BulkWriter.WriteVarChar(objParts[3], 200);
 
             BulkWriter.EndLine();
         }

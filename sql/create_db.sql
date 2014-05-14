@@ -401,9 +401,18 @@ CREATE TABLE [dbo].[ref](
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [REF_FG]
 ) ON [REF_FG]
 
+-- For the storage of headers of sam files:
+CREATE TABLE [dbo].[sam](
+	[samID] [int] NOT NULL PRIMARY KEY, -- sam file identifier
+	[line] [int] NOT NULL, -- 1-based row number of the header line in the file
+	[type] [varchar](2) NOT NULL,
+	[tags] [varchar](8000) NOT NULL
+) ON [PRIMARY]
+
 CREATE TABLE sread
 (
-	[samID] [int] IDENTITY(1,1)PRIMARY KEY,
+	[sreadID] [int] IDENTITY(1,1)PRIMARY KEY,
+	[samID] [int] NOT NULL,
 	[refID] [int] NOT NULL,
 	[dir] [bit] NOT NULL,
 	[mapq] [tinyint] NOT NULL,

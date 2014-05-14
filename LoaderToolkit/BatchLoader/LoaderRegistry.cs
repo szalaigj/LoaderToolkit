@@ -35,9 +35,14 @@ namespace BatchLoader
             //For(typeof(Mapper<string>)).Add(typeof(Mappers.BasesDist));
             //For<Merger>().Add<Mergers.BasesDist>();
 
-            // For For SAM-style:
-            For(typeof(Mapper<string>)).Add(typeof(Mappers.Ref));
-            For<Merger>().Add<Mergers.Ref>();
+            // For SAM-style:
+            // ref:
+            //For(typeof(Mapper<string>)).Add(typeof(Mappers.Ref));
+            //For<Merger>().Add<Mergers.Ref>();
+
+            // sam:
+            For(typeof(Mapper<string>)).Add(typeof(Mappers.Sam));
+            For<Merger>().Add<Mergers.Sam>();
 
             For(typeof(ChunkService<string>)).Add(typeof(ChunkService<string>)).Named("WithAutoWiring");
 
