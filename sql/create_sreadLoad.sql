@@ -5,9 +5,10 @@ CREATE TABLE [$dbname].[dbo].[$tablename]
 	[rname] [varchar](50) NOT NULL,
 	[dir] [bit] NOT NULL,
 	[mapq] [tinyint] NOT NULL,
-	[cigar] [varchar](100) NULL,
-	[seq] [varchar](1000) NULL,
+	[seq] [varchar](8000) NOT NULL,
+	[inPos] [varchar](8000) NULL,
+	[delPos] [varchar](8000) NULL,
 	[posStart] [bigint] NOT NULL,
     [posEnd] [bigint] NOT NULL,
-    [qual] [varchar](50) NOT NULL
+    [qual] [varchar](8000) NOT NULL
 ) ON [SREADLOAD_FG];
