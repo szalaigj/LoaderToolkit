@@ -32,7 +32,7 @@ namespace BatchLoader.Mappers
             var seq = objParts[11];
             var qual = objParts[12];
 
-            // [extID] [varchar](150) NOT NULL
+            // [qname] [varchar](150) NOT NULL
             BulkWriter.WriteVarChar(qname, 150);
 
             // [rname] [varchar](50) NOT NULL
@@ -48,14 +48,27 @@ namespace BatchLoader.Mappers
             // [seq] [varchar](8000) NOT NULL
             seq = EliminateSoftClippingPartsFromSeq(cigar, seq);
             BulkWriter.WriteVarChar(seq, 8000);
+            
+            long posStart;
+            long posEnd;
+            string insPos;
+            string delPos;
+            ProcessCigar(cigar, pos, out posStart, out posEnd, out insPos, out delPos);
 
-            // [inPos] [varchar](8000) NULL
+            insPos = (string.Empty.Equals(insPos)) ? null : insPos;
+            delPos = (string.Empty.Equals(delPos)) ? null : delPos;
+
+            // [insPos] [varchar](8000) NULL
+            BulkWriter.WriteVarChar(insPos, 8000);
 
             // [delPos] [varchar](8000) NULL
+            BulkWriter.WriteVarChar(delPos, 8000);
 
             // [posStart] [bigint] NOT NULL
+            BulkWriter.WriteBigInt(posStart);
 
             // [posEnd] [bigint] NOT NULL
+            BulkWriter.WriteBigInt(posEnd);
 
             // [qual] [varchar](8000) NOT NULL
             BulkWriter.WriteVarChar(qual, 8000);
@@ -98,12 +111,11 @@ namespace BatchLoader.Mappers
             return result;
         }
 
-        private void ProcessCigar(string cigar, string pos, bool dir, long posStart, long posEnd, 
+        private void ProcessCigar(string cigar, string pos, out long posStart, out long posEnd, 
             out string insPos, out string delPos)
         {
             insPos = "";
             delPos = "";
-            var posValue = Int64.Parse(pos);
             // This regex pattern contains positive lookbehind expressions
             // which is needed for zero-length matchs
             string pattern = @"(?<=M)|(?<=I)|(?<=D)|(?<=N)|(?<=S)|(?<=H)|(?<=P)|(?<=\=)|(?<=X)";
@@ -112,8 +124,18 @@ namespace BatchLoader.Mappers
             var results = Regex.Split(cigar, pattern);
             string[] cigarOperations = new string[results.Length-1];
             Array.Copy(results, cigarOperations, cigarOperations.Length);
+            int innerPos = ProcessOperations(ref insPos, ref delPos, cigarOperations);
+            posStart = Int64.Parse(pos);
+            posEnd = posStart + innerPos - 1;
+        }
+
+        private int ProcessOperations(ref string insPos, ref string delPos, string[] cigarOperations)
+        {
+            // the relative position related to the SEQ which is 0-based:
+            // note: the clipping and insertion operations should be ignored
+            //       so when the end of CIGAR string is reached it is NOT sure the innerPos will equal to length of SEQ
             int innerPos = 0;
-            foreach(string op in cigarOperations)
+            foreach (string op in cigarOperations)
             {
                 var opLen = op.Substring(0, op.Length - 1);
                 var opLenValue = Int32.Parse(opLen);
@@ -122,11 +144,31 @@ namespace BatchLoader.Mappers
                 {
                     if ("I".Equals(opType))
                     {
-                        insPos += innerPos + " " + opLen + "\t";
+                        insPos += recordPos(innerPos - 1, opLen);
                     }
-                    innerPos += opLenValue;
+                    else if (("D".Equals(opType)) || ("N".Equals(opType)))
+                    {
+                        delPos += recordPos(innerPos - 1, opLen);
+                        innerPos += opLenValue;
+                    }
+                    else
+                    {
+                        innerPos += opLenValue;
+                    }
                 }
             }
+            return innerPos;
+        }
+
+        /// <summary>
+        /// The record will contain only the position which is relative to posStart.
+        /// </summary>
+        /// <param name="actualOffsetPos"></param>
+        /// <param name="opLen"></param>
+        /// <returns></returns>
+        private string recordPos(long actualOffsetPos, string opLen)
+        {
+            return actualOffsetPos + " " + opLen + "\t";
         }
     }
 }

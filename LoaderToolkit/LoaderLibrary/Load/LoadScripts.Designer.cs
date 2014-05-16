@@ -279,6 +279,14 @@ namespace LoaderLibrary.Load {
             }
         }
 
+        public static string create_sreadLoad
+        {
+            get
+            {
+                return ResourceManager.GetString("create_sreadLoad", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to IF OBJECT_ID (N&apos;[$dbname].dbo.[$tablename]&apos;, N&apos;U&apos;) IS NOT NULL 
         ///DROP TABLE [$dbname].dbo.[$tablename].
@@ -448,6 +456,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("index_sam", resourceCulture);
+            }
+        }
+
+        public static string index_sreadLoad
+        {
+            get
+            {
+                return ResourceManager.GetString("index_sreadLoad", resourceCulture);
             }
         }
 
@@ -670,6 +686,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("merge_sam", resourceCulture);
+            }
+        }
+
+        public static string merge_sread
+        {
+            get
+            {
+                return ResourceManager.GetString("merge_sread", resourceCulture);
             }
         }
     }
