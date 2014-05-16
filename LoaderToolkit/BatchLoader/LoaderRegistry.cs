@@ -41,8 +41,12 @@ namespace BatchLoader
             //For<Merger>().Add<Mergers.Ref>();
 
             // sam:
-            For(typeof(Mapper<string>)).Add(typeof(Mappers.Sam));
-            For<Merger>().Add<Mergers.Sam>();
+            //For(typeof(Mapper<string>)).Add(typeof(Mappers.Sam));
+            //For<Merger>().Add<Mergers.Sam>();
+
+            // sread:
+            For(typeof(Mapper<string>)).Add(typeof(Mappers.Sread));
+            For<Merger>().Add<Mergers.Sread>();
 
             For(typeof(ChunkService<string>)).Add(typeof(ChunkService<string>)).Named("WithAutoWiring");
 
