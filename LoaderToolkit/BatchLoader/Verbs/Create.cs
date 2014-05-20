@@ -5,12 +5,15 @@ using System.Text;
 using System.IO;
 using LoaderLibrary.Load;
 using LoaderLibrary.CommandLineParser;
+using System.Reflection;
+using StructureMap;
 
 namespace BatchLoader.Verbs
 {
     [Verb(Name = "Create", Description = "Create new batch.")]
-    class Create : Verb
+    class Create : BatchLoaderVerb
     {
+        private string mode;
         private string source;
         private string fileSuffix;
         private string bulkPath;
@@ -21,7 +24,14 @@ namespace BatchLoader.Verbs
         private string userID;
         private string password;
         private bool binary;
-        
+
+        [Parameter(Name = "Mode", Description = "Mapper/Merger class names which are used for load/target tables.", Required = true)]
+        public override string Mode
+        {
+            get { return mode; }
+            set { mode = value; }
+        }
+
         [Parameter(Name = "Source", Description = "Source file pattern.", Required = true)]
         public string Source
         {
@@ -115,7 +125,15 @@ namespace BatchLoader.Verbs
             // Find files matching pattern
             var dir = Path.GetDirectoryName(Source);
             var pat = Path.GetFileName(Source);
+            var ext = Path.GetExtension(Source);
             var files = Directory.GetFiles(dir, pat);
+
+            var currentMapper = ObjectFactory.GetInstance<Mapper<string>>();
+            if (!currentMapper.PreferredSourceFileExt.Equals(ext))
+            {
+                Console.WriteLine("WARNING: the extension of the given Source does not equal the " +
+                    "preferred file extension of the given Mapper type! Are you sure you want to use it?");
+            }
 
             if (files.Length == 0)
             {

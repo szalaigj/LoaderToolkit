@@ -15,6 +15,11 @@ namespace BatchLoader.Mappers
             get { return "pupLoad"; }
         }
 
+        public override string PreferredSourceFileExt
+        {
+            get { return ".pup"; }
+        }
+
         protected void MapFirstToken(string firstToken)
         {
             // [sampleName] [varchar](16) NOT NULL

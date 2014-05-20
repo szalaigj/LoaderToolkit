@@ -15,6 +15,11 @@ namespace BatchLoader.Mappers
             get { return "sreadLoad"; }
         }
 
+        public override string PreferredSourceFileExt
+        {
+            get { return ".aln"; }
+        }
+
         public override void Map(string obj)
         {
             string[] objParts = obj.Split('\t');

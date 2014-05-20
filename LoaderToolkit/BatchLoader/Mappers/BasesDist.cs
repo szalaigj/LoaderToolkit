@@ -14,6 +14,11 @@ namespace BatchLoader.Mappers
             get { return "basesDistLoad"; }
         }
 
+        public override string PreferredSourceFileExt
+        {
+            get { return ".mutTrip"; }
+        }
+
         public override void Map(string obj)
         {
             // the obj - which is read line in fact - is splitted by tab or space character: 

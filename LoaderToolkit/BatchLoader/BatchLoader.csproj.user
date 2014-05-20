@@ -4,6 +4,6 @@
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>Start -BatchID 1 -Keep</StartArguments>
+    <StartArguments>Start -Mode BinaryEncodedPileup -BatchID 1 -Keep</StartArguments>
   </PropertyGroup>
 </Project>

@@ -15,6 +15,11 @@ namespace BatchLoader.Mappers
             get { return "ref"; }
         }
 
+        public override string PreferredSourceFileExt
+        {
+            get { return ".fa"; }
+        }
+
         public override void Map(string obj)
         {
             string[] objParts = obj.Split('\t');

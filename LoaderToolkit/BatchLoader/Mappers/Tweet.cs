@@ -17,6 +17,12 @@ namespace BatchLoader.Mappers
             get { return "tweet"; }
         }
 
+        public override string PreferredSourceFileExt
+        {
+            // TODO: this file extension is unknown.
+            get { return "UNKNOWN"; }
+        }
+
         public override void Map(Dictionary<string, object> obj)
         {
             if (obj.ContainsKey("text"))

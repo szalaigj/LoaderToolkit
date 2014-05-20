@@ -20,6 +20,8 @@ namespace LoaderLibrary.Load
 
         private BulkFileWriter bulkWriter = null;
 
+        public abstract string PreferredSourceFileExt { get; }
+
         public bool Skipped
         {
             get { return skipped; }

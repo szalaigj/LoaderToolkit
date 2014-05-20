@@ -12,8 +12,9 @@ using StructureMap;
 namespace BatchLoader.Verbs
 {
     [Verb(Name = "Start", Description = "Starts processing of a batch")]
-    class Start : Verb
+    class Start : BatchLoaderVerb
     {
+        private string mode;
         private int batchID;
         private int batchSize;
         private int threads;
@@ -21,7 +22,14 @@ namespace BatchLoader.Verbs
         private bool keepFiles;
 
         private Batch batch;
-        
+
+        [Parameter(Name = "Mode", Description = "Mapper/Merger class names which are used for load/target tables.", Required = true)]
+        public override string Mode
+        {
+            get { return mode; }
+            set { mode = value; }
+        }
+
         [Parameter(Name = "BatchID", Description = "Batch ID to start.", Required = true)]
         public int BatchID
         {

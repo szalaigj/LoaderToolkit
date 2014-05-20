@@ -8,11 +8,19 @@ using System.Threading.Tasks;
 
 namespace BatchLoader.Mappers
 {
+    /// <summary>
+    /// This mapper is not used because the reference descriptions file contains 'insert into' statements currently.
+    /// </summary>
     public class RefDesc : Mapper<string>
     {
         public override string TableName
         {
             get { return "refDesc"; }
+        }
+
+        public override string PreferredSourceFileExt
+        {
+            get { return ".dsc"; }
         }
 
         public override void Map(string obj)

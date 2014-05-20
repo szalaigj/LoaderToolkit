@@ -14,7 +14,7 @@ namespace BatchLoader
 {
     public class LoaderRegistry : Registry
     {
-        public LoaderRegistry()
+        public LoaderRegistry(Type mapperType, Type mergerType)
         {
             For(typeof(FileUtils<string>)).Use(typeof(FileUtils<string>));
             For(typeof(SqlUtils<string>)).Use(typeof(SqlUtils<string>));
@@ -27,26 +27,8 @@ namespace BatchLoader
             For<StreamReaderForLoaderWithPrefix>().Use<StreamReaderForLoaderWithPrefix>();
             For(typeof(BaseBulkInsertFileCreator<string>)).Use(typeof(DefaultBulkInsertFileCreator));
 
-            // For pileups:
-            //For(typeof(Mapper<string>)).Add(typeof(Mappers.BinaryEncodedPileup));
-            //For<Merger>().Add<Mergers.BinaryEncodedPileup>();
-
-            // For basesDist:
-            //For(typeof(Mapper<string>)).Add(typeof(Mappers.BasesDist));
-            //For<Merger>().Add<Mergers.BasesDist>();
-
-            // For SAM-style:
-            // ref:
-            //For(typeof(Mapper<string>)).Add(typeof(Mappers.Ref));
-            //For<Merger>().Add<Mergers.Ref>();
-
-            // sam:
-            //For(typeof(Mapper<string>)).Add(typeof(Mappers.Sam));
-            //For<Merger>().Add<Mergers.Sam>();
-
-            // sread:
-            For(typeof(Mapper<string>)).Add(typeof(Mappers.Sread));
-            For<Merger>().Add<Mergers.Sread>();
+            For(typeof(Mapper<string>)).Add(mapperType);
+            For(typeof(Merger)).Add(mergerType);
 
             For(typeof(ChunkService<string>)).Add(typeof(ChunkService<string>)).Named("WithAutoWiring");
 

@@ -75,6 +75,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueuedTaskScheduler.cs" />
     <Compile Include="Streams\JsonSelector.cs" />
+    <Compile Include="Verbs\BatchLoaderVerb.cs" />
     <Compile Include="Verbs\Create.cs" />
     <Compile Include="Verbs\Start.cs" />
   </ItemGroup>

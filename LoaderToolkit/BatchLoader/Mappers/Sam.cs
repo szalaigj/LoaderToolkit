@@ -14,6 +14,11 @@ namespace BatchLoader.Mappers
             get { return "sam"; }
         }
 
+        public override string PreferredSourceFileExt
+        {
+            get { return ".hdr"; }
+        }
+
         public override void Map(string obj)
         {
             string[] objParts = obj.Split('\t');

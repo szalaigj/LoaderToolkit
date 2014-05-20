@@ -1,4 +1,5 @@
-﻿using LoaderLibrary.CommandLineParser;
+﻿using BatchLoader.Verbs;
+using LoaderLibrary.CommandLineParser;
 using StructureMap;
 using System;
 using System.Collections.Generic;
@@ -12,23 +13,22 @@ namespace BatchLoader
     {
         static void Main(string[] args)
         {
-            ObjectFactory.Initialize(x =>
-            {
-                x.AddRegistry<LoaderRegistry>();
-            });
-
             List<Type> verbs = new List<Type>() 
             {
-                typeof(Verbs.Create),
-                typeof(Verbs.Start),
+                typeof(Create),
+                typeof(Start),
             };
 
-            Verb v = null;
+            BatchLoaderVerb v = null;
 
             try
             {
                 PrintHeader();
-                v = (Verb)ArgumentParser.Parse(args, verbs);
+                v = (BatchLoaderVerb)ArgumentParser.Parse(args, verbs);
+                ObjectFactory.Initialize(x =>
+                {
+                    x.AddRegistry(new LoaderRegistry(v.GetMapperType(), v.GetMergerType()));
+                });
             }
             catch (ArgumentParserException ex)
             {
