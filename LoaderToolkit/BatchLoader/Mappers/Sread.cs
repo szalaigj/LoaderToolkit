@@ -51,6 +51,8 @@ namespace BatchLoader.Mappers
             BulkWriter.WriteTinyInt(SByte.Parse(mapq));
 
             // [seq] [varchar](8000) NOT NULL
+            cigar = TransformZeroOrAsteriskToMatchOrMismatch(cigar, seq, qname);
+            cigar = TransformInsertionToSoftClippingAtTheBeginningOf(cigar);
             seq = EliminateSoftClippingPartsFromSeq(cigar, seq);
             BulkWriter.WriteVarChar(seq, 8000);
             
@@ -93,6 +95,48 @@ namespace BatchLoader.Mappers
         {
             var bit = (bitwiseFlag & (1 << bitNumber - 1)) != 0;
             return bit;
+        }
+
+        /// <summary>
+        /// If CIGAR string contains '*' or '0' then the information about it is unavailable
+        /// so it is assumed there are not insertion/deletion/soft- or hard clipping. 
+        /// </summary>
+        /// <param name="cigar"></param>
+        /// <param name="seq"></param>
+        /// <param name="qname"></param>
+        /// <returns></returns>
+        private string TransformZeroOrAsteriskToMatchOrMismatch(string cigar, string seq, string qname)
+        {
+            string result = string.Copy(cigar);
+            if ("*".Equals(cigar) || "0".Equals(cigar))
+            {
+                var seqLen = seq.Length;
+                result = seqLen + "M";
+                Console.WriteLine("WARNING: a row of source file contains unavailable CIGAR string" +
+                    " so the CIGAR string set to '{0}M' and its qname is '{1}'.", seqLen, qname);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// It would be necessary that the leading insertion operation is replaced by soft clipping operation
+        /// because there is no real difference between them conceptually 
+        /// but if the insertion is remained the further processing would be misled.
+        /// </summary>
+        /// <param name="cigar"></param>
+        /// <returns></returns>
+        private string TransformInsertionToSoftClippingAtTheBeginningOf(string cigar)
+        {
+            string result = string.Copy(cigar);
+            string patternForInsertionAtTheBeginning = @"^\d+I";
+            bool isMatch = Regex.IsMatch(cigar, patternForInsertionAtTheBeginning);
+            if (isMatch)
+            {
+                // only the first occurence of 'I' should be replaced by 'S':
+                int posOfFirstCharI = cigar.IndexOf("I");
+                result = cigar.Substring(0, posOfFirstCharI) + "S" + cigar.Substring(posOfFirstCharI + 1);
+            }
+            return result;
         }
 
         private string EliminateSoftClippingPartsFromSeq(string cigar, string seq)

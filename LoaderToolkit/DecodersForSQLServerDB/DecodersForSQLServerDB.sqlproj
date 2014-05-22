@@ -58,6 +58,7 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="UserDefinedFunctions" />
+    <Folder Include="UserDefinedAggregates" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -73,6 +74,8 @@
     <Compile Include="UserDefinedFunctions\CountBasesSeparately.cs" />
     <Compile Include="UserDefinedFunctions\CollectNucsFromNeighborhoodOfRefSeqPos.cs" />
     <Compile Include="UserDefinedFunctions\DetermineInDel.cs" />
+    <Compile Include="UserDefinedAggregates\Concatenate.cs" />
+    <Compile Include="UserDefinedFunctions\ObtainMismatchAndInDel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BinaryCodec\BinaryCodec.csproj">
