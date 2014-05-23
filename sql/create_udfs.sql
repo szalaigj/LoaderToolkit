@@ -34,15 +34,6 @@ AS
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[CollectNucsFromNeighborhoodOfRefSeqPos]
 GO
 
-CREATE FUNCTION [dbo].[DetermineInDel](@exNuc [nvarchar](4000), @missNuc [nvarchar](4000))
-RETURNS table 
-(
-    inDel bit, chainLen int, nucChain nvarchar(100)
-)
-AS 
-EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetermineInDel]
-GO
-
 CREATE AGGREGATE [dbo].[Concatenate](@input [nvarchar](4000))
 RETURNS [nvarchar](4000)
 EXTERNAL NAME [DecodersForSQLServerDB].[Concatenate]
@@ -67,4 +58,13 @@ CREATE FUNCTION [dbo].[IsNucX](@posStart [bigint], @misMNuc [nvarchar](4000), @r
 RETURNS [int] WITH EXECUTE AS CALLER
 AS 
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[IsNucX]
+GO
+
+CREATE FUNCTION [dbo].[DetermineInDel](@posStart [bigint], @indel [nvarchar](4000))
+RETURNS table 
+(
+    inDel bit, chainLen int, nucChain nvarchar(100)
+)
+AS 
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetermineInDel]
 GO

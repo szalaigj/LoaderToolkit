@@ -480,3 +480,34 @@ AND [dbo].[IsDel](s.posStart, s.indel, r.pos) = 0
 GROUP BY r.refID, r.pos, r.refNuc) as counters
 
 GO
+
+CREATE VIEW [dbo].[inDel]
+(
+		[refID]
+		,[pos]
+		,[coverage]
+		,[inDel]
+		,[chainLen]
+		,[nucChain]
+)
+AS
+SELECT [refID]
+      ,[pos]
+      ,[coverage]
+	  ,[did].[inDel]
+	  ,[did].[chainLen]
+	  ,[did].[nucChain]
+FROM
+(SELECT r.refID
+,r.pos
+,r.refNuc
+,s.indel
+,s.posStart
+,COUNT(*) as coverage
+FROM dbo.ref r
+INNER JOIN [dbo].sread s ON r.refID = s.refID AND (r.pos BETWEEN s.posStart AND s.posEnd)
+WHERE s.[indel] != ''
+GROUP BY r.refID, r.pos, r.refNuc, s.indel, s.posStart) as [innerTbl]
+CROSS APPLY [dbo].[DetermineInDel]([posStart], [indel]) as [did]
+
+GO

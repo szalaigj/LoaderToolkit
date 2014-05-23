@@ -33,31 +33,21 @@ public partial class UserDefinedFunctions
         DataAccess = DataAccessKind.Read,
         TableDefinition = "inDel bit, chainLen int, nucChain nvarchar(100)",
         FillRowMethodName = "FillRowFromExtraAndMissingNuc")]
-    public static IEnumerable DetermineInDel(SqlString exNuc, SqlString missNuc)
+    public static IEnumerable DetermineInDel(SqlInt64 posStart, SqlString indel)
     {
         ArrayList resultList = new ArrayList();
-        string patternForChars = @"[a-zA-Z]+$";
-        if (!exNuc.IsNull)
+        string patternForIndelEntry = @"[0-9]+[-\+]+[a-zA-Z]+";
+        MatchCollection matches = Regex.Matches(indel.Value, patternForIndelEntry);
+        foreach (Match match in matches)
         {
-            AddNewInDelRowToResult(exNuc, resultList, patternForChars, true);
-        }
-        if (!missNuc.IsNull)
-        {
-            AddNewInDelRowToResult(missNuc, resultList, patternForChars, false);
+            var foundIndel = match.Value;
+            var isInsertion = Regex.IsMatch(foundIndel, @"^[0-9]+[\+]+[a-zA-Z]+$");
+            char splittingChar = isInsertion ? '+' : '-';
+            string[] foundIndelParts = foundIndel.Split(splittingChar);
+            long indelStartPos = posStart.Value + Int32.Parse(foundIndelParts[0]);
+            var nucChainValue = foundIndelParts[1];
+            resultList.Add(new InDelRow { InDel = isInsertion, ChainLen = nucChainValue.Length, NucChain = nucChainValue });
         }
         return resultList;
-    }
-
-    private static void AddNewInDelRowToResult(SqlString nuc, ArrayList resultList, string patternForChars, bool inDelSwitch)
-    {
-        string nucValues = nuc.Value;
-        string[] nucArray = nucValues.Split('\t');
-        // the following variable index runs till length minus one because the last element of the (extra or missing) nucArray is always empty string:
-        // e.g.: '0AT\t1TCG\t' --> {'0AT','1TCG',''}
-        for (int index = 0; index < nucArray.Length - 1; index++)
-        {
-            string nucValue = Regex.Match(nucArray[index], patternForChars).Value;
-            resultList.Add(new InDelRow { InDel = inDelSwitch, ChainLen = nucValue.Length, NucChain = nucValue });
-        }
     }
 }
