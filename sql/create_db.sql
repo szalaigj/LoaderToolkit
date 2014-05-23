@@ -478,6 +478,5 @@ FROM dbo.ref r
 INNER JOIN [dbo].sread s ON r.refID = s.refID AND (r.pos BETWEEN s.posStart AND s.posEnd)
 AND [dbo].[IsDel](s.posStart, s.indel, r.pos) = 0
 GROUP BY r.refID, r.pos, r.refNuc) as counters
-ORDER BY refID, pos
 
 GO
