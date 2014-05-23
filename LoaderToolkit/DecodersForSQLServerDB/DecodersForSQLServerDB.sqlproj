@@ -76,6 +76,8 @@
     <Compile Include="UserDefinedFunctions\DetermineInDel.cs" />
     <Compile Include="UserDefinedAggregates\Concatenate.cs" />
     <Compile Include="UserDefinedFunctions\ObtainMismatchAndInDel.cs" />
+    <Compile Include="UserDefinedFunctions\IsDel.cs" />
+    <Compile Include="UserDefinedFunctions\IsNucX.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BinaryCodec\BinaryCodec.csproj">

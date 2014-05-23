@@ -42,3 +42,29 @@ RETURNS table
 AS 
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetermineInDel]
 GO
+
+CREATE AGGREGATE [dbo].[Concatenate](@input [nvarchar](4000))
+RETURNS [nvarchar](4000)
+EXTERNAL NAME [DecodersForSQLServerDB].[Concatenate]
+GO
+
+CREATE FUNCTION [dbo].[MisIndel](@refSeq [nvarchar](4000), @sreadSeq [nvarchar](4000), @insPos [nvarchar](4000), @delPos [nvarchar](4000))
+RETURNS table 
+(
+    misMNuc nvarchar(4000), indel nvarchar(4000)
+) 
+AS
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[ObtainMismatchAndInDel];
+GO
+
+CREATE FUNCTION [dbo].[IsDel](@posStart [bigint], @indel [nvarchar](4000), @refPos [bigint])
+RETURNS [bit] WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[IsDel]
+GO
+
+CREATE FUNCTION [dbo].[IsNucX](@posStart [bigint], @misMNuc [nvarchar](4000), @refPos [bigint], @refNuc [nvarchar](1), @countNuc [nvarchar](1))
+RETURNS [int] WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[IsNucX]
+GO

@@ -434,3 +434,50 @@ CREATE TABLE sread
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [SREAD_FG]
 ) ON [SREAD_FG]
 
+CREATE VIEW [dbo].[basesCover]
+(
+		[pupID]
+		,[pos]
+		,[refNuc]
+		,[coverage]
+		,[A]
+		,[C]
+		,[G]
+		,[T]
+		,[triplet]
+)
+AS
+SELECT [refID]
+      ,[pos]
+      ,[refNuc]
+      ,[coverage]
+	  ,[A]
+	  ,[C]
+	  ,[G]
+	  ,[T]
+	  ,CASE
+		WHEN lagPos = pos - 1 AND leadPos = pos + 1 THEN lagValue + [refNuc] + leadValue
+		WHEN lagPos = pos - 1 AND (leadPos IS NULL OR leadPos != pos + 1) THEN lagValue + [refNuc] + 'x'
+		WHEN (lagPos IS NULL OR lagPos != pos - 1) AND leadPos = pos + 1 THEN 'x' + [refNuc] + leadValue
+		ELSE 'x' + [refNuc] + 'x'
+	   END triplet
+FROM
+(SELECT r.refID
+,r.pos
+,r.refNuc
+,COUNT(*) as coverage
+,SUM([dbo].[IsNucX](s.posStart, s.misMNuc, r.pos, r.refNuc, 'A')) as A
+,SUM([dbo].[IsNucX](s.posStart, s.misMNuc, r.pos, r.refNuc, 'C')) as C
+,SUM([dbo].[IsNucX](s.posStart, s.misMNuc, r.pos, r.refNuc, 'G')) as G
+,SUM([dbo].[IsNucX](s.posStart, s.misMNuc, r.pos, r.refNuc, 'T')) as T
+,LAG(r.pos,1) OVER (ORDER BY r.refID, r.pos) as lagPos
+,LAG(r.refNuc,1) OVER (ORDER BY r.refID, r.pos) as lagValue
+,LEAD(r.pos,1) OVER (ORDER BY r.refID, r.pos) as leadPos
+,LEAD(r.refNuc,1) OVER (ORDER BY r.refID, r.pos) as leadValue
+FROM dbo.ref r
+INNER JOIN [dbo].sread s ON r.refID = s.refID AND (r.pos BETWEEN s.posStart AND s.posEnd)
+AND [dbo].[IsDel](s.posStart, s.indel, r.pos) = 0
+GROUP BY r.refID, r.pos, r.refNuc) as counters
+ORDER BY refID, pos
+
+GO
