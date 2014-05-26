@@ -63,7 +63,7 @@ GO
 CREATE FUNCTION [dbo].[DetermineInDel](@posStart [bigint], @indel [nvarchar](4000))
 RETURNS table 
 (
-    inDel bit, chainLen int, nucChain nvarchar(100)
+    inDelStartPos bigint, inDel bit, chainLen int, nucChain nvarchar(100)
 )
 AS 
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetermineInDel]

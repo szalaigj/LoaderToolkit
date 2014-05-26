@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileChunking", "FileChunkin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileAdapter", "FileAdapter\FileAdapter.csproj", "{C5BE39DE-DFD1-426A-8FD3-FA633132B16D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecodersForSQLServerDB.Test", "DecodersForSQLServerDB.Test\DecodersForSQLServerDB.Test.csproj", "{401BB700-EC61-4BA2-9E36-6F70089E149D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{C5BE39DE-DFD1-426A-8FD3-FA633132B16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5BE39DE-DFD1-426A-8FD3-FA633132B16D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5BE39DE-DFD1-426A-8FD3-FA633132B16D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{401BB700-EC61-4BA2-9E36-6F70089E149D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{401BB700-EC61-4BA2-9E36-6F70089E149D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{401BB700-EC61-4BA2-9E36-6F70089E149D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{401BB700-EC61-4BA2-9E36-6F70089E149D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

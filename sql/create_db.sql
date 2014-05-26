@@ -483,31 +483,43 @@ GO
 
 CREATE VIEW [dbo].[inDel]
 (
-		[refID]
-		,[pos]
-		,[coverage]
+		 [refID]
+		,[sreadID]
+		,[inDelStartPos]
 		,[inDel]
 		,[chainLen]
 		,[nucChain]
+		,[coverage]
 )
 AS
-SELECT [refID]
-      ,[pos]
-      ,[coverage]
-	  ,[did].[inDel]
-	  ,[did].[chainLen]
-	  ,[did].[nucChain]
+WITH
+idq
+AS
+(SELECT [innerTbl].[refID]
+       ,[innerTbl].[sreadID]
+       ,[did].[inDelStartPos]
+	   ,[did].[inDel]
+	   ,[did].[chainLen]
+	   ,[did].[nucChain]
 FROM
+(SELECT s.refID
+       ,s.sreadID
+       ,s.indel
+       ,s.posStart
+FROM [dbo].sread s) as [innerTbl]
+CROSS APPLY [dbo].[DetermineInDel]([posStart], [indel]) as [did]),
+cov
+AS
 (SELECT r.refID
-,r.pos
-,r.refNuc
-,s.indel
-,s.posStart
-,COUNT(*) as coverage
-FROM dbo.ref r
-INNER JOIN [dbo].sread s ON r.refID = s.refID AND (r.pos BETWEEN s.posStart AND s.posEnd)
-WHERE s.[indel] != ''
-GROUP BY r.refID, r.pos, r.refNuc, s.indel, s.posStart) as [innerTbl]
-CROSS APPLY [dbo].[DetermineInDel]([posStart], [indel]) as [did]
+       ,r.pos
+	   ,COUNT(*) as coverage
+ FROM [dbo].[ref] r
+ INNER JOIN [dbo].sread s ON r.refID = s.refID AND (r.pos BETWEEN s.posStart AND s.posEnd)
+ AND [dbo].[IsDel](s.posStart, s.indel, r.pos) = 0
+ GROUP BY r.refID, r.pos)
+SELECT i.*
+	  ,c.coverage
+FROM idq i
+INNER JOIN cov c ON i.refID = c.refID AND i.inDelStartPos = c.pos
 
 GO

@@ -15,15 +15,17 @@ public partial class UserDefinedFunctions
 {
     private class InDelRow
     {
+        public SqlInt64 InDelStartPos { get; set; }
         public SqlBoolean InDel { get; set; }
         public SqlInt32 ChainLen { get; set; }
         public SqlString NucChain { get; set; }
     }
 
-    public static void FillRowFromExtraAndMissingNuc(object tableTypeObject, out SqlBoolean inDel, out SqlInt32 chainLen, out SqlString nucChain)
+    public static void FillRowFromExtraAndMissingNuc(object tableTypeObject, out SqlInt64 inDelStartPos, out SqlBoolean inDel, out SqlInt32 chainLen, out SqlString nucChain)
     {
         var tableType = (InDelRow)tableTypeObject;
 
+        inDelStartPos = tableType.InDelStartPos;
         inDel = tableType.InDel;
         chainLen = tableType.ChainLen;
         nucChain = tableType.NucChain;
@@ -31,7 +33,7 @@ public partial class UserDefinedFunctions
 
     [Microsoft.SqlServer.Server.SqlFunction(
         DataAccess = DataAccessKind.Read,
-        TableDefinition = "inDel bit, chainLen int, nucChain nvarchar(100)",
+        TableDefinition = "inDelStartPos bigint, inDel bit, chainLen int, nucChain nvarchar(100)",
         FillRowMethodName = "FillRowFromExtraAndMissingNuc")]
     public static IEnumerable DetermineInDel(SqlInt64 posStart, SqlString indel)
     {
@@ -44,9 +46,9 @@ public partial class UserDefinedFunctions
             var isInsertion = Regex.IsMatch(foundIndel, @"^[0-9]+[\+]+[a-zA-Z]+$");
             char splittingChar = isInsertion ? '+' : '-';
             string[] foundIndelParts = foundIndel.Split(splittingChar);
-            long indelStartPos = posStart.Value + Int32.Parse(foundIndelParts[0]);
+            long inDelStartPos = posStart.Value + Int32.Parse(foundIndelParts[0]);
             var nucChainValue = foundIndelParts[1];
-            resultList.Add(new InDelRow { InDel = isInsertion, ChainLen = nucChainValue.Length, NucChain = nucChainValue });
+            resultList.Add(new InDelRow { InDelStartPos = inDelStartPos, InDel = isInsertion, ChainLen = nucChainValue.Length, NucChain = nucChainValue });
         }
         return resultList;
     }
