@@ -30,7 +30,7 @@ namespace FileAdapter.Verbs
         }
 
         [Parameter(Name = "SamID", Description = "The sam file identifier which will be the allocated, planned samID.")]
-        // Value of this property is the higher bit parts of the planned refID.
+        // Value of this property is the sam file identifier which can be arbitrary but should not be equal to existing samID in the DB.
         public int SamID
         {
             get { return samID; }
