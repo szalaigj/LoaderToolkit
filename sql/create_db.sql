@@ -436,7 +436,8 @@ CREATE TABLE sread
 
 CREATE VIEW [dbo].[basesCover]
 (
-		[pupID]
+         [samID]
+		,[refID]
 		,[pos]
 		,[refNuc]
 		,[coverage]
@@ -447,7 +448,8 @@ CREATE VIEW [dbo].[basesCover]
 		,[triplet]
 )
 AS
-SELECT [refID]
+SELECT [samID]
+      ,[refID]
       ,[pos]
       ,[refNuc]
       ,[coverage]
@@ -462,7 +464,8 @@ SELECT [refID]
 		ELSE 'x' + [refNuc] + 'x'
 	   END triplet
 FROM
-(SELECT r.refID
+(SELECT s.samID
+,r.refID
 ,r.pos
 ,r.refNuc
 ,COUNT(*) as coverage
@@ -477,13 +480,14 @@ FROM
 FROM dbo.ref r
 INNER JOIN [dbo].sread s ON r.refID = s.refID AND (r.pos BETWEEN s.posStart AND s.posEnd)
 AND [dbo].[IsDel](s.posStart, s.indel, r.pos) = 0
-GROUP BY r.refID, r.pos, r.refNuc) as counters
+GROUP BY s.samID, r.refID, r.pos, r.refNuc) as counters
 
 GO
 
 CREATE VIEW [dbo].[inDel]
 (
-		 [refID]
+         [samID]
+		,[refID]
 		,[sreadID]
 		,[inDelStartPos]
 		,[inDel]
@@ -495,14 +499,16 @@ AS
 WITH
 idq
 AS
-(SELECT [innerTbl].[refID]
+(SELECT [innerTbl].[samID]
+       ,[innerTbl].[refID]
        ,[innerTbl].[sreadID]
        ,[did].[inDelStartPos]
 	   ,[did].[inDel]
 	   ,[did].[chainLen]
 	   ,[did].[nucChain]
 FROM
-(SELECT s.refID
+(SELECT s.samID
+       ,s.refID
        ,s.sreadID
        ,s.indel
        ,s.posStart
@@ -510,16 +516,17 @@ FROM [dbo].sread s) as [innerTbl]
 CROSS APPLY [dbo].[DetermineInDel]([posStart], [indel]) as [did]),
 cov
 AS
-(SELECT r.refID
+(SELECT s.samID
+       ,r.refID
        ,r.pos
 	   ,COUNT(*) as coverage
  FROM [dbo].[ref] r
  INNER JOIN [dbo].sread s ON r.refID = s.refID AND (r.pos BETWEEN s.posStart AND s.posEnd)
  AND [dbo].[IsDel](s.posStart, s.indel, r.pos) = 0
- GROUP BY r.refID, r.pos)
+ GROUP BY s.samID, r.refID, r.pos)
 SELECT i.*
 	  ,c.coverage
 FROM idq i
-INNER JOIN cov c ON i.refID = c.refID AND i.inDelStartPos = c.pos
+INNER JOIN cov c ON i.samID = c.samID AND i.refID = c.refID AND i.inDelStartPos = c.pos
 
 GO
