@@ -40,7 +40,7 @@ namespace BatchLoader.Mergers
                 {
                     while (reader.Read())
                     {
-                        refIDs += reader.GetString(0) + ",";
+                        refIDs += reader.GetInt32(0).ToString() + ",";
                     }
                 }
             }
