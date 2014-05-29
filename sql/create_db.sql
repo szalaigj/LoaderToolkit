@@ -473,10 +473,10 @@ FROM
 ,SUM([dbo].[IsNucX](s.posStart, s.misMNuc, r.pos, r.refNuc, 'C')) as C
 ,SUM([dbo].[IsNucX](s.posStart, s.misMNuc, r.pos, r.refNuc, 'G')) as G
 ,SUM([dbo].[IsNucX](s.posStart, s.misMNuc, r.pos, r.refNuc, 'T')) as T
-,LAG(r.pos,1) OVER (ORDER BY r.refID, r.pos) as lagPos
-,LAG(r.refNuc,1) OVER (ORDER BY r.refID, r.pos) as lagValue
-,LEAD(r.pos,1) OVER (ORDER BY r.refID, r.pos) as leadPos
-,LEAD(r.refNuc,1) OVER (ORDER BY r.refID, r.pos) as leadValue
+,LAG(r.pos,1) OVER (ORDER BY s.samID, r.refID, r.pos) as lagPos
+,LAG(r.refNuc,1) OVER (ORDER BY s.samID, r.refID, r.pos) as lagValue
+,LEAD(r.pos,1) OVER (ORDER BY s.samID, r.refID, r.pos) as leadPos
+,LEAD(r.refNuc,1) OVER (ORDER BY s.samID, r.refID, r.pos) as leadValue
 FROM dbo.ref r
 INNER JOIN [dbo].sread s ON r.refID = s.refID AND (r.pos BETWEEN s.posStart AND s.posEnd)
 AND [dbo].[IsDel](s.posStart, s.indel, r.pos) = 0
