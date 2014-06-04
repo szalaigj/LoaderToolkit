@@ -218,7 +218,20 @@ namespace LoaderLibrary.Load
             return outputBytes;
         }
 
-        public void WriteTinyInt(sbyte value)
+        public void WriteSignedTinyInt(sbyte value)
+        {
+            if (binary)
+            {
+                outputBinary.Write(value);
+            }
+            else
+            {
+                WriteFieldEnd();
+                row.Append(value);
+            }
+        }
+
+        public void WriteTinyInt(byte value)
         {
             if (binary)
             {

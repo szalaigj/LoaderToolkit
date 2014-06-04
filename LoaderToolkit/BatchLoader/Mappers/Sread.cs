@@ -48,7 +48,7 @@ namespace BatchLoader.Mappers
             BulkWriter.WriteBit(dir);
 
             // [mapq] [tinyint] NOT NULL
-            BulkWriter.WriteTinyInt(SByte.Parse(mapq));
+            BulkWriter.WriteTinyInt(Byte.Parse(mapq));
 
             // [seq] [varchar](8000) NOT NULL
             cigar = TransformZeroOrAsteriskToMatchOrMismatch(cigar, seq, qname);
