@@ -40,7 +40,7 @@ namespace BatchLoader.Mappers
                 char nuc = nucsOfLine[index];
 
                 // [refID] [int] NOT NULL PRIMARY KEY
-                BulkWriter.WriteInt(Int32.Parse(firstTokenParts[1]));
+                BulkWriter.WriteInt(Int32.Parse(firstTokenParts[firstTokenParts.Length - 1]));
 
                 // [pos] [bigint] NOT NULL
                 BulkWriter.WriteBigInt(firstPosOfLine);
