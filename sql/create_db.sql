@@ -191,6 +191,45 @@ ADD FILE
 TO FILEGROUP SREADLOAD_FG;
 GO
 
+-- Expand the previous file groups:
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = sread_2,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\sread_2.ndf',
+	SIZE = 300GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = sread_3,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\sread_3.ndf',
+	SIZE = 300GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP SREAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = sreadload_2,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\sreadload_2.ndf',
+	SIZE = 300GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = sreadload_3,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\sreadload_3.ndf',
+	SIZE = 300GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP SREADLOAD_FG;
+GO
+
 -- For checking:
 USE szalaigj
 GO
