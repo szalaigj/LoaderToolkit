@@ -12,7 +12,7 @@ AS
       ,[delPos]
       ,[posStart]
       ,[posEnd]
-	  ,[$targetdb].[dbo].[Concatenate]([refNuc]) as [crn]
+	  ,[$targetdb].[dbo].[FoolproofConcatenate]([refNuc], [pos]) as [crn]
       ,[seq]
 	  ,[qual]
 FROM [$loaddb].[dbo].[$tablename] ld

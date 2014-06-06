@@ -34,9 +34,22 @@ AS
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[CollectNucsFromNeighborhoodOfRefSeqPos]
 GO
 
-CREATE AGGREGATE [dbo].[Concatenate](@startPos [bigint], @currentRefNuc [nvarchar](1), @currentPos [bigint])
-RETURNS [nvarchar](4000)
+CREATE AGGREGATE [dbo].[Concatenate]
+(@value [nvarchar](4000))
+RETURNS[nvarchar](4000)
+EXTERNAL NAME [DecodersForSQLServerDB].[Concatenate]
+GO
+
+CREATE AGGREGATE [dbo].[SafeConcatenate]
+(@startPos [bigint], @currentRefNuc [nvarchar](4000), @currentPos [bigint])
+RETURNS[nvarchar](4000)
 EXTERNAL NAME [DecodersForSQLServerDB].[SafeConcatenate]
+GO
+
+CREATE AGGREGATE [dbo].[FoolproofConcatenate]
+(@currentRefNuc [nvarchar](4000), @currentPos [bigint])
+RETURNS[nvarchar](4000)
+EXTERNAL NAME [DecodersForSQLServerDB].[FoolproofConcatenate]
 GO
 
 CREATE FUNCTION [dbo].[MisIndel](@refSeq [nvarchar](4000), @sreadSeq [nvarchar](4000), @insPos [nvarchar](4000), @delPos [nvarchar](4000))
