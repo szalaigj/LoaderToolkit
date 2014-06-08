@@ -41,7 +41,8 @@ namespace LoaderLibrary.Load
 
             using (SqlCommand cmd = new SqlCommand(sql.ToString(), cn, tn))
             {
-                cmd.CommandTimeout = 7200;
+                //the command timeout limit is one day:
+                cmd.CommandTimeout = 86400;
 
                 //cmd.Parameters.Add("@run_id", SqlDbType.SmallInt).Value = RunID;
 
