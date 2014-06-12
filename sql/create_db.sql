@@ -569,3 +569,54 @@ FROM idq i
 INNER JOIN cov c ON i.samID = c.samID AND i.refID = c.refID AND i.inDelStartPos = c.pos
 
 GO
+
+-- For SAM-style with binary encoded reference genomes:
+CREATE TABLE [dbo].[refDesc](-- this is unchanged
+	[refID] [int] NOT NULL PRIMARY KEY,-- IDENTITY(1,1)PRIMARY KEY,
+	[extID] [varchar](80) NOT NULL,
+	[desc] [varchar](200) NULL
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[refBin](
+	[refID] [int] NOT NULL,
+	[posStart] [bigint] NOT NULL,
+	[seqBlock] [binary](256) NOT NULL,
+	CONSTRAINT [PK_refBin] PRIMARY KEY CLUSTERED 
+	(
+		[refID] ASC,
+		[posStart] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [REF_BIN_FG]
+) ON [REF_BIN_FG]
+
+-- For the storage of headers of sam files:
+CREATE TABLE [dbo].[sam](-- this is unchanged
+	[samID] [int] NOT NULL, -- sam file identifier
+	[line] [int] NOT NULL, -- 1-based row number of the header line in the file
+	[type] [varchar](2) NOT NULL,
+	[tags] [varchar](8000) NOT NULL,
+	CONSTRAINT [PK_sam] PRIMARY KEY CLUSTERED 
+	(
+		[samID] ASC,
+		[line] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE sreadBin
+(
+	[samID] [int] NOT NULL,
+	[sreadID] [int] NOT NULL IDENTITY(1,1),
+	[refID] [int] NOT NULL,
+	[qname] [varchar](150) NOT NULL,
+	[dir] [bit] NOT NULL, -- the 0 means the normal and 1 means the reversed direction
+	[mapq] [tinyint] NOT NULL,
+	[posStart] [bigint] NOT NULL,
+    [posEnd] [bigint] NOT NULL,
+    [misMNuc] [varchar](8000) NULL, -- (binary encoded) bases which did not match the reference with offset
+	[indel] [varchar](8000) NULL, -- (binary encoded) sequences of insertions/deletions with offset
+    [qual] [varchar](8000) NOT NULL,
+	CONSTRAINT [PK_sreadBin] PRIMARY KEY CLUSTERED 
+	(
+		[samID] ASC,
+		[sreadID] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [SREAD_BIN_FG]
+) ON [SREAD_BIN_FG]

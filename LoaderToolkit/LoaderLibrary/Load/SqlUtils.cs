@@ -115,6 +115,7 @@ namespace LoaderLibrary.Load
             sql.Replace("$tablename", String.Format("{0}_{1}", chunk.ChunkId, mapper.TableName));
             sql.Replace("$ixname", String.Format("IX_{0}_{1}", chunk.ChunkId, mapper.TableName));
             sql.Replace("$filename", mapper.GetFilename(chunk));
+            sql.Replace("$orderplaceholder", (chunk.ColumnOrders == null) ? "" : "ORDER (" + chunk.ColumnOrders + "),");
         }
     }
 }

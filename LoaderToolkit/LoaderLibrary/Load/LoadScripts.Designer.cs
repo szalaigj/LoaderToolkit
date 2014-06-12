@@ -271,6 +271,14 @@ namespace LoaderLibrary.Load {
             }
         }
 
+        public static string create_refBin
+        {
+            get
+            {
+                return ResourceManager.GetString("create_refBin", resourceCulture);
+            }
+        }
+
         public static string create_sam
         {
             get
@@ -448,6 +456,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("index_ref", resourceCulture);
+            }
+        }
+
+        public static string index_refBin
+        {
+            get
+            {
+                return ResourceManager.GetString("index_refBin", resourceCulture);
             }
         }
 
@@ -678,6 +694,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("merge_ref", resourceCulture);
+            }
+        }
+
+        public static string merge_refBin
+        {
+            get
+            {
+                return ResourceManager.GetString("merge_refBin", resourceCulture);
             }
         }
 

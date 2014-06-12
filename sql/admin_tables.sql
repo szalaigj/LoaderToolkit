@@ -7,6 +7,7 @@ CREATE TABLE [dbo].[batch](
 	[file_suffix] [nvarchar](30) NULL,
 	[bulk_path] [nvarchar](512) NOT NULL,
 	[binary] [bit] NOT NULL,
+	[column_orders] [nvarchar](512) NULL,
  CONSTRAINT [PK_batch] PRIMARY KEY CLUSTERED 
 (
 	[batch_id] ASC

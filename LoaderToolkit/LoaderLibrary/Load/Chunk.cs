@@ -29,6 +29,7 @@ namespace LoaderLibrary.Load
 
         private string filename;
         private string fileSuffix;
+        private string columnOrders;
         private bool overlapped;
         private bool binary;
         private bool skip;
@@ -140,6 +141,12 @@ namespace LoaderLibrary.Load
         {
             get { return fileSuffix; }
             set { fileSuffix = value; }
+        }
+
+        public string ColumnOrders
+        {
+            get { return columnOrders; }
+            set { columnOrders = value; }
         }
 
         public bool Overlapped

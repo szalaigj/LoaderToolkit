@@ -60,7 +60,9 @@
     <Compile Include="Mappers\BasePileup.cs" />
     <Compile Include="Mappers\BasesDist.cs" />
     <Compile Include="Mappers\BinaryEncodedPileup.cs" />
+    <Compile Include="Mappers\BinaryNucleotideEncodingUtil.cs" />
     <Compile Include="Mappers\Ref.cs" />
+    <Compile Include="Mappers\RefBin.cs" />
     <Compile Include="Mappers\RefDesc.cs" />
     <Compile Include="Mappers\Sam.cs" />
     <Compile Include="Mappers\SimplePileup.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="Mergers\BasesDist.cs" />
     <Compile Include="Mergers\BinaryEncodedPileup.cs" />
     <Compile Include="Mergers\Ref.cs" />
+    <Compile Include="Mergers\RefBin.cs" />
     <Compile Include="Mergers\Sam.cs" />
     <Compile Include="Mergers\Sread.cs" />
     <Compile Include="Program.cs" />
@@ -96,7 +99,6 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

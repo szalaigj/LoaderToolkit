@@ -157,6 +157,9 @@
   <data name="merge_ref" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\merge_ref.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
+  <data name="merge_refBin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\merge_refBin.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
   <data name="merge_sam" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\merge_sam.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
@@ -231,6 +234,12 @@
   </data>
   <data name="index_ref" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\index_ref.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="create_refBin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\create_refBin.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="index_refBin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\index_refBin.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
   <data name="create_sam" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\create_sam.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>

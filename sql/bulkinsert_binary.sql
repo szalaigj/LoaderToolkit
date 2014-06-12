@@ -4,5 +4,6 @@ BULK INSERT [$dbname].[dbo].[$tablename]
 FROM '$filename'
 WITH (
 	DATAFILETYPE = N'widenative',
+	$orderplaceholder
 	TABLOCK
 	)

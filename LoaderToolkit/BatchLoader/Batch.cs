@@ -16,6 +16,7 @@ namespace BatchLoader
         private SqlConnectionStringBuilder loaderDB;
         private string sourcePath;
         private string fileSuffix;
+        private string columnOrders;
         private string bulkPath;
         private bool binary;
 
@@ -49,6 +50,12 @@ namespace BatchLoader
             set { fileSuffix = value; }
         }
 
+        public string ColumnOrders
+        {
+            get { return columnOrders; }
+            set { columnOrders = value; }
+        }
+
         public string BulkPath
         {
             get { return bulkPath; }
@@ -78,6 +85,7 @@ namespace BatchLoader
             this.loaderDB = new SqlConnectionStringBuilder("Data Source=localhost;Initial Catalog=szalaigj;Integrated Security=true");
             this.sourcePath = null;
             this.fileSuffix = null;
+            this.columnOrders = null;
             this.bulkPath = null;
 
             this.chunks = new List<Chunk>();
@@ -99,8 +107,8 @@ namespace BatchLoader
         {
             var sql = @"
 INSERT batch
-    (target_db, loader_db, source_path, file_suffix, bulk_path, binary)
-VALUES (@target_db, @loader_db, @source_path, @file_suffix, @bulk_path, @binary);
+    (target_db, loader_db, source_path, file_suffix, bulk_path, binary, column_orders)
+VALUES (@target_db, @loader_db, @source_path, @file_suffix, @bulk_path, @binary, @column_orders);
 
 SELECT CAST(@@IDENTITY AS int)";
 
@@ -122,7 +130,8 @@ SET target_db = @target_db,
     source_path = @source_path,
     file_suffix = @file_suffix,
     bulk_path = @bulk_path,
-    binary = @binary
+    binary = @binary,
+    column_orders = @column_orders
 WHERE batch_id = @batch_id";
 
             using (var cmd = new SqlCommand(sql, context.Connection, context.Transaction))
@@ -142,6 +151,7 @@ WHERE batch_id = @batch_id";
             cmd.Parameters.Add("@file_suffix", SqlDbType.NVarChar).Value = (object)fileSuffix ?? DBNull.Value;
             cmd.Parameters.Add("@bulk_path", SqlDbType.NVarChar).Value = bulkPath;
             cmd.Parameters.Add("@binary", SqlDbType.Bit).Value = binary;
+            cmd.Parameters.Add("@column_orders", SqlDbType.NVarChar).Value = (object)columnOrders ?? DBNull.Value;
         }
 
         public void Load(DatabaseContext context)
@@ -170,6 +180,7 @@ WHERE batch_id = @batch_id";
             fileSuffix = dr.IsDBNull(++o) ? null : dr.GetString(o);
             bulkPath = dr.GetString(++o);
             binary = dr.GetBoolean(++o);
+            columnOrders = dr.IsDBNull(++o) ? null : dr.GetString(o);
         }
 
         private void DeleteChunks(DatabaseContext context)
@@ -224,6 +235,7 @@ WHERE batch_id = @batch_id";
             c.BulkPath = bulkPath;
             c.Filename = Path.Combine(sourcePath, c.ChunkId);
             c.FileSuffix = fileSuffix;
+            c.ColumnOrders = columnOrders;
             c.LoaderDB.ConnectionString = loaderDB.ConnectionString;
             c.TargetDB.ConnectionString = targetDB.ConnectionString;
 

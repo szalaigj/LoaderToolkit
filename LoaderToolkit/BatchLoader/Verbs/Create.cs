@@ -16,6 +16,7 @@ namespace BatchLoader.Verbs
         private string mode;
         private string source;
         private string fileSuffix;
+        private string columnOrders;
         private string bulkPath;
         private string targetDB;
         private string loaderDB;
@@ -44,6 +45,13 @@ namespace BatchLoader.Verbs
         {
             get { return fileSuffix; }
             set { fileSuffix = value; }
+        }
+
+        [Parameter(Name = "ColumnOrders", Description = "The column orders as a hint for bulk insertion.", Required = false)]
+        public string ColumnOrders
+        {
+            get { return columnOrders; }
+            set { columnOrders = value; }
         }
 
         [Parameter(Name = "BulkPath", Description = "Bulk load files' path", Required = true)]
@@ -152,6 +160,7 @@ namespace BatchLoader.Verbs
                 
                 b.SourcePath = Path.GetDirectoryName(Source);
                 b.FileSuffix = FileSuffix;
+                b.ColumnOrders = ColumnOrders;
                 b.BulkPath = BulkPath;
 
                 b.TargetDB.DataSource = Server;
