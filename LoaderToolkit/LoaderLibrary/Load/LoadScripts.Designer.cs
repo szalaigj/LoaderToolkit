@@ -295,6 +295,14 @@ namespace LoaderLibrary.Load {
             }
         }
 
+        public static string create_sreadBinLoad
+        {
+            get
+            {
+                return ResourceManager.GetString("create_sreadBinLoad", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to IF OBJECT_ID (N&apos;[$dbname].dbo.[$tablename]&apos;, N&apos;U&apos;) IS NOT NULL 
         ///DROP TABLE [$dbname].dbo.[$tablename].
@@ -480,6 +488,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("index_sreadLoad", resourceCulture);
+            }
+        }
+
+        public static string index_sreadBinLoad
+        {
+            get
+            {
+                return ResourceManager.GetString("index_sreadBinLoad", resourceCulture);
             }
         }
 
@@ -718,6 +734,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("merge_sread", resourceCulture);
+            }
+        }
+
+        public static string merge_sreadBin
+        {
+            get
+            {
+                return ResourceManager.GetString("merge_sreadBin", resourceCulture);
             }
         }
     }

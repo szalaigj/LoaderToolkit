@@ -166,6 +166,9 @@
   <data name="merge_sread" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\merge_sread.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
+  <data name="merge_sreadBin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\merge_sreadBin.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
   <data name="create_delete_tweet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\create_delete_tweet.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
@@ -252,5 +255,11 @@
   </data>
   <data name="index_sreadLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\index_sreadLoad.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="create_sreadBinLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\create_sreadBinLoad.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="index_sreadBinLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\index_sreadBinLoad.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
 </root>

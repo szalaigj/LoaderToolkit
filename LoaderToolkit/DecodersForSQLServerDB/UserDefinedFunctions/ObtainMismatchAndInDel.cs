@@ -108,4 +108,22 @@ public partial class UserDefinedFunctions
         refIndex++;
         sreadIndex++;
     }
+
+    [Microsoft.SqlServer.Server.SqlFunction(
+        DataAccess = DataAccessKind.Read,
+        TableDefinition = "misMNuc nvarchar(4000), indel nvarchar(4000)",
+        FillRowMethodName = "FillRowFromSequencesAndExtraAndMissingNuc")]
+    public static IEnumerable ObtainMismatchAndInDelBin(SqlBinary refSeq, SqlBinary sreadSeq, SqlString insPos, SqlString delPos)
+    {
+        string resultMismatch = "";
+        string resultIndel = "";
+        Dictionary<int, int> insOffsetLen = DetermineOffsetLen(insPos);
+        Dictionary<int, int> delOffsetLen = DetermineOffsetLen(delPos);
+        byte[] refSeqValue = refSeq.Value;
+        byte[] sreadSeqValue = sreadSeq.Value;
+        int refIndex = 0;
+        int sreadIndex = 0;
+        MismatchInDelRow result = new MismatchInDelRow { Mismatch = new SqlString(resultMismatch), Indel = new SqlString(resultIndel) };
+        return new ArrayList { result };
+    }
 }
