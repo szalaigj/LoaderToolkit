@@ -81,3 +81,12 @@ RETURNS table
 AS 
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetermineInDel]
 GO
+
+CREATE FUNCTION [dbo].[MisIndelBin](@refSeq [varbinary](8000), @refPosStart [bigint], @sreadSeq [varbinary](8000), @sreadPosStart [bigint], @insPos [nvarchar](4000), @delPos [nvarchar](4000))
+RETURNS table 
+(
+    misMNuc nvarchar(4000), indel nvarchar(4000)
+) 
+AS
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[ObtainMismatchAndInDelBin];
+GO
