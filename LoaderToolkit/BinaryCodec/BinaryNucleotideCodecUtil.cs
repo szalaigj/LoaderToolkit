@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace BatchLoader.Mappers
 {
-    public static class BinaryNucleotideEncodingUtil
+    public static class BinaryNucleotideCodecUtil
     {
         public static readonly Dictionary<string, byte> encodedNucleotidePairs;
 
-        static BinaryNucleotideEncodingUtil()
+        static BinaryNucleotideCodecUtil()
         {
             encodedNucleotidePairs = new Dictionary<string, byte>();
             Dictionary<string, int> encodedNucleotides = new Dictionary<string, int>() 

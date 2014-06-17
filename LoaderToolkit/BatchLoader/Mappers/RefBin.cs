@@ -45,7 +45,7 @@ namespace BatchLoader.Mappers
             for (int index = 0; index < incrementOfPosStart * 2; index += 2)
             {
                 var nucleotidePair = partsOfNucSeq.Substring(index, 2);
-                var encodedPair = BinaryNucleotideEncodingUtil.GetEncodedPart(nucleotidePair);
+                var encodedPair = BinaryNucleotideCodecUtil.GetEncodedPart(nucleotidePair);
                 encodedNucleotides[index / 2] = encodedPair;
             }
 

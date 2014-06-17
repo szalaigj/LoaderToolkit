@@ -26,7 +26,7 @@ namespace BatchLoader.Mappers
             for (int index = 0; index < seq.Length; index += 2)
             {
                 var nucleotidePair = seq.Substring(index, 2);
-                var encodedPair = BinaryNucleotideEncodingUtil.GetEncodedPart(nucleotidePair);
+                var encodedPair = BinaryNucleotideCodecUtil.GetEncodedPart(nucleotidePair);
                 encodedNucleotides[index / 2] = encodedPair;
             }
             // [seq] [varbinary](512) NOT NULL
