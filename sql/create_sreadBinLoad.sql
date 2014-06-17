@@ -11,4 +11,4 @@ CREATE TABLE [$dbname].[dbo].[$tablename]
 	[posStart] [bigint] NOT NULL,
     [posEnd] [bigint] NOT NULL,
     [qual] [varchar](8000) NOT NULL
-) ON [PRIMARY];
+) ON [SREADLOAD_BIN_FG];

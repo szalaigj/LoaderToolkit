@@ -230,6 +230,100 @@ ADD FILE
 TO FILEGROUP SREADLOAD_FG;
 GO
 
+-- For SAM-style with binary encoding
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP REF_BIN_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = ref_bin_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\ref_bin_0.ndf',
+	SIZE = 80GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = ref_bin_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\ref_bin_1.ndf',
+	SIZE = 80GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP REF_BIN_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP REFLOAD_BIN_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = refload_bin_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\refload_bin_0.ndf',
+	SIZE = 40GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = refload_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\refload_bin_1.ndf',
+	SIZE = 40GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP REFLOAD_BIN_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP SREAD_BIN_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = sread_bin_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\sread_bin_0.ndf',
+	SIZE = 300GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = sread_bin_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\sread_bin_1.ndf',
+	SIZE = 300GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP SREAD_BIN_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP SREADLOAD_BIN_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = sreadload_bin_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\sreadload_bin_0.ndf',
+	SIZE = 300GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = sreadload_bin_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\sreadload_bin_1.ndf',
+	SIZE = 300GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP SREADLOAD_BIN_FG;
+GO
+
 -- For checking:
 USE szalaigj
 GO
@@ -602,7 +696,7 @@ CREATE TABLE [dbo].[sam](-- this is unchanged
 ) ON [PRIMARY]
 
 CREATE TABLE sreadBin
-(
+(-- this is unchanged
 	[samID] [int] NOT NULL,
 	[sreadID] [int] NOT NULL IDENTITY(1,1),
 	[refID] [int] NOT NULL,
@@ -611,8 +705,8 @@ CREATE TABLE sreadBin
 	[mapq] [tinyint] NOT NULL,
 	[posStart] [bigint] NOT NULL,
     [posEnd] [bigint] NOT NULL,
-    [misMNuc] [varchar](8000) NULL, -- (binary encoded) bases which did not match the reference with offset
-	[indel] [varchar](8000) NULL, -- (binary encoded) sequences of insertions/deletions with offset
+    [misMNuc] [varchar](8000) NULL, -- bases which did not match the reference with offset
+	[indel] [varchar](8000) NULL, -- sequences of insertions/deletions with offset
     [qual] [varchar](8000) NOT NULL,
 	CONSTRAINT [PK_sreadBin] PRIMARY KEY CLUSTERED 
 	(
