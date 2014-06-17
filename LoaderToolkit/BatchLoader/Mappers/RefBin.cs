@@ -1,4 +1,5 @@
-﻿using LoaderLibrary.Load;
+﻿using BinaryCodec;
+using LoaderLibrary.Load;
 using System;
 using System.Collections.Generic;
 using System.Linq;

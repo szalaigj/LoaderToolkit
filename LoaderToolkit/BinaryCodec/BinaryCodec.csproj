@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="BidirectionalDictionary.cs" />
     <Compile Include="BinaryCodecUtil.cs" />
+    <Compile Include="BinaryNucleotideEncodingUtil.cs" />
     <Compile Include="BitArrayEqualityComparer.cs" />
     <Compile Include="BitArrayOfInputCreator.cs" />
     <Compile Include="BoolsDecoder.cs" />

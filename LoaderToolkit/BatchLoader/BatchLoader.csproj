@@ -61,7 +61,6 @@
     <Compile Include="Mappers\BasesDist.cs" />
     <Compile Include="Mappers\BaseSread.cs" />
     <Compile Include="Mappers\BinaryEncodedPileup.cs" />
-    <Compile Include="Mappers\BinaryNucleotideEncodingUtil.cs" />
     <Compile Include="Mappers\Ref.cs" />
     <Compile Include="Mappers\RefBin.cs" />
     <Compile Include="Mappers\RefDesc.cs" />
