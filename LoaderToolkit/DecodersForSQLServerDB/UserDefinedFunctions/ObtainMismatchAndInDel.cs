@@ -11,6 +11,7 @@ using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Text.RegularExpressions;
 using Microsoft.SqlServer.Server;
+using BinaryCodec;
 
 public partial class UserDefinedFunctions
 {
@@ -34,20 +35,24 @@ public partial class UserDefinedFunctions
         FillRowMethodName = "FillRowFromSequencesAndExtraAndMissingNuc")]
     public static IEnumerable ObtainMismatchAndInDel(SqlString refSeq, SqlString sreadSeq, SqlString insPos, SqlString delPos)
     {
-        string resultMismatch = "";
-        string resultIndel = "";
         Dictionary<int, int> insOffsetLen = DetermineOffsetLen(insPos);
         Dictionary<int, int> delOffsetLen = DetermineOffsetLen(delPos);
         string refSeqValue = refSeq.Value;
-        char[] nucsOfRefSeq = refSeqValue.ToCharArray();
         string sreadSeqValue = sreadSeq.Value;
-        char[] nucsOfSreadSeq = sreadSeqValue.ToCharArray();
+        return DetermineMismatchInDelRow(insOffsetLen, delOffsetLen, refSeqValue, sreadSeqValue);
+    }
+
+    private static IEnumerable DetermineMismatchInDelRow(Dictionary<int, int> insOffsetLen, Dictionary<int, int> delOffsetLen,
+        string refSeqValue, string sreadSeqValue)
+    {
+        string resultMismatch = "";
+        string resultIndel = "";
         int refIndex = 0;
         int sreadIndex = 0;
-        while ((refIndex < nucsOfRefSeq.Length) && (sreadIndex < nucsOfSreadSeq.Length))
+        while ((refIndex < refSeqValue.Length) && (sreadIndex < sreadSeqValue.Length))
         {
-            var sreadNuc = nucsOfSreadSeq[sreadIndex];
-            if (nucsOfRefSeq[refIndex] != sreadNuc)
+            var sreadNuc = sreadSeqValue[sreadIndex];
+            if (refSeqValue[refIndex] != sreadNuc)
             {
                 resultMismatch += refIndex + " " + sreadNuc + "\t";
             }
@@ -116,81 +121,11 @@ public partial class UserDefinedFunctions
     public static IEnumerable ObtainMismatchAndInDelBin(SqlBinary refSeq, SqlInt64 refPosStart, SqlBinary sreadSeq, SqlInt64 sreadPosStart,
         SqlString insPos, SqlString delPos)
     {
-        Dictionary<int, string> decodedNucleotides = new Dictionary<int, string>() 
-        { 
-             {0x8, "A"}, 
-             {0x9, "C"}, 
-             {0xA, "G"}, 
-             {0xB, "T"}, 
-             {0xC, "N"},
-             {0X4, " "} 
-        };
-        string resultMismatch = "";
-        string resultIndel = "";
         Dictionary<int, int> insOffsetLen = DetermineOffsetLen(insPos);
         Dictionary<int, int> delOffsetLen = DetermineOffsetLen(delPos);
-        byte[] sreadSeqValue = sreadSeq.Value;
-        string decodedSreadSeq = DetermineDecodedSeq(decodedNucleotides, sreadSeqValue);
-        long offset = sreadPosStart.Value - refPosStart.Value;
-        bool isOffsetEven = (offset % 2 == 0);
-        var startRefSeqByteOffset = (int)(offset / 2 + 64);
-        byte[] refSeqValue = refSeq.Value;
-        string decodedRelatedRefSeqBlock;
-        if (isOffsetEven)
-        {
-            byte[] relatedRefSeqBlock = new byte[sreadSeqValue.Length];
-            Array.Copy(refSeqValue, startRefSeqByteOffset, relatedRefSeqBlock, 0, sreadSeqValue.Length);
-            decodedRelatedRefSeqBlock = DetermineDecodedSeq(decodedNucleotides, relatedRefSeqBlock);
-        }
-        else
-        {
-            byte[] relatedRefSeqBlock = new byte[sreadSeqValue.Length - 1];
-            Array.Copy(refSeqValue, startRefSeqByteOffset + 1, relatedRefSeqBlock, 0, sreadSeqValue.Length - 1);
-            decodedRelatedRefSeqBlock = DetermineDecodedSeq(decodedNucleotides, relatedRefSeqBlock);
-            byte maskForLowerBits = 0x0F;
-            var encLastNucl = refSeqValue[startRefSeqByteOffset] & maskForLowerBits;
-            decodedRelatedRefSeqBlock = decodedNucleotides[encLastNucl] + decodedRelatedRefSeqBlock;
-        }
-
-        int refIndex = 0;
-        int sreadIndex = 0;
-        while ((refIndex < decodedRelatedRefSeqBlock.Length) && (sreadIndex < decodedSreadSeq.Length))
-        {
-            var sreadNuc = decodedSreadSeq[sreadIndex];
-            if (decodedRelatedRefSeqBlock[refIndex] != sreadNuc)
-            {
-                resultMismatch += refIndex + " " + sreadNuc + "\t";
-            }
-            int length;
-            if (insOffsetLen.TryGetValue(refIndex, out length))
-            {
-                RecordInsertion(ref resultIndel, decodedSreadSeq, ref refIndex, ref sreadIndex, length);
-            }
-            else if (delOffsetLen.TryGetValue(refIndex, out length))
-            {
-                RecordDeletion(ref resultIndel, decodedRelatedRefSeqBlock, ref refIndex, ref sreadIndex, length);
-            }
-            else
-            {
-                StepIndecesNormally(ref refIndex, ref sreadIndex);
-            }
-        }
-        MismatchInDelRow result = new MismatchInDelRow { Mismatch = new SqlString(resultMismatch), Indel = new SqlString(resultIndel) };
-        return new ArrayList { result };
-    }
-
-    private static string DetermineDecodedSeq(Dictionary<int, string> decodedNucleotides, byte[] byteSeq)
-    {
-        string decodedSeq = "";
-        foreach (byte encNucPair in byteSeq)
-        {
-            byte maskForHigherBits = 0xF0;
-            var encFirstNucl = (encNucPair & maskForHigherBits) >> 4;
-            byte maskForLowerBits = 0x0F;
-            var encLastNucl = encNucPair & maskForLowerBits;
-            decodedSeq = decodedSeq + decodedNucleotides[encFirstNucl] + decodedNucleotides[encLastNucl];
-        }
-        decodedSeq = decodedSeq.TrimEnd(' ');
-        return decodedSeq;
+        string decodedRelatedRefSeqBlock = BinaryNucleotideCodecUtil.DetermineDecodedRelatedRefSeqBlock(sreadSeq.Length, sreadPosStart.Value,
+            refPosStart.Value, refSeq.Value);
+        string decodedSreadSeq = BinaryNucleotideCodecUtil.DetermineDecodedSeq(sreadSeq.Value);
+        return DetermineMismatchInDelRow(insOffsetLen, delOffsetLen, decodedRelatedRefSeqBlock, decodedSreadSeq);
     }
 }

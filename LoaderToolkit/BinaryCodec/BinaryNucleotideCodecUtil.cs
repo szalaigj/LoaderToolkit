@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BatchLoader.Mappers
+namespace BinaryCodec
 {
     public static class BinaryNucleotideCodecUtil
     {
         public static readonly Dictionary<string, byte> encodedNucleotidePairs;
+        public static readonly Dictionary<int, string> decodedNucleotides;
 
         static BinaryNucleotideCodecUtil()
         {
@@ -42,11 +43,94 @@ namespace BatchLoader.Mappers
                     encodedNucleotidePairs.Add(currentNucleotidePair, (byte)encodedNucleotidePair);
                 }
             }
+            decodedNucleotides = new Dictionary<int, string>() 
+            { 
+                {0x8, "A"}, 
+                {0x9, "C"}, 
+                {0xA, "G"}, 
+                {0xB, "T"},
+                {0xC, "N"},
+                {0X4, " "} 
+            };
         }
 
         public static byte GetEncodedPart(string nucleotidePair)
         {
             return encodedNucleotidePairs[nucleotidePair];
+        }
+
+        public static string DetermineDecodedSeq(byte[] byteSeq)
+        {
+            string decodedSeq = "";
+            foreach (byte encNucPair in byteSeq)
+            {
+                byte maskForHigherBits = 0xF0;
+                var encFirstNucl = (encNucPair & maskForHigherBits) >> 4;
+                byte maskForLowerBits = 0x0F;
+                var encLastNucl = encNucPair & maskForLowerBits;
+                decodedSeq = decodedSeq + decodedNucleotides[encFirstNucl] + decodedNucleotides[encLastNucl];
+            }
+            decodedSeq = decodedSeq.TrimEnd(' ');
+            return decodedSeq;
+        }
+
+        public static string DetermineDecodedRelatedRefSeqBlock(int sreadByteSeqLength, long sreadPosStartValue,
+            long refPosStartValue, byte[] refSeqValue)
+        {
+            long offset = sreadPosStartValue - refPosStartValue;
+            bool isOffsetEven = (offset % 2 == 0);
+            var startRefSeqByteOffset = (int)(offset / 2 + 64);
+            string decodedRelatedRefSeqBlock;
+            if (isOffsetEven)
+            {
+                byte[] relatedRefSeqBlock = new byte[sreadByteSeqLength];
+                Array.Copy(refSeqValue, startRefSeqByteOffset, relatedRefSeqBlock, 0, sreadByteSeqLength);
+                decodedRelatedRefSeqBlock = DetermineDecodedSeq(relatedRefSeqBlock);
+            }
+            else
+            {
+                byte[] relatedRefSeqBlock = new byte[sreadByteSeqLength - 1];
+                Array.Copy(refSeqValue, startRefSeqByteOffset + 1, relatedRefSeqBlock, 0, sreadByteSeqLength - 1);
+                decodedRelatedRefSeqBlock = DetermineDecodedSeq(relatedRefSeqBlock);
+                byte maskForLowerBits = 0x0F;
+                var encLastNucl = refSeqValue[startRefSeqByteOffset] & maskForLowerBits;
+                decodedRelatedRefSeqBlock = decodedNucleotides[encLastNucl] + decodedRelatedRefSeqBlock;
+            }
+            return decodedRelatedRefSeqBlock;
+        }
+
+        public static string DetermineRefSeqBlockWithPrecAndSuccNucs(long sreadPosStartValue, long sreadPosEndValue,
+            long refPosStartValue, byte[] refSeqValue)
+        {
+            // The sread pos start is left shifted by one because of preceding nucleotide:
+            var actualSreadPosStartValue = sreadPosStartValue - 1;
+            // The following contains plus one because of length-determination:
+            int sreadByteSeqLength = ((int)(sreadPosEndValue - actualSreadPosStartValue) + 1) / 2;
+            // If the actualSreadPosStartValue is not aligned to the beginning of the given byte exactly
+            // then the size of byte array should be increased:
+            sreadByteSeqLength = ((actualSreadPosStartValue - refPosStartValue) % 2 == 1) ? (sreadByteSeqLength + 1) : sreadByteSeqLength;
+            string decodedRelatedRefSeqBlock = DetermineDecodedRelatedRefSeqBlock(sreadByteSeqLength,
+            actualSreadPosStartValue, refPosStartValue, refSeqValue);
+            decodedRelatedRefSeqBlock = ComplementSucceedingNuc(sreadPosEndValue, refPosStartValue, refSeqValue, decodedRelatedRefSeqBlock);
+            return decodedRelatedRefSeqBlock;
+        }
+
+        private static string ComplementSucceedingNuc(long sreadPosEndValue, long refPosStartValue, byte[] refSeqValue, string decodedRelatedRefSeqBlock)
+        {
+            string succeedingNuc = "";
+            long endOffset = sreadPosEndValue - refPosStartValue;
+            bool isEndOffsetOdd = (endOffset % 2 == 1);
+            var endRefSeqByteOffset = (int)(endOffset / 2 + 64);
+            if (isEndOffsetOdd)
+            {
+                byte maskForHigherBits = 0xF0;
+                var succeedingNucBin = (refSeqValue[endRefSeqByteOffset + 1] & maskForHigherBits) >> 4;
+                succeedingNuc = BinaryNucleotideCodecUtil.decodedNucleotides[succeedingNucBin];
+            }
+            // If the end offset is even 
+            //    the decodedRelatedRefSeqBlock has contained the succeeding nucleotide because of byte representation
+            //    so the decodedRelatedRefSeqBlock is unchanged in this case:
+            return decodedRelatedRefSeqBlock + succeedingNuc;
         }
     }
 }

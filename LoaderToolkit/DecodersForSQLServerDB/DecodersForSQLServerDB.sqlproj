@@ -81,6 +81,7 @@
     <Compile Include="UserDefinedFunctions\IsNucX.cs" />
     <Compile Include="UserDefinedAggregates\SafeConcatenate.cs" />
     <Compile Include="UserDefinedAggregates\FoolproofConcatenate.cs" />
+    <Compile Include="UserDefinedFunctions\DetNucDistr.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BinaryCodec\BinaryCodec.csproj">

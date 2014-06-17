@@ -714,3 +714,47 @@ CREATE TABLE sreadBin
 		[sreadID] ASC
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [SREAD_BIN_FG]
 ) ON [SREAD_BIN_FG]
+
+CREATE VIEW [dbo].[basesCoverBin]
+(
+         [samID]
+		,[refID]
+		,[pos]
+		,[refNuc]
+		,[coverage]
+		,[A]
+		,[C]
+		,[G]
+		,[T]
+		,[triplet]
+)
+AS
+WITH
+align
+AS
+(
+SELECT sb.samID
+      ,sb.refID
+	  ,sb.posStart as sreadPosStart
+	  ,sb.posEnd as sreadPosEnd
+	  ,sb.misMNuc
+	  ,sb.indel
+	  ,rb.posStart as refPosStart
+	  ,rb.seqBlock as refSeq
+FROM [dbo].sreadBin sb
+INNER JOIN [dbo].refBin rb ON sb.refID = rb.refID AND FLOOR(sb.posStart/256)*256 + 1 = rb.posStart)
+SELECT a.samID
+      ,a.refID
+	  ,dn.refPos as pos
+	  ,dn.refNuc
+	  ,SUM(dn.coverage) as coverage
+	  ,SUM(dn.A) as A
+	  ,SUM(dn.C) as C
+	  ,SUM(dn.G) as G
+	  ,SUM(dn.T) as T
+	  ,dn.triplet
+FROM align a
+CROSS APPLY [dbo].[DetNucDistr](a.refPosStart, a.refSeq, a.sreadPosStart, a.sreadPosEnd, a.misMNuc, a.indel) dn
+GROUP BY a.samID, a.refID, dn.refPos, dn.refNuc, dn.triplet
+
+GO

@@ -90,3 +90,18 @@ RETURNS table
 AS
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[ObtainMismatchAndInDelBin];
 GO
+
+CREATE FUNCTION [dbo].[DetNucDistr](@refPosStart [bigint], @refSeq [varbinary](8000), @sreadPosStart [bigint], @sreadPosEnd [bigint], @misMNuc [nvarchar](4000), @indel [nvarchar](4000))
+RETURNS  TABLE (
+	[refPos] [bigint] NULL,
+	[refNuc] [nvarchar](1) NULL,
+	[coverage] [int] NULL,
+	[A] [int] NULL,
+	[C] [int] NULL,
+	[G] [int] NULL,
+	[T] [int] NULL,
+	[triplet] [nvarchar](3) NULL
+) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetNucDistr]
+GO
