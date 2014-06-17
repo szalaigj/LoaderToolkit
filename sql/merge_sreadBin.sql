@@ -26,4 +26,4 @@ SELECT [samID]
   ,[mid].[indel]
   ,[qual]
   FROM q1
-  CROSS APPLY [genetics].[dbo].[ObtainMismatchAndInDelBin](seqBlock, refPosStart, seq, posStart, insPos, delPos) as [mid];
+  CROSS APPLY [genetics].[dbo].[MisIndelBin](seqBlock, refPosStart, seq, posStart, insPos, delPos) as [mid];
