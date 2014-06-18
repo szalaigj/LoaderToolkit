@@ -13,7 +13,7 @@ q1 AS
 		,q0.*
   FROM q0
   INNER JOIN [genetics].[dbo].[refBin] r
-  ON r.refID = q0.refID AND FLOOR(q0.posStart/256)*256 + 1 = r.posStart)
+  ON r.refID = q0.refID AND FLOOR((q0.posStart - 1) / 256) * 256 + 1 = r.posStart)
 INSERT INTO [$targetdb].[dbo].[sreadBin] WITH(TABLOCKX) ([samID],[refID],[qname],[dir],[mapq],[posStart],[posEnd],[misMNuc],[indel],[qual])
 SELECT [samID]
   ,[refID]

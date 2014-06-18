@@ -742,7 +742,7 @@ SELECT sb.samID
 	  ,rb.posStart as refPosStart
 	  ,rb.seqBlock as refSeq
 FROM [dbo].sreadBin sb
-INNER JOIN [dbo].refBin rb ON sb.refID = rb.refID AND FLOOR(sb.posStart/256)*256 + 1 = rb.posStart)
+INNER JOIN [dbo].refBin rb ON sb.refID = rb.refID AND FLOOR((sb.posStart - 1) / 256) * 256 + 1 = rb.posStart)
 SELECT a.samID
       ,a.refID
 	  ,dn.refPos as pos
