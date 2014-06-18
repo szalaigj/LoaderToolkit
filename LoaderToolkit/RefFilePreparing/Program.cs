@@ -41,7 +41,7 @@ namespace RefFilePreparing
         private static void PrintHeader()
         {
             Console.WriteLine(
-            @"File chunking utility
+            @"Reference genome/chromosome files organizer
             (c) 2014 János Szalai-Gindl szalai@complex.elte.hu, László Dobos dobos@complex.elte.hu
             Department of Physics of Complex Systems, Eötvös Loránd University
 

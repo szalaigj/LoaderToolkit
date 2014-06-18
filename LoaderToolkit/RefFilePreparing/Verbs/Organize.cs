@@ -98,7 +98,7 @@ namespace RefFilePreparing.Verbs
                                 writer.Write(firstPosOfLine + "\t" + prevOverlap + outputLine);
                                 writer.Flush();
                                 firstPosOfLine += incrementOfPosStart;
-                                prevOverlap = nextOverlap;
+                                prevOverlap = outputLine.Substring(incrementOfPosStart / 2, incrementOfPosStart / 2);
                                 outputLineBuffer = (bufferLen == incrementOfPosStart) ? ""
                                                    : outputLineBuffer.Substring(incrementOfPosStart, bufferLen - incrementOfPosStart);
                             }
