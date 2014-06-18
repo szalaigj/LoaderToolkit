@@ -80,6 +80,10 @@ namespace BinaryCodec
             long offset = sreadPosStartValue - refPosStartValue;
             bool isOffsetEven = (offset % 2 == 0);
             var startRefSeqByteOffset = (int)(offset / 2 + 64);
+            if (offset < 0)
+            {
+                startRefSeqByteOffset--;
+            }
             string decodedRelatedRefSeqBlock;
             if (isOffsetEven)
             {
@@ -108,7 +112,7 @@ namespace BinaryCodec
             int sreadByteSeqLength = ((int)(sreadPosEndValue - actualSreadPosStartValue) + 1) / 2;
             // If the actualSreadPosStartValue is not aligned to the beginning of the given byte exactly
             // then the size of byte array should be increased:
-            sreadByteSeqLength = ((actualSreadPosStartValue - refPosStartValue) % 2 == 1) ? (sreadByteSeqLength + 1) : sreadByteSeqLength;
+            sreadByteSeqLength = (Math.Abs(actualSreadPosStartValue - refPosStartValue) % 2 == 1) ? (sreadByteSeqLength + 1) : sreadByteSeqLength;
             string decodedRelatedRefSeqBlock = DetermineDecodedRelatedRefSeqBlock(sreadByteSeqLength,
             actualSreadPosStartValue, refPosStartValue, refSeqValue);
             decodedRelatedRefSeqBlock = ComplementSucceedingNuc(sreadPosEndValue, refPosStartValue, refSeqValue, decodedRelatedRefSeqBlock);
