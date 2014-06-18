@@ -74,27 +74,23 @@ namespace BinaryCodec
             return decodedSeq;
         }
 
-        public static string DetermineDecodedRelatedRefSeqBlock(int sreadByteSeqLength, long sreadPosStartValue,
+        public static string DetermineDecodedRelatedRefSeqBlock(int relatedByteSeqLength, long relatedPosStartValue,
             long refPosStartValue, byte[] refSeqValue)
         {
-            long offset = sreadPosStartValue - refPosStartValue;
+            long offset = relatedPosStartValue - refPosStartValue;
             bool isOffsetEven = (offset % 2 == 0);
-            var startRefSeqByteOffset = (int)(offset / 2 + 64);
-            if (offset < 0)
-            {
-                startRefSeqByteOffset--;
-            }
+            var startRefSeqByteOffset = (offset < 0) ? (int)((offset - 1) / 2 + 64) : (int)(offset / 2 + 64);
             string decodedRelatedRefSeqBlock;
             if (isOffsetEven)
             {
-                byte[] relatedRefSeqBlock = new byte[sreadByteSeqLength];
-                Array.Copy(refSeqValue, startRefSeqByteOffset, relatedRefSeqBlock, 0, sreadByteSeqLength);
+                byte[] relatedRefSeqBlock = new byte[relatedByteSeqLength];
+                Array.Copy(refSeqValue, startRefSeqByteOffset, relatedRefSeqBlock, 0, relatedByteSeqLength);
                 decodedRelatedRefSeqBlock = DetermineDecodedSeq(relatedRefSeqBlock);
             }
             else
             {
-                byte[] relatedRefSeqBlock = new byte[sreadByteSeqLength - 1];
-                Array.Copy(refSeqValue, startRefSeqByteOffset + 1, relatedRefSeqBlock, 0, sreadByteSeqLength - 1);
+                byte[] relatedRefSeqBlock = new byte[relatedByteSeqLength - 1];
+                Array.Copy(refSeqValue, startRefSeqByteOffset + 1, relatedRefSeqBlock, 0, relatedByteSeqLength - 1);
                 decodedRelatedRefSeqBlock = DetermineDecodedSeq(relatedRefSeqBlock);
                 byte maskForLowerBits = 0x0F;
                 var encLastNucl = refSeqValue[startRefSeqByteOffset] & maskForLowerBits;
@@ -119,14 +115,14 @@ namespace BinaryCodec
             return decodedRelatedRefSeqBlock;
         }
 
-        private static string ComplementSucceedingNuc(long sreadPosEndValue, long refPosStartValue, byte[] refSeqValue, string decodedRelatedRefSeqBlock)
+        public static string ComplementSucceedingNuc(long relatedPosEndValue, long refPosStartValue, byte[] refSeqValue, string decodedRelatedRefSeqBlock)
         {
             string succeedingNuc = "";
-            long endOffset = sreadPosEndValue - refPosStartValue;
-            bool isEndOffsetOdd = (endOffset % 2 == 1);
-            var endRefSeqByteOffset = (int)(endOffset / 2 + 64);
+            long endOffset = relatedPosEndValue - refPosStartValue;
+            bool isEndOffsetOdd = (Math.Abs(endOffset) % 2 == 1);
             if (isEndOffsetOdd)
             {
+                var endRefSeqByteOffset = (int)(endOffset / 2 + 64);
                 byte maskForHigherBits = 0xF0;
                 var succeedingNucBin = (refSeqValue[endRefSeqByteOffset + 1] & maskForHigherBits) >> 4;
                 succeedingNuc = BinaryNucleotideCodecUtil.decodedNucleotides[succeedingNucBin];

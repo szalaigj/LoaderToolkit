@@ -82,6 +82,18 @@ AS
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetermineInDel]
 GO
 
+CREATE FUNCTION [dbo].[DetRelRefPosStart](@pos [bigint])
+RETURNS [bigint] WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetRelRefPosStart]
+GO
+
+CREATE FUNCTION [dbo].[DetDecRefSeq](@posRadius [int], @pos [bigint], @refPosStart [bigint], @refSeq [varbinary](8000))
+RETURNS [nvarchar](4000) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetDecRefSeq]
+GO
+
 CREATE FUNCTION [dbo].[MisIndelBin](@refSeq [varbinary](8000), @refPosStart [bigint], @sreadSeq [varbinary](8000), @sreadPosStart [bigint], @insPos [nvarchar](4000), @delPos [nvarchar](4000))
 RETURNS table 
 (
