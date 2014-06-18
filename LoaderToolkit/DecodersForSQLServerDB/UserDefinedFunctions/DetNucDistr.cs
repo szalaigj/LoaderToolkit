@@ -176,7 +176,7 @@ public partial class UserDefinedFunctions
                 nucSep.T = 1;
                 break;
             case "N":
-                nucSep.coverage = 0;
+                nucSep.coverage = 1;
                 nucSep.A = 0;
                 nucSep.C = 0;
                 nucSep.G = 0;
@@ -186,5 +186,56 @@ public partial class UserDefinedFunctions
                 throw new InvalidExpressionException("The mutation value is invalid in the column misMNuc.");
         }
         result.Add(nucSep);
+    }
+
+    private class RefPosCoverage
+    {
+        public SqlInt64 refPos { get; set; }
+        public SqlInt32 coverage { get; set; }
+    }
+
+    public static void FillRowFromRefSeqBlock(object tableTypeObject, out SqlInt64 refPos, out SqlInt32 coverage)
+    {
+        var tableType = (RefPosCoverage)tableTypeObject;
+
+        refPos = tableType.refPos;
+        coverage = tableType.coverage;
+    }
+
+    [Microsoft.SqlServer.Server.SqlFunction(
+        DataAccess = DataAccessKind.Read,
+        TableDefinition = "refPos bigint, coverage int",
+        FillRowMethodName = "FillRowFromRefSeqBlock")]
+    public static IEnumerable DetRefPosCov(SqlInt64 refPosStart, SqlBinary refSeq, SqlInt64 sreadPosStart, SqlInt64 sreadPosEnd,
+        SqlString misMNuc, SqlString indel)
+    {
+        ArrayList result = new ArrayList();
+        // The following contains plus one because of length-determination:
+        int sreadSeqLength = (int)(sreadPosEnd.Value - sreadPosStart.Value) + 1;
+        List<long> deletionPositions = DetermineDelPositions(sreadPosStart.Value, indel.Value);
+        long actRefPos = sreadPosStart.Value;
+        int refIndex = 0;
+        while (refIndex < sreadSeqLength)
+        {
+            if (deletionPositions.Contains(actRefPos))
+            {
+                result.Add(new RefPosCoverage
+                {
+                    refPos = actRefPos,
+                    coverage = 0
+                });
+            }
+            else
+            {
+                result.Add(new RefPosCoverage
+                {
+                    refPos = actRefPos,
+                    coverage = 1
+                });
+            }
+            refIndex++;
+            actRefPos++;
+        }
+        return result;
     }
 }

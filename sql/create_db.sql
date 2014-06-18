@@ -715,6 +715,30 @@ CREATE TABLE sreadBin
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [SREAD_BIN_FG]
 ) ON [SREAD_BIN_FG]
 
+CREATE VIEW [dbo].[align]
+(
+       samID
+      ,refID
+	  ,sreadPosStart
+	  ,sreadPosEnd
+	  ,misMNuc
+	  ,indel
+	  ,refPosStart
+	  ,refSeq
+)
+AS
+SELECT sb.samID
+      ,sb.refID
+	  ,sb.posStart as sreadPosStart
+	  ,sb.posEnd as sreadPosEnd
+	  ,sb.misMNuc
+	  ,sb.indel
+	  ,rb.posStart as refPosStart
+	  ,rb.seqBlock as refSeq
+FROM [dbo].sreadBin sb
+INNER JOIN [dbo].refBin rb ON sb.refID = rb.refID AND FLOOR((sb.posStart - 1) / 256) * 256 + 1 = rb.posStart
+GO
+
 CREATE VIEW [dbo].[basesCoverBin]
 (
          [samID]
@@ -729,20 +753,6 @@ CREATE VIEW [dbo].[basesCoverBin]
 		,[triplet]
 )
 AS
-WITH
-align
-AS
-(
-SELECT sb.samID
-      ,sb.refID
-	  ,sb.posStart as sreadPosStart
-	  ,sb.posEnd as sreadPosEnd
-	  ,sb.misMNuc
-	  ,sb.indel
-	  ,rb.posStart as refPosStart
-	  ,rb.seqBlock as refSeq
-FROM [dbo].sreadBin sb
-INNER JOIN [dbo].refBin rb ON sb.refID = rb.refID AND FLOOR((sb.posStart - 1) / 256) * 256 + 1 = rb.posStart)
 SELECT a.samID
       ,a.refID
 	  ,dn.refPos as pos
@@ -753,8 +763,54 @@ SELECT a.samID
 	  ,SUM(dn.G) as G
 	  ,SUM(dn.T) as T
 	  ,dn.triplet
-FROM align a
+FROM [dbo].[align] a
 CROSS APPLY [dbo].[DetNucDistr](a.refPosStart, a.refSeq, a.sreadPosStart, a.sreadPosEnd, a.misMNuc, a.indel) dn
 GROUP BY a.samID, a.refID, dn.refPos, dn.refNuc, dn.triplet
+
+GO
+
+CREATE VIEW [dbo].[inDelBin]
+(
+         [samID]
+		,[refID]
+		,[sreadID]
+		,[inDelStartPos]
+		,[inDel]
+		,[chainLen]
+		,[nucChain]
+		,[coverage]
+)
+AS
+WITH
+idq
+AS
+(SELECT [innerTbl].[samID]
+       ,[innerTbl].[refID]
+       ,[innerTbl].[sreadID]
+       ,[did].[inDelStartPos]
+	   ,[did].[inDel]
+	   ,[did].[chainLen]
+	   ,[did].[nucChain]
+FROM
+(SELECT sb.samID
+       ,sb.refID
+       ,sb.sreadID
+       ,sb.indel
+       ,sb.posStart
+FROM [dbo].sreadBin sb) as [innerTbl]
+CROSS APPLY [dbo].[DetermineInDel]([posStart], [indel]) as [did]),
+cov
+AS
+(SELECT a.samID
+       ,a.refID
+       ,drpc.refPos
+	   ,SUM(drpc.coverage) as coverage
+ FROM [dbo].[align] a
+ CROSS APPLY [dbo].[DetRefPosCov](a.refPosStart, a.refSeq, a.sreadPosStart, a.sreadPosEnd, a.misMNuc, a.indel) drpc
+ GROUP BY a.samID, a.refID, drpc.refPos)
+SELECT i.*
+	  ,c.coverage
+FROM idq i
+INNER JOIN cov c ON i.samID = c.samID AND i.refID = c.refID AND i.inDelStartPos = c.refPos
 
 GO

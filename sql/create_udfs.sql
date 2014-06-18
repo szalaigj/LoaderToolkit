@@ -105,3 +105,12 @@ RETURNS  TABLE (
 AS 
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetNucDistr]
 GO
+
+CREATE FUNCTION [dbo].[DetRefPosCov](@refPosStart [bigint], @refSeq [varbinary](8000), @sreadPosStart [bigint], @sreadPosEnd [bigint], @misMNuc [nvarchar](4000), @indel [nvarchar](4000))
+RETURNS  TABLE (
+	[refPos] [bigint] NULL,
+	[coverage] [int] NULL
+) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetRefPosCov]
+GO
