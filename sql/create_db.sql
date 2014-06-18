@@ -269,7 +269,7 @@ ADD FILE
     FILEGROWTH = 0KB
 ),
 (
-	NAME = refload_1,
+	NAME = refload_bin_1,
 	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\refload_bin_1.ndf',
 	SIZE = 40GB,
 	MAXSIZE = UNLIMITED,
