@@ -162,8 +162,11 @@ namespace FileAdapter.Verbs
                 {
                     using (var dr = cmd.ExecuteReader())
                     {
-                        dr.Read();
-                        LoadFromDataReader(dr, result);
+                        while (dr.Read())
+                        {
+                            dr.Read();
+                            LoadFromDataReader(dr, result);
+                        }  
                     }
                 }
                 context.Commit();
