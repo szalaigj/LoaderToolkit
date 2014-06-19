@@ -164,7 +164,6 @@ namespace FileAdapter.Verbs
                     {
                         while (dr.Read())
                         {
-                            dr.Read();
                             LoadFromDataReader(dr, result);
                         }  
                     }
