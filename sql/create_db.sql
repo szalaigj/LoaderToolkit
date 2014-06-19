@@ -269,7 +269,7 @@ ADD FILE
     FILEGROWTH = 0KB
 ),
 (
-	NAME = refload_1,
+	NAME = refload_bin_1,
 	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\refload_bin_1.ndf',
 	SIZE = 40GB,
 	MAXSIZE = UNLIMITED,
@@ -671,6 +671,8 @@ CREATE TABLE [dbo].[refDesc](-- this is unchanged
 	[desc] [varchar](200) NULL
 ) ON [PRIMARY]
 
+GO
+
 CREATE TABLE [dbo].[refBin](
 	[refID] [int] NOT NULL,
 	[posStart] [bigint] NOT NULL,
@@ -681,6 +683,8 @@ CREATE TABLE [dbo].[refBin](
 		[posStart] ASC
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [REF_BIN_FG]
 ) ON [REF_BIN_FG]
+
+GO
 
 -- For the storage of headers of sam files:
 CREATE TABLE [dbo].[sam](-- this is unchanged
@@ -694,6 +698,8 @@ CREATE TABLE [dbo].[sam](-- this is unchanged
 		[line] ASC
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [PRIMARY]
 ) ON [PRIMARY]
+
+GO
 
 CREATE TABLE sreadBin
 (-- this is unchanged
@@ -714,6 +720,8 @@ CREATE TABLE sreadBin
 		[sreadID] ASC
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [SREAD_BIN_FG]
 ) ON [SREAD_BIN_FG]
+
+GO
 
 CREATE VIEW [dbo].[align]
 (
@@ -737,6 +745,7 @@ SELECT sb.samID
 	  ,rb.seqBlock as refSeq
 FROM [dbo].sreadBin sb
 INNER JOIN [dbo].refBin rb ON sb.refID = rb.refID AND FLOOR((sb.posStart - 1) / 256) * 256 + 1 = rb.posStart
+
 GO
 
 CREATE VIEW [dbo].[basesCoverBin]
