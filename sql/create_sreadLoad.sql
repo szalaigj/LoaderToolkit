@@ -2,7 +2,7 @@ CREATE TABLE [$dbname].[dbo].[$tablename]
 (
 	[samID] [int] NOT NULL,
 	[qname] [varchar](150) NOT NULL,
-	[rname] [varchar](50) NOT NULL,
+	[refID] [int] NOT NULL,
 	[dir] [bit] NOT NULL,
 	[mapq] [tinyint] NOT NULL,
 	[seq] [varchar](8000) NOT NULL,

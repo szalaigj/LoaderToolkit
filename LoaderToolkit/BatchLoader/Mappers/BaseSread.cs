@@ -27,7 +27,7 @@ namespace BatchLoader.Mappers
 
             var qname = objParts[2];
             var flag = objParts[3];
-            var rname = objParts[4];
+            var refID = objParts[4];
             var pos = objParts[5];
             var mapq = objParts[6];
             var cigar = objParts[7];
@@ -37,8 +37,8 @@ namespace BatchLoader.Mappers
             // [qname] [varchar](150) NOT NULL
             BulkWriter.WriteVarChar(qname, 150);
 
-            // [rname] [varchar](50) NOT NULL
-            BulkWriter.WriteVarChar(rname, 50);
+            // [refID] [int] NOT NULL
+            BulkWriter.WriteInt(Int32.Parse(refID));
 
             // [dir] [bit] NOT NULL
             bool dir = DetermineDir(flag);

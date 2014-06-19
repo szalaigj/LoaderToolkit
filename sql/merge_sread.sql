@@ -17,7 +17,7 @@ AS
 	  ,[qual]
 FROM [$loaddb].[dbo].[$tablename] ld
 INNER JOIN [$targetdb].[dbo].[ref] r ON 
-r.refID in $opt
+ld.[refID] = r.[refID]
 AND r.pos BETWEEN ld.posStart AND ld.posEnd
 GROUP BY [samID],[refID],[qname],[dir],[mapq],[insPos],[delPos],[posStart],[posEnd],[seq],[qual])
 INSERT INTO [$targetdb].[dbo].[sread] WITH(TABLOCKX) ([samID],[refID],[qname],[dir],[mapq],[posStart],[posEnd],[misMNuc],[indel],[qual])

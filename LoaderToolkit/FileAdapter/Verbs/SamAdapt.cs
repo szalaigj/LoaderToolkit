@@ -1,6 +1,7 @@
 ﻿using LoaderLibrary.CommandLineParser;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,9 +12,16 @@ namespace FileAdapter.Verbs
     [Verb(Name = "SamAdapt", Description = "Separate and transform header and alignment sections of a sam file.")]
     public class SamAdapt : Verb
     {
+        public const string queryForRefIds = "SELECT"
+                                           + " [refID], [extID]"
+                                           + " FROM [$targetdb].[dbo].[refDesc] d"
+                                           + " WHERE [refID] & 0xFFFF0000 = $speciesID";
+
         private string source;
         private string outputPath;
         private int samID;
+        private int speciesID;
+        private string targetDB;
 
         [Parameter(Name = "Source", Description = "Source file pattern.", Required = true)]
         public string Source
@@ -37,6 +45,21 @@ namespace FileAdapter.Verbs
             set { samID = value; }
         }
 
+        [Parameter(Name = "SpeciesID", Description = "The species ID which is a part of the allocated refID.", Required = true)]
+        // Value of this property is the higher bit parts of the allocated refID.
+        public int SpeciesID
+        {
+            get { return speciesID; }
+            set { speciesID = value; }
+        }
+
+        [Parameter(Name = "TargetDB", Description = "Database to use as target.", Required = true)]
+        public string TargetDB
+        {
+            get { return targetDB; }
+            set { targetDB = value; }
+        }
+
         public SamAdapt()
         {
             InitializeMembers();
@@ -51,6 +74,9 @@ namespace FileAdapter.Verbs
 
         public override void Run()
         {
+            // Load the extID (rname) - refID mappings:
+            var extIDsToRefIDs = LoadRelatedRefIDsFromDB();
+
             // Find files matching pattern
             var dir = Path.GetDirectoryName(Source);
             var pat = Path.GetFileName(Source);
@@ -92,7 +118,16 @@ namespace FileAdapter.Verbs
                         }
                         else
                         {
-                            writerForAlignment.WriteLine(samID + "\t" + line);
+                            var lineParts = line.Split('\t');
+                            var refID = extIDsToRefIDs[lineParts[2]];
+                            string modifiedLine = lineParts[0] + "\t" + lineParts[1] + "\t" + refID;
+                            int index = 3;
+                            while (index < lineParts.Length)
+                            {
+                                modifiedLine += "\t" + lineParts[index];
+                                index++;
+                            }
+                            writerForAlignment.WriteLine(samID + "\t" + modifiedLine);
                             writerForAlignment.Flush();
                         }
                     }
@@ -105,6 +140,35 @@ namespace FileAdapter.Verbs
                         writerForAlignment.Dispose();
                 }
             }
+        }
+
+        private Dictionary<string, int> LoadRelatedRefIDsFromDB()
+        {
+            Dictionary<string, int> result = new Dictionary<string, int>();
+            using (var context = new DatabaseContext())
+            {
+                string sql = queryForRefIds;
+                sql = sql.Replace("$targetdb", targetDB);
+                sql = sql.Replace("$speciesID", speciesID.ToString());
+                using (var cmd = new SqlCommand(sql, context.Connection, context.Transaction))
+                {
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        dr.Read();
+                        LoadFromDataReader(dr, result);
+                    }
+                }
+                context.Commit();
+            }
+            return result;
+        }
+
+        private void LoadFromDataReader(SqlDataReader dr, Dictionary<string, int> dict)
+        {
+            int o = -1;
+            var refID = dr.GetInt32(++o);
+            var extID = dr.GetString(++o);
+            dict.Add(extID, refID);
         }
 
         private StreamWriter GetOutputStreamForHeaderSection(string file)
