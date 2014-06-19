@@ -114,22 +114,30 @@ namespace FileAdapter.Verbs
                             var lineWithoutAtSign = line.Substring(1);
                             writerForHeader.WriteLine(samID + "\t" + firstPosOfLine + "\t" + lineWithoutAtSign);
                             writerForHeader.Flush();
-                            firstPosOfLine++;
                         }
                         else
                         {
                             var lineParts = line.Split('\t');
-                            var refID = extIDsToRefIDs[lineParts[2]];
-                            string modifiedLine = lineParts[0] + "\t" + lineParts[1] + "\t" + refID;
-                            int index = 3;
-                            while (index < lineParts.Length)
+                            int refID;
+                            if (extIDsToRefIDs.TryGetValue(lineParts[2], out refID))
                             {
-                                modifiedLine += "\t" + lineParts[index];
-                                index++;
+                                string modifiedLine = lineParts[0] + "\t" + lineParts[1] + "\t" + refID;
+                                int index = 3;
+                                while (index < lineParts.Length)
+                                {
+                                    modifiedLine += "\t" + lineParts[index];
+                                    index++;
+                                }
+                                writerForAlignment.WriteLine(samID + "\t" + modifiedLine);
+                                writerForAlignment.Flush();
                             }
-                            writerForAlignment.WriteLine(samID + "\t" + modifiedLine);
-                            writerForAlignment.Flush();
+                            else
+                            {
+                                Console.WriteLine("WARNING: {0}. row of source file" + 
+                                    "contains rname '{1}' which is not in the refDesc of target db.", firstPosOfLine, lineParts[2]);
+                            }
                         }
+                        firstPosOfLine++;
                     }
                 }
                 finally
