@@ -48,8 +48,8 @@ namespace BatchLoader.Mappers
                 // [strand] [char] NOT NULL
                 BulkWriter.WriteChar(objParts[7], 1);
 
-                // [frame] [tinyint] NOT NULL
-                BulkWriter.WriteTinyInt(Byte.Parse(objParts[8]));
+                // [frame] [char] NOT NULL
+                BulkWriter.WriteChar(objParts[8], 1);
 
                 // [attribute] [varchar](8000) NOT NULL
                 BulkWriter.WriteVarChar(objParts[9], 8000);
