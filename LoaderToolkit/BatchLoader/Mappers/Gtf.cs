@@ -23,34 +23,39 @@ namespace BatchLoader.Mappers
         {
             string[] objParts = obj.Split('\t');
             // The objParts[0] is skipped because the filename is irrelevant.
-            // [seqname] [varchar](150) NOT NULL
-            BulkWriter.WriteVarChar(objParts[1], 150);
 
-            // [source] [varchar](150) NOT NULL
-            BulkWriter.WriteVarChar(objParts[2], 150);
+            // The following is needed to skip the first header lines from gtf files:
+            if (objParts.Length == 10)
+            {
+                // [seqname] [varchar](150) NOT NULL
+                BulkWriter.WriteVarChar(objParts[1], 150);
 
-            // [feature] [varchar](150) NOT NULL
-            BulkWriter.WriteVarChar(objParts[3], 150);
+                // [source] [varchar](150) NOT NULL
+                BulkWriter.WriteVarChar(objParts[2], 150);
 
-            // [start] [bigint] NOT NULL
-            BulkWriter.WriteBigInt(Int64.Parse(objParts[4]));
+                // [feature] [varchar](150) NOT NULL
+                BulkWriter.WriteVarChar(objParts[3], 150);
 
-            // [end] [bigint] NOT NULL
-            BulkWriter.WriteBigInt(Int64.Parse(objParts[5]));
+                // [start] [bigint] NOT NULL
+                BulkWriter.WriteBigInt(Int64.Parse(objParts[4]));
 
-            // [score] [varchar](50) NOT NULL
-            BulkWriter.WriteVarChar(objParts[6], 50);
+                // [end] [bigint] NOT NULL
+                BulkWriter.WriteBigInt(Int64.Parse(objParts[5]));
 
-            // [strand] [char] NOT NULL
-            BulkWriter.WriteChar(objParts[7], 1);
+                // [score] [varchar](50) NOT NULL
+                BulkWriter.WriteVarChar(objParts[6], 50);
 
-            // [frame] [tinyint] NOT NULL
-            BulkWriter.WriteTinyInt(Byte.Parse(objParts[8]));
+                // [strand] [char] NOT NULL
+                BulkWriter.WriteChar(objParts[7], 1);
 
-            // [attribute] [varchar](8000) NOT NULL
-            BulkWriter.WriteVarChar(objParts[9], 8000);
+                // [frame] [tinyint] NOT NULL
+                BulkWriter.WriteTinyInt(Byte.Parse(objParts[8]));
 
-            BulkWriter.EndLine();
+                // [attribute] [varchar](8000) NOT NULL
+                BulkWriter.WriteVarChar(objParts[9], 8000);
+
+                BulkWriter.EndLine();   
+            }
         }
     }
 }
