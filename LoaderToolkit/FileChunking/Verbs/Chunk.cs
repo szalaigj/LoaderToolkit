@@ -14,6 +14,7 @@ namespace FileChunking.Verbs
         private string source;
         private string outputPath;
         private int outputMeasure;
+        private int skipFirstLines;
 
         [Parameter(Name = "Source", Description = "Source file pattern.", Required = true)]
         public string Source
@@ -36,6 +37,13 @@ namespace FileChunking.Verbs
             set { outputMeasure = value; }
         }
 
+        [Parameter(Name = "SkipFirstLines", Description = "Number of first lines which should be skipped.")]
+        public int SkipFirstLines
+        {
+            get { return skipFirstLines; }
+            set { skipFirstLines = value; }
+        }
+
         public Chunk()
         {
             InitializeMembers();
@@ -46,6 +54,7 @@ namespace FileChunking.Verbs
             this.source = null;
             this.outputPath = null;
             this.outputMeasure = 32;
+            this.skipFirstLines = 0;
         }
 
         public override void Run()
@@ -73,6 +82,8 @@ namespace FileChunking.Verbs
                 TimeSpan elapsedTime = endTime - startTime;
                 Console.WriteLine("Number of lines is computed. Elapsed time: " + elapsedTime);
                 int lineCountOfOutputFiles = lineCount / OutputMeasure;
+                Console.WriteLine("Note: the first {0} lines will be skipped", skipFirstLines);
+                int firstLinesCounter = 0;
                 using (StreamReader sr = new StreamReader(file))
                 {
                     String line;
@@ -85,23 +96,30 @@ namespace FileChunking.Verbs
                     {
                         while ((line = sr.ReadLine()) != null)
                         {
-                            // The last output file will contain the remainder lines also:
-                            if ((cntOfLines == lineCountOfOutputFiles - 1) && (fileIndex != OutputMeasure - 1))
+                            if (firstLinesCounter < skipFirstLines)
                             {
-                                writer.WriteLine(line);
-                                writer.Flush();
-                                cntOfLines = 0;
-                                fileIndex++;
-                                endTime = DateTime.Now;
-                                elapsedTime = endTime - startTime;
-                                Console.WriteLine("{0}. output file is created. Elapsed time: " + elapsedTime, fileIndex);
-                                writer = GetOutputStream(file, fileIndex);
-                                startTime = DateTime.Now;
+                                firstLinesCounter++;
                             }
                             else
                             {
-                                cntOfLines++;
-                                writer.WriteLine(line);
+                                // The last output file will contain the remainder lines also:
+                                if ((cntOfLines == lineCountOfOutputFiles - 1) && (fileIndex != OutputMeasure - 1))
+                                {
+                                    writer.WriteLine(line);
+                                    writer.Flush();
+                                    cntOfLines = 0;
+                                    fileIndex++;
+                                    endTime = DateTime.Now;
+                                    elapsedTime = endTime - startTime;
+                                    Console.WriteLine("{0}. output file is created. Elapsed time: " + elapsedTime, fileIndex);
+                                    writer = GetOutputStream(file, fileIndex);
+                                    startTime = DateTime.Now;
+                                }
+                                else
+                                {
+                                    cntOfLines++;
+                                    writer.WriteLine(line);
+                                }
                             }
                         }
                         // For handling the last output file:
