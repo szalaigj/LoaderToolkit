@@ -303,6 +303,14 @@ namespace LoaderLibrary.Load {
             }
         }
 
+        public static string create_gtf
+        {
+            get
+            {
+                return ResourceManager.GetString("create_gtf", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to IF OBJECT_ID (N&apos;[$dbname].dbo.[$tablename]&apos;, N&apos;U&apos;) IS NOT NULL 
         ///DROP TABLE [$dbname].dbo.[$tablename].
@@ -496,6 +504,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("index_sreadBinLoad", resourceCulture);
+            }
+        }
+
+        public static string index_gtf
+        {
+            get
+            {
+                return ResourceManager.GetString("index_gtf", resourceCulture);
             }
         }
 
@@ -742,6 +758,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("merge_sreadBin", resourceCulture);
+            }
+        }
+
+        public static string merge_gtf
+        {
+            get
+            {
+                return ResourceManager.GetString("merge_gtf", resourceCulture);
             }
         }
     }

@@ -61,6 +61,7 @@
     <Compile Include="Mappers\BasesDist.cs" />
     <Compile Include="Mappers\BaseSread.cs" />
     <Compile Include="Mappers\BinaryEncodedPileup.cs" />
+    <Compile Include="Mappers\Gtf.cs" />
     <Compile Include="Mappers\Ref.cs" />
     <Compile Include="Mappers\RefBin.cs" />
     <Compile Include="Mappers\RefDesc.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Mappers\Tweet.cs" />
     <Compile Include="Mergers\BasesDist.cs" />
     <Compile Include="Mergers\BinaryEncodedPileup.cs" />
+    <Compile Include="Mergers\Gtf.cs" />
     <Compile Include="Mergers\Ref.cs" />
     <Compile Include="Mergers\RefBin.cs" />
     <Compile Include="Mergers\Sam.cs" />

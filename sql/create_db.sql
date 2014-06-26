@@ -324,6 +324,52 @@ ADD FILE
 TO FILEGROUP SREADLOAD_BIN_FG;
 GO
 
+ALTER DATABASE szalaigj
+ADD FILEGROUP ALIGN_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = align_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\align_0.ndf',
+	SIZE = 200GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = align_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\align_1.ndf',
+	SIZE = 200GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP ALIGN_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP BCOVERBIN_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = bcoverbin_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\bcoverbin_0.ndf',
+	SIZE = 200GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = bcoverbin_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\bcoverbin_1.ndf',
+	SIZE = 200GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP BCOVERBIN_FG;
+GO
+
 -- For checking:
 USE szalaigj
 GO
@@ -821,5 +867,43 @@ SELECT i.*
 	  ,c.coverage
 FROM idq i
 INNER JOIN cov c ON i.samID = c.samID AND i.refID = c.refID AND i.inDelStartPos = c.refPos
+
+GO
+
+CREATE TABLE tmp_basesCoverBin
+(
+	[samID] [int] NOT NULL,
+	[refID] [int] NOT NULL,
+	[pos] [bigint] NOT NULL,
+	[refNuc] [nvarchar](1) NOT NULL,
+	[coverage] [int] NOT NULL,
+	[A] [int] NOT NULL,
+	[C] [int] NOT NULL,
+	[G] [int] NOT NULL,
+	[T] [int] NOT NULL,
+	[triplet] [nvarchar](3) NOT NULL,
+	CONSTRAINT [PK_tmp_basesCoverBin] PRIMARY KEY CLUSTERED 
+	(
+		[samID] ASC,
+		[refID] ASC,
+		[pos] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [BCOVERBIN_FG]
+) ON [BCOVERBIN_FG]
+
+GO
+
+-- For GTF (General Feature Format) annotations: (see the full specification: http://www.sanger.ac.uk/resources/software/gff/spec.html or http://www.ensembl.org/info/website/upload/gff.html)
+CREATE TABLE gtf
+(
+	[seqname] [varchar](150) NOT NULL, -- name of the chromosome or scaffold
+	[source] [varchar](150) NOT NULL, -- name of the program that generated this feature
+	[feature] [varchar](150) NOT NULL, -- feature type name, e.g. Gene, Variation, Similarity
+	[start] [bigint] NOT NULL, -- start position of the feature (1-based)
+	[end] [bigint] NOT NULL, -- end position
+	[score] [varchar](50) NOT NULL, -- original this value is floating point value but the character dot '.' indicates that there is no score
+	[strand] [char] NOT NULL, -- one of '+' (forward), '-' (reverse) or '.' (strand is not relevant)
+	[frame] [tinyint] NOT NULL, -- one of '0' (the first base of the feature is the first base of a codon), '1' (the second base is the first base of a codon) or '2'(the third base is the first base of a codon)
+	[attribute] [varchar](8000) NOT NULL -- a semicolon-separated list of tag-value pairs, providing additional information about each feature
+) ON [PRIMARY]
 
 GO
