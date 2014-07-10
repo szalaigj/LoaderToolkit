@@ -18,6 +18,8 @@ Az ensembl73-as verziója:
 ftp://ftp.ensembl.org/pub/release-73/gtf/gallus_gallus/
 A formátum leírása itt található:
 http://www.ensembl.org/info/website/upload/gff.html
+full specification: 
+http://www.sanger.ac.uk/resources/software/gff/spec.html
 Egy érdekes blogbejegyzés:
 http://blog.goldenhelix.com/?p=2486
 
