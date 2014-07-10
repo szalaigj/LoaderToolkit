@@ -1,0 +1,26 @@
+További linkek:
+
+cuda bowtie:
+https://developer.nvidia.com/nvbio
+
+Sequenza: http://cbs.dtu.dk/biotools/sequenza/
+VarScan2: http://varscan.sourceforge.net/
+MuTect: http://www.broadinstitute.org/cancer/cga/mutect
+
+EMBL tool-ok
+http://www.ensembl.org/info/docs/index.html
+Ensembl Variant effect predictor:
+http://www.ensembl.org/info/docs/tools/vep/script/index.html
+
+A génannotáció gtf formátumban van, amit innen lehet letölteni:
+http://www.ensembl.org/info/data/ftp/index.html
+Az ensembl73-as verziója:
+ftp://ftp.ensembl.org/pub/release-73/gtf/gallus_gallus/
+A formátum leírása itt található:
+http://www.ensembl.org/info/website/upload/gff.html
+Egy érdekes blogbejegyzés:
+http://blog.goldenhelix.com/?p=2486
+
+Lessons learned from implementing a national infrastructure in Sweden for storage and analysis of next-generation sequencing data
+előadás:
+http://www.labtube.tv/playvideo.aspx?vid=166680
