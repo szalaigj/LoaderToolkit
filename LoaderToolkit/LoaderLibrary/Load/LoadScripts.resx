@@ -172,6 +172,9 @@
   <data name="merge_gtf" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\merge_gtf.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
+  <data name="merge_fltrCov" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\merge_fltrCov.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
   <data name="create_delete_tweet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\create_delete_tweet.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
@@ -270,5 +273,11 @@
   </data>
   <data name="index_gtf" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\index_gtf.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="create_fdpLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\create_fdpLoad.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="index_fdpLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\index_fdpLoad.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
 </root>
