@@ -370,6 +370,53 @@ ADD FILE
 TO FILEGROUP BCOVERBIN_FG;
 GO
 
+-- For filtered pileups:
+ALTER DATABASE szalaigj
+ADD FILEGROUP FDPLOAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = fdpload_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\fdpload_0.ndf',
+	SIZE = 20GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = fdpload_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\fdpload_1.ndf',
+	SIZE = 20GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP FDPLOAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP FLTR_COV_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = fltrcov0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\fltrcov0.ndf',
+	SIZE = 200GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = fltrcov1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\fltrcov1.ndf',
+	SIZE = 200GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP FLTR_COV_FG;
+GO
+
 -- For checking:
 USE szalaigj
 GO
@@ -902,8 +949,36 @@ CREATE TABLE gtf
 	[end] [bigint] NOT NULL, -- end position
 	[score] [varchar](50) NOT NULL, -- original this value is floating point value but the character dot '.' indicates that there is no score
 	[strand] [char] NOT NULL, -- one of '+' (forward), '-' (reverse) or '.' (strand is not relevant)
-	[frame] [tinyint] NOT NULL, -- one of '0' (the first base of the feature is the first base of a codon), '1' (the second base is the first base of a codon) or '2'(the third base is the first base of a codon)
+	[frame] [char] NOT NULL, -- one of '0' (the first base of the feature is the first base of a codon), '1' (the second base is the first base of a codon), '2'(the third base is the first base of a codon) or '.' (the frame is not relevant)
 	[attribute] [varchar](8000) NOT NULL -- a semicolon-separated list of tag-value pairs, providing additional information about each feature
 ) ON [PRIMARY]
 
 GO
+
+-- For filtered pileups:
+
+CREATE TABLE [dbo].[sample](
+	[sampleID] [int] IDENTITY(1,1)PRIMARY KEY,
+	[name] [varchar](16) NOT NULL,
+	[desc] [varchar](200) NULL
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[pileup](
+	[pupID] [int] IDENTITY(1,1)PRIMARY KEY,
+	[sampleID] [int] NOT NULL,
+	[refID] [int] NOT NULL
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[fltrCov](
+	[pupID] [int] NOT NULL,
+	[pos] [bigint] NOT NULL,
+	[refNuc] [char] NOT NULL,
+	[coverage] [int] NOT NULL,
+	[bases] [varchar](8000) NOT NULL,
+	[basesQual] [varchar](8000) NULL,
+	CONSTRAINT [PK_fltr_cov] PRIMARY KEY CLUSTERED 
+	(
+		[pupID] ASC,
+		[pos] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [FLTR_COV_FG]
+) ON [FLTR_COV_FG]

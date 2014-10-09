@@ -6,6 +6,6 @@ CREATE TABLE [$dbname].[dbo].[$tablename]
 	[pos] [bigint] NOT NULL,
 	[refNuc] [char] NOT NULL,
 	[coverage] [int] NOT NULL,
-	[bases] [varbinary](8000) NOT NULL,
+	[bases] [varchar](8000) NOT NULL,
 	[basesQual] [varchar](8000) NULL
-) ON [FDPLOAD_FG];
+) ON [PRIMARY];
