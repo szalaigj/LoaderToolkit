@@ -955,7 +955,7 @@ CREATE TABLE gtf
 
 GO
 
--- For filtered pileups:
+-- For filtered pileups: (related tables from the above approach are [refDesc], [refBin])
 
 CREATE TABLE [dbo].[sample](
 	[sampleID] [int] IDENTITY(1,1)PRIMARY KEY,
