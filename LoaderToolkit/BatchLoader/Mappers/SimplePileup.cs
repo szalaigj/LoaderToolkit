@@ -17,11 +17,11 @@ namespace BatchLoader.Mappers
             MapFirstToken(objParts[0]);
 
             var secondToken = objParts[1];
-            // [refSeqID] [varchar](50) NOT NULL
-            BulkWriter.WriteVarChar(secondToken, 50);
+            // [extID] [varchar](80) NOT NULL
+            BulkWriter.WriteVarChar(secondToken, 80);
 
             var thirdToken = objParts[2];
-            // [refSeqPos] [bigint] NOT NULL
+            // [pos] [bigint] NOT NULL
             BulkWriter.WriteBigInt(Int64.Parse(thirdToken));
 
             var fourthToken = objParts[3];
