@@ -20,7 +20,7 @@ namespace BatchLoader.Mappers
             get { return ".pup"; }
         }
 
-        protected void MapFirstToken(string firstToken)
+        protected virtual void MapFirstToken(string firstToken)
         {
             // [sampleName] [varchar](16) NOT NULL
             BulkWriter.WriteVarChar(firstToken, 16);

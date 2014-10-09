@@ -18,7 +18,7 @@ namespace BatchLoader.Mappers
             get { return ".fdp"; }
         }
 
-        protected new void MapFirstToken(string firstToken)
+        protected override void MapFirstToken(string firstToken)
         {
             string[] firstTokenParts = firstToken.Split('_');
             // [sampleName] [varchar](16) NOT NULL
