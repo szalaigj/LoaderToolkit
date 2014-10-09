@@ -8,4 +8,4 @@ CREATE TABLE [$dbname].[dbo].[$tablename]
 	[coverage] [int] NOT NULL,
 	[bases] [varchar](8000) NOT NULL,
 	[basesQual] [varchar](8000) NULL
-) ON [PRIMARY];
+) ON [FDPLOAD_FG];
