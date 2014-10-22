@@ -19,7 +19,7 @@ using System.Text;
     //through the IBinarySerialize.Write and IBinarySerialize.Read methods.
     IsInvariantToNulls = true, //indicates whether the aggregate is invariant to nulls
     IsInvariantToDuplicates = false, //indicates whether the aggregate is invariant to duplicates
-    MaxByteSize = 8000 //the maximum size, in bytes, of the aggregate instance
+    MaxByteSize = -1 //the maximum size, in bytes, of the aggregate instance
     )]
 public struct FoolproofConcatenate : IBinarySerialize
 {
