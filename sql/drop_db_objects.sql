@@ -16,6 +16,8 @@ drop function [dbo].[IsNucX];
 drop function [dbo].[MisIndelBin];
 drop function [dbo].[DetNucDistr];
 drop function [dbo].[DetRefPosCov];
+drop function [dbo].[DetDecRefSeq];
+drop function [dbo].[DetRelRefPosStart];
 drop aggregate [dbo].[Concatenate];
 drop aggregate [dbo].[SafeConcatenate];
 drop aggregate [dbo].[FoolproofConcatenate];

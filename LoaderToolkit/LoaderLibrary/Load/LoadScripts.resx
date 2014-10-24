@@ -175,6 +175,9 @@
   <data name="merge_fltrCov" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\merge_fltrCov.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
+  <data name="merge_cover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\merge_cover.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
   <data name="create_delete_tweet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\create_delete_tweet.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
@@ -279,5 +282,11 @@
   </data>
   <data name="index_fdpLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\..\sql\index_fdpLoad.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+<data name="create_coverLoad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\create_coverLoad.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
+  </data>
+  <data name="index_cover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\sql\index_cover.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1250</value>
   </data>
 </root>

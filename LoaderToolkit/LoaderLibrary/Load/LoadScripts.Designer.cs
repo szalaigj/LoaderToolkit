@@ -319,6 +319,14 @@ namespace LoaderLibrary.Load {
             }
         }
 
+        public static string create_coverLoad
+        {
+            get
+            {
+                return ResourceManager.GetString("create_coverLoad", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to IF OBJECT_ID (N&apos;[$dbname].dbo.[$tablename]&apos;, N&apos;U&apos;) IS NOT NULL 
         ///DROP TABLE [$dbname].dbo.[$tablename].
@@ -528,6 +536,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("index_fdpLoad", resourceCulture);
+            }
+        }
+
+        public static string index_cover
+        {
+            get
+            {
+                return ResourceManager.GetString("index_cover", resourceCulture);
             }
         }
 
@@ -790,6 +806,14 @@ namespace LoaderLibrary.Load {
             get
             {
                 return ResourceManager.GetString("merge_fltrCov", resourceCulture);
+            }
+        }
+
+        public static string merge_cover
+        {
+            get
+            {
+                return ResourceManager.GetString("merge_cover", resourceCulture);
             }
         }
     }

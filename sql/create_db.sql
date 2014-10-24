@@ -982,3 +982,73 @@ CREATE TABLE [dbo].[fltrCov](
 		[pos] ASC
 	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [FLTR_COV_FG]
 ) ON [FLTR_COV_FG]
+
+-- This a schema for ACGT counts
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP COVER_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = cover_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\cover_0.ndf',
+	SIZE = 500GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = cover_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\cover_1.ndf',
+	SIZE = 500GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP COVER_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILEGROUP COVERLOAD_FG;
+GO
+
+ALTER DATABASE szalaigj
+ADD FILE
+(
+	NAME = coverload_0,
+	FILENAME = 'C:\Data\Raid6_0\user\sql_db\szalaigj\coverload_0.ndf',
+	SIZE = 500GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+),
+(
+	NAME = coverload_1,
+	FILENAME = 'C:\Data\Raid6_1\user\sql_db\szalaigj\coverload_1.ndf',
+	SIZE = 500GB,
+	MAXSIZE = UNLIMITED,
+    FILEGROWTH = 0KB
+)
+TO FILEGROUP COVERLOAD_FG;
+GO
+
+CREATE TABLE [dbo].[cover]
+(
+	[sampleID] [int] NOT NULL,
+	[refID] [int] NOT NULL,
+	[pos] [bigint] NOT NULL,
+	[refNuc] [nvarchar](1) NOT NULL,
+	[coverage] [int] NOT NULL,
+	[Acount] [int] NOT NULL,
+	[Ccount] [int] NOT NULL,
+	[Gcount] [int] NOT NULL,
+	[Tcount] [int] NOT NULL,
+	[incount] [int] NOT NULL,
+	[delcount] [int] NOT NULL,
+	CONSTRAINT [PK_cover] PRIMARY KEY CLUSTERED 
+	(
+		[sampleID] ASC,
+		[refID] ASC,
+		[pos] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, DATA_COMPRESSION = PAGE) ON [COVER_FG]
+) ON [COVER_FG]
+GO

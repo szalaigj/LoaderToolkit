@@ -57,6 +57,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="DatabaseContext.cs" />
     <Compile Include="LoaderRegistry.cs" />
+    <Compile Include="Mappers\Cover.cs" />
     <Compile Include="Mappers\BasePileup.cs" />
     <Compile Include="Mappers\BasesDist.cs" />
     <Compile Include="Mappers\BaseSread.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Mappers\Tweet.cs" />
     <Compile Include="Mergers\BasesDist.cs" />
     <Compile Include="Mergers\BinaryEncodedPileup.cs" />
+    <Compile Include="Mergers\Cover.cs" />
     <Compile Include="Mergers\FilteredPileup.cs" />
     <Compile Include="Mergers\Gtf.cs" />
     <Compile Include="Mergers\Ref.cs" />
