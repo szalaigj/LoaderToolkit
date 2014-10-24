@@ -539,11 +539,11 @@ namespace LoaderLibrary.Load {
             }
         }
 
-        public static string index_cover
+        public static string index_coverLoad
         {
             get
             {
-                return ResourceManager.GetString("index_cover", resourceCulture);
+                return ResourceManager.GetString("index_coverLoad", resourceCulture);
             }
         }
 
