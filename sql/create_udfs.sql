@@ -52,6 +52,12 @@ RETURNS[nvarchar](4000)
 EXTERNAL NAME [DecodersForSQLServerDB].[FoolproofConcatenate]
 GO
 
+CREATE AGGREGATE [dbo].[CountConcat]
+(@currentRefNuc [nvarchar](4000), @currentPos [bigint], @substrLen [int])
+RETURNS[nvarchar](MAX)
+EXTERNAL NAME [DecodersForSQLServerDB].[CountConcat]
+GO
+
 CREATE FUNCTION [dbo].[MisIndel](@refSeq [nvarchar](4000), @sreadSeq [nvarchar](4000), @insPos [nvarchar](4000), @delPos [nvarchar](4000))
 RETURNS table 
 (
@@ -125,4 +131,13 @@ RETURNS  TABLE (
 ) WITH EXECUTE AS CALLER
 AS 
 EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetRefPosCov]
+GO
+
+CREATE FUNCTION [dbo].[DetSubstrCount](@input [nvarchar](MAX))
+RETURNS  TABLE (
+	[substr] [nvarchar](MAX) NULL,
+	[cnt] [bigint] NULL
+) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [DecodersForSQLServerDB].[UserDefinedFunctions].[DetSubstrCount]
 GO

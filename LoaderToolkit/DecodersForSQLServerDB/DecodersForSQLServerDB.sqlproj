@@ -84,6 +84,8 @@
     <Compile Include="UserDefinedFunctions\DetNucDistr.cs" />
     <Compile Include="UserDefinedFunctions\DetRelRefPosStart.cs" />
     <Compile Include="UserDefinedFunctions\DetDecRefSeq.cs" />
+    <Compile Include="UserDefinedFunctions\DetSubstrCount.cs" />
+    <Compile Include="UserDefinedAggregates\CountConcat.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BinaryCodec\BinaryCodec.csproj">

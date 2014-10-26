@@ -18,6 +18,8 @@ drop function [dbo].[DetNucDistr];
 drop function [dbo].[DetRefPosCov];
 drop function [dbo].[DetDecRefSeq];
 drop function [dbo].[DetRelRefPosStart];
+drop function [dbo].[DetSubstrCount];
 drop aggregate [dbo].[Concatenate];
 drop aggregate [dbo].[SafeConcatenate];
 drop aggregate [dbo].[FoolproofConcatenate];
+drop aggregate [dbo].[CountConcat];
